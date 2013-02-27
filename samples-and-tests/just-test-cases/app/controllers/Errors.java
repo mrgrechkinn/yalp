@@ -1,8 +1,8 @@
 package controllers;
 
 import models.ErrorModel;
-import play.data.validation.Valid;
-import play.mvc.Controller;
+import yalp.data.validation.Valid;
+import yalp.mvc.Controller;
 
 public class Errors extends Controller {
 

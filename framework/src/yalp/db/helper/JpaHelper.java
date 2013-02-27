@@ -1,8 +1,8 @@
-package play.db.helper;
+package yalp.db.helper;
 
 import java.util.List;
 import javax.persistence.Query;
-import play.db.jpa.JPA;
+import yalp.db.jpa.JPA;
 
 public class JpaHelper {
 

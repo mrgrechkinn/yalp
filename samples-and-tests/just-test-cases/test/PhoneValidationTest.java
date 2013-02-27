@@ -1,7 +1,7 @@
 import org.junit.Test;
 
-import play.data.validation.PhoneCheck;
-import play.test.UnitTest;
+import yalp.data.validation.PhoneCheck;
+import yalp.test.UnitTest;
 
 public class PhoneValidationTest extends UnitTest {
 

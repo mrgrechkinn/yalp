@@ -1,4 +1,4 @@
-package play;
+package yalp;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -17,7 +17,7 @@ import org.apache.log4j.Priority;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 
-import play.exceptions.PlayException;
+import yalp.exceptions.YalpException;
 
 /**
  * Main logger of the application.
@@ -38,13 +38,13 @@ public class Logger {
      */
     public static boolean recordCaller = false;
     /**
-     * The application logger (play).
+     * The application logger (yalp).
      */
     public static org.apache.log4j.Logger log4j;
     /**
      * When using java.util.logging.
      */
-    public static java.util.logging.Logger juli = java.util.logging.Logger.getLogger("play");
+    public static java.util.logging.Logger juli = java.util.logging.Logger.getLogger("yalp");
     /**
      * true if logger is configured manually (log4j-config file supplied by application)
      */
@@ -54,12 +54,12 @@ public class Logger {
      * Try to init stuff.
      */
     public static void init() {
-        String log4jPath = Play.configuration.getProperty("application.log.path", "/log4j.xml");
+        String log4jPath = Yalp.configuration.getProperty("application.log.path", "/log4j.xml");
         URL log4jConf = Logger.class.getResource(log4jPath);
         boolean isXMLConfig = log4jPath.endsWith(".xml");
         if (log4jConf == null) { // try again with the .properties
             isXMLConfig = false;
-            log4jPath = Play.configuration.getProperty("application.log.path", "/log4j.properties");
+            log4jPath = Yalp.configuration.getProperty("application.log.path", "/log4j.properties");
             log4jConf = Logger.class.getResource(log4jPath);
         }
         if (log4jConf == null) {
@@ -68,7 +68,7 @@ public class Logger {
             PropertyConfigurator.configure(shutUp);
         } else if (Logger.log4j == null) {
 
-            if (log4jConf.getFile().indexOf(Play.applicationPath.getAbsolutePath()) == 0) {
+            if (log4jConf.getFile().indexOf(Yalp.applicationPath.getAbsolutePath()) == 0) {
                 // The log4j configuration file is located somewhere in the application folder,
                 // so it's probably a custom configuration file
                 configuredManually = true;
@@ -78,15 +78,15 @@ public class Logger {
             } else {
                 PropertyConfigurator.configure(log4jConf);
             }
-            Logger.log4j = org.apache.log4j.Logger.getLogger("play");
+            Logger.log4j = org.apache.log4j.Logger.getLogger("yalp");
             // In test mode, append logs to test-result/application.log
-            if (Play.runingInTestMode()) {
+            if (Yalp.runingInTestMode()) {
                 org.apache.log4j.Logger rootLogger = org.apache.log4j.Logger.getRootLogger();
                 try {
-                    if (!Play.getFile("test-result").exists()) {
-                        Play.getFile("test-result").mkdir();
+                    if (!Yalp.getFile("test-result").exists()) {
+                        Yalp.getFile("test-result").mkdir();
                     }
-                    Appender testLog = new FileAppender(new PatternLayout("%d{DATE} %-5p ~ %m%n"), Play.getFile("test-result/application.log").getAbsolutePath(), false);
+                    Appender testLog = new FileAppender(new PatternLayout("%d{DATE} %-5p ~ %m%n"), Yalp.getFile("test-result/application.log").getAbsolutePath(), false);
                     rootLogger.addAppender(testLog);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -490,7 +490,7 @@ public class Logger {
     }
 
     /**
-     * If e is a PlayException -> a very clean report
+     * If e is a YalpException -> a very clean report
      */
     static boolean niceThrowable(org.apache.log4j.Level level, Throwable e, String message, Object... args) {
         if (e instanceof Exception) {
@@ -500,20 +500,20 @@ public class Logger {
                 // Clean stack trace
                 List<StackTraceElement> cleanTrace = new ArrayList<StackTraceElement>();
                 for (StackTraceElement se : toClean.getStackTrace()) {
-                    if (se.getClassName().startsWith("play.server.PlayHandler$NettyInvocation")) {
-                        cleanTrace.add(new StackTraceElement("Invocation", "HTTP Request", "Play!", -1));
+                    if (se.getClassName().startsWith("yalp.server.YalpHandler$NettyInvocation")) {
+                        cleanTrace.add(new StackTraceElement("Invocation", "HTTP Request", "Yalp", -1));
                         break;
                     }
-                    if (se.getClassName().startsWith("play.server.PlayHandler$SslNettyInvocation")) {
-                        cleanTrace.add(new StackTraceElement("Invocation", "HTTP Request", "Play!", -1));
+                    if (se.getClassName().startsWith("yalp.server.YalpHandler$SslNettyInvocation")) {
+                        cleanTrace.add(new StackTraceElement("Invocation", "HTTP Request", "Yalp", -1));
                         break;
                     }
-                    if (se.getClassName().startsWith("play.jobs.Job") && se.getMethodName().equals("run")) {
-                        cleanTrace.add(new StackTraceElement("Invocation", "Job", "Play!", -1));
+                    if (se.getClassName().startsWith("yalp.jobs.Job") && se.getMethodName().equals("run")) {
+                        cleanTrace.add(new StackTraceElement("Invocation", "Job", "Yalp", -1));
                         break;
                     }
-                    if (se.getClassName().startsWith("play.server.PlayHandler") && se.getMethodName().equals("messageReceived")) {
-                        cleanTrace.add(new StackTraceElement("Invocation", "Message Received", "Play!", -1));
+                    if (se.getClassName().startsWith("yalp.server.YalpHandler") && se.getMethodName().equals("messageReceived")) {
+                        cleanTrace.add(new StackTraceElement("Invocation", "Message Received", "Yalp", -1));
                         break;
                     }
                     if (se.getClassName().startsWith("sun.reflect.")) {
@@ -542,21 +542,21 @@ public class Logger {
 
             StringWriter sw = new StringWriter();
 
-            // Better format for Play exceptions
-            if (e instanceof PlayException) {
-                PlayException playException = (PlayException) e;
+            // Better format for Yalp exceptions
+            if (e instanceof YalpException) {
+                YalpException yalpException = (YalpException) e;
                 PrintWriter errorOut = new PrintWriter(sw);
                 errorOut.println("");
                 errorOut.println("");
-                errorOut.println("@" + playException.getId());
+                errorOut.println("@" + yalpException.getId());
                 errorOut.println(format(message, args));
                 errorOut.println("");
-                if (playException.isSourceAvailable()) {
-                    errorOut.println(playException.getErrorTitle() + " (In " + playException.getSourceFile() + " around line " + playException.getLineNumber() + ")");
+                if (yalpException.isSourceAvailable()) {
+                    errorOut.println(yalpException.getErrorTitle() + " (In " + yalpException.getSourceFile() + " around line " + yalpException.getLineNumber() + ")");
                 } else {
-                    errorOut.println(playException.getErrorTitle());
+                    errorOut.println(yalpException.getErrorTitle());
                 }
-                errorOut.println(playException.getErrorDescription().replaceAll("</?\\w+/?>", "").replace("\n", " "));
+                errorOut.println(yalpException.getErrorDescription().replaceAll("</?\\w+/?>", "").replace("\n", " "));
             } else {
                 sw.append(format(message, args));
             }

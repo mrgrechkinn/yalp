@@ -1,7 +1,7 @@
 package models;
 
-import play.db.jpa.GenericModel;
-import play.db.jpa.Model;
+import yalp.db.jpa.GenericModel;
+import yalp.db.jpa.Model;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;

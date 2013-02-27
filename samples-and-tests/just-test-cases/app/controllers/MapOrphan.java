@@ -3,7 +3,7 @@ package controllers;
 import models.orphans.maps.BaseModel;
 import models.orphans.maps.LevelOne;
 import models.orphans.maps.LevelTwo;
-import play.mvc.Controller;
+import yalp.mvc.Controller;
 
 public class MapOrphan extends Controller {
 

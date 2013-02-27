@@ -1,4 +1,4 @@
-package play.deps;
+package yalp.deps;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -20,8 +20,8 @@ import org.apache.ivy.util.DefaultMessageLogger;
 import org.apache.ivy.util.Message;
 import org.apache.ivy.util.filter.FilterHelper;
 
-import play.libs.Files;
-import play.libs.IO;
+import yalp.libs.Files;
+import yalp.libs.IO;
 
 public class DependenciesManager {
 
@@ -162,7 +162,7 @@ public class DependenciesManager {
 		ResolveReport report;
 		List<String> modules = new ArrayList<String>();
 
-		System.setProperty("play.path", framework.getAbsolutePath());
+		System.setProperty("yalp.path", framework.getAbsolutePath());
 		Ivy ivy = configure();
 
 		ResolveEngine resolveEngine = ivy.getResolveEngine();
@@ -178,7 +178,7 @@ public class DependenciesManager {
 				ArtifactDownloadReport[] adr = report.getArtifactsReports(node.getResolvedId());
 				for (ArtifactDownloadReport artifact : adr) {
 					if (artifact.getLocalFile() != null) {
-						if (isPlayModule(artifact) || !isFrameworkLocal(artifact)) {
+						if (isYalpModule(artifact) || !isFrameworkLocal(artifact)) {
 						    String mName = artifact.getLocalFile().getName();
 						    if (mName.endsWith(".jar") || mName.endsWith(".zip")) {
 							mName = mName.substring(0, mName.length() - 4);
@@ -206,7 +206,7 @@ public class DependenciesManager {
                     if (artifact.getLocalFile() == null) {
                         missing.add(artifact);
                     } else {
-                        if (isPlayModule(artifact) || !isFrameworkLocal(artifact)) {
+                        if (isYalpModule(artifact) || !isFrameworkLocal(artifact)) {
                             artifacts.add(artifact);
                         }
                     }
@@ -248,12 +248,12 @@ public class DependenciesManager {
     }
 
     public File install(ArtifactDownloadReport artifact) throws Exception {
-        Boolean force = System.getProperty("play.forcedeps").equals("true");
-        Boolean trim = System.getProperty("play.trimdeps").equals("true");
+        Boolean force = System.getProperty("yalp.forcedeps").equals("true");
+        Boolean trim = System.getProperty("yalp.trimdeps").equals("true");
         try {
             File from = artifact.getLocalFile();
 
-            if (!isPlayModule(artifact)) {
+            if (!isYalpModule(artifact)) {
                 if ("source".equals(artifact.getArtifact().getType())) {
                     // A source artifact: leave it in the cache, and write its path in tmp/lib-src/<jar-name>.src
                     // so that it can be used later by commands generating IDE project fileS.
@@ -311,20 +311,20 @@ public class DependenciesManager {
         return new File(framework, "framework/lib/" + artifactFileName).exists() || new File(framework, "framework/" + artifactFileName).exists();
     }
 
-    private boolean isPlayModule(ArtifactDownloadReport artifact) throws Exception {
-        boolean isPlayModule = artifact.getLocalFile().getName().endsWith(".zip");
-        if (!isPlayModule) {
+    private boolean isYalpModule(ArtifactDownloadReport artifact) throws Exception {
+        boolean isYalpModule = artifact.getLocalFile().getName().endsWith(".zip");
+        if (!isYalpModule) {
             // Check again from origin location
             if (!artifact.getArtifactOrigin().isLocal() && artifact.getArtifactOrigin().getLocation().endsWith(".zip")) {
-                isPlayModule = true;
+                isYalpModule = true;
             } else if (artifact.getArtifactOrigin().isLocal() && artifact.getLocalFile().isDirectory()) {
-                isPlayModule = true;
+                isYalpModule = true;
             } else if (artifact.getArtifactOrigin().isLocal()) {
                 String frameworkPath = new File(framework, "modules").getCanonicalPath();
-                isPlayModule = artifact.getArtifactOrigin().getLocation().startsWith(frameworkPath);
+                isYalpModule = artifact.getArtifactOrigin().getLocation().startsWith(frameworkPath);
             }
         }
-        return isPlayModule;
+        return isYalpModule;
     }
 
     public ResolveReport resolve() throws Exception {
@@ -340,7 +340,7 @@ public class DependenciesManager {
 
 
         // Variables
-        System.setProperty("play.path", framework.getAbsolutePath());
+        System.setProperty("yalp.path", framework.getAbsolutePath());
         
         // Ivy
         Ivy ivy = configure();
@@ -386,14 +386,14 @@ public class DependenciesManager {
         new SettingsParser(humanReadyLogger).parse(ivySettings, new File(application, "conf/dependencies.yml"));
         ivySettings.setDefaultResolver("mavenCentral");
         ivySettings.setDefaultUseOrigin(true);
-        PlayConflictManager conflictManager = new PlayConflictManager();
-        ivySettings.addConflictManager("playConflicts", conflictManager);
+        YalpConflictManager conflictManager = new YalpConflictManager();
+        ivySettings.addConflictManager("yalpConflicts", conflictManager);
         ivySettings.addConflictManager("defaultConflicts", conflictManager.deleguate);
         ivySettings.setDefaultConflictManager(conflictManager);
 
         Ivy ivy = Ivy.newInstance(ivySettings);
 
-        // Default ivy config see: http://play.lighthouseapp.com/projects/57987-play-framework/tickets/807
+        // Default ivy config see: http://yalp.lighthouseapp.com/projects/57987-play-framework/tickets/807
         File ivyDefaultSettings = new File(userHome, ".ivy2/ivysettings.xml");
         if(ivyDefaultSettings.exists()) {
             ivy.configure(ivyDefaultSettings);

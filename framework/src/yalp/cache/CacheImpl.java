@@ -1,11 +1,11 @@
-package play.cache;
+package yalp.cache;
 
 import java.util.Map;
 
 /**
  * A cache implementation.
  * expiration is specified in seconds
- * @see play.cache.Cache
+ * @see yalp.cache.Cache
  */
 public interface CacheImpl {
 

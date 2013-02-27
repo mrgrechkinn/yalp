@@ -1,4 +1,4 @@
-package play.data.binding;
+package yalp.data.binding;
 
 public class Data1 {
 

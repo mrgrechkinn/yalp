@@ -1,14 +1,14 @@
-package play.exceptions;
+package yalp.exceptions;
 
 import java.util.Arrays;
 import java.util.List;
-import play.classloading.ApplicationClasses.ApplicationClass;
-import play.templates.Template;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
+import yalp.templates.Template;
 
 /**
  * A template is missing (tag, ...)
  */
-public class TemplateNotFoundException extends PlayException implements SourceAttachment {
+public class TemplateNotFoundException extends YalpException implements SourceAttachment {
 
     private String path;
     private String sourceFile;

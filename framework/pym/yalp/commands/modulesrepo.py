@@ -10,7 +10,7 @@ import time
 import urllib
 import yaml
 
-from play.utils import *
+from yalp.utils import *
 
 NM = ['new-module', 'nm']
 LM = ['list-modules', 'lm']
@@ -27,7 +27,7 @@ HELP = {
     'install': "Install a module"
 }
 
-DEFAULT_REPO = 'http://www.playframework.org'
+DEFAULT_REPO = 'http://www.yalpframework.com'
 
 def load_module(name):
     base = os.path.normpath(os.path.dirname(os.path.realpath(sys.argv[0])))
@@ -59,8 +59,8 @@ def execute(**kargs):
     elif command in AM:
         add(app, args, env)
 
-def get_repositories(play_base):
-    repopath = os.path.join(play_base, 'repositories')
+def get_repositories(yalp_base):
+    repopath = os.path.join(yalp_base, 'repositories')
     if os.path.exists(repopath):
         repos = []
         f = file(repopath)
@@ -176,7 +176,7 @@ class Unzip:
             dirs.sort()
             return dirs
 
-def new(app, args, play_env):
+def new(app, args, yalp_env):
     if os.path.exists(app.path):
         print "~ Oops. %s already exists" % app.path
         print "~"
@@ -185,7 +185,7 @@ def new(app, args, play_env):
     print "~ The new module will be created in %s" % os.path.normpath(app.path)
     print "~"
     application_name = os.path.basename(app.path)
-    copy_directory(os.path.join(play_env["basedir"], 'resources/module-skel'), app.path)
+    copy_directory(os.path.join(yalp_env["basedir"], 'resources/module-skel'), app.path)
     # check_application()
     replaceAll(os.path.join(app.path, 'build.xml'), r'%MODULE%', application_name)
     replaceAll(os.path.join(app.path, 'commands.py'), r'%MODULE%', application_name)
@@ -202,9 +202,9 @@ def new(app, args, play_env):
     os.mkdir(os.path.join(app.path, 'app/views/%s' % application_name))
     os.mkdir(os.path.join(app.path, 'app/views/tags'))
     os.mkdir(os.path.join(app.path, 'app/views/tags/%s' % application_name))
-    os.mkdir(os.path.join(app.path, 'src/play'))
-    os.mkdir(os.path.join(app.path, 'src/play/modules'))
-    os.mkdir(os.path.join(app.path, 'src/play/modules/%s' % application_name))
+    os.mkdir(os.path.join(app.path, 'src/yalp'))
+    os.mkdir(os.path.join(app.path, 'src/yalp/modules'))
+    os.mkdir(os.path.join(app.path, 'src/yalp/modules/%s' % application_name))
 
     print "~ OK, the module is created."
     print "~ Start using it by adding it to the dependencies.yml of your project, as decribed in the documentation."
@@ -240,10 +240,10 @@ def list(app, args):
         print "~"
 
     print "~ To install one of these modules use:"
-    print "~ play install module-version (eg: play install scala-1.0)"
+    print "~ yalp install module-version (eg: yalp install scala-1.0)"
     print "~"
     print "~ Or you can just install the default release of a module using:"
-    print "~ play install module (eg: play install scala)"
+    print "~ yalp install module (eg: yalp install scala)"
     print "~"
 
 
@@ -282,7 +282,7 @@ def build(app, args, env):
         for dep in deps["require"]:
             if isinstance(dep, basestring):
                 splitted = dep.split(" ")
-                if len(splitted) == 2 and splitted[0] == "play":
+                if len(splitted) == 2 and splitted[0] == "yalp":
                     fwkMatch = splitted[1]
         f.close
 
@@ -291,7 +291,7 @@ def build(app, args, env):
     if version is None:
         version = raw_input("~ What is the module version number? ")
     if fwkMatch is None:
-        fwkMatch = raw_input("~ What are the playframework versions required? ")
+        fwkMatch = raw_input("~ What are the Yalp framework versions required? ")
 
     if os.path.exists(deps_file):
         f = open(deps_file)
@@ -317,7 +317,7 @@ def build(app, args, env):
         print "~"
         print "~ Building..."
         print "~"
-        os.system('ant -f %s -Dplay.path=%s' % (build_file, ftb) )
+        os.system('ant -f %s -Dyalp.path=%s' % (build_file, ftb) )
         print "~"
 
     mv = '%s-%s' % (name, version)
@@ -400,7 +400,7 @@ def install(app, args, env):
 
     if fetch is None:
         print '~ No module found \'%s\'' % name
-        print '~ Try play list-modules to get the modules list'
+        print '~ Try yalp list-modules to get the modules list'
         print '~'
         sys.exit(-1)
 
@@ -430,7 +430,7 @@ def install(app, args, env):
     print '~ You can now use it by adding it to the dependencies.yml file:'
     print '~'
     print '~ require:'
-    print '~     play -> %s %s' % (module, v['version'])
+    print '~     yalp -> %s %s' % (module, v['version'])
     print '~'
     sys.exit(0)
 
@@ -449,7 +449,7 @@ def add(app, args, env):
         sys.exit(-1)
 
     if m is None:
-        print "~ Usage: play add --module=<modulename>"
+        print "~ Usage: yalp add --module=<modulename>"
         print "~ "
         sys.exit(-1)
 
@@ -468,7 +468,7 @@ def add(app, args, env):
         print "~ "
         sys.exit(-1)
 
-    replaceAll(appConf, r'# ---- MODULES ----', '# ---- MODULES ----\nmodule.%s=${play.path}/modules/%s' % (mn, m) )
+    replaceAll(appConf, r'# ---- MODULES ----', '# ---- MODULES ----\nmodule.%s=${yalp.path}/modules/%s' % (mn, m) )
     print "~ Module %s add to application %s." % (mn, app.name())
     print "~ "
 

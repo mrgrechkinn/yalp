@@ -2,7 +2,7 @@ package models;
 
 import javax.persistence.Entity;
 
-import play.db.jpa.Model;
+import yalp.db.jpa.Model;
 
 @Entity
 public class Referenced extends Model{

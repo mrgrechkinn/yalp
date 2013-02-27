@@ -1,4 +1,4 @@
-package play;
+package yalp;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -11,25 +11,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
-import play.Play.Mode;
-import play.classloading.ApplicationClasses.ApplicationClass;
-import play.classloading.enhancers.ContinuationEnhancer;
-import play.classloading.enhancers.ControllersEnhancer;
-import play.classloading.enhancers.Enhancer;
-import play.classloading.enhancers.LocalvariablesNamesEnhancer;
-import play.classloading.enhancers.MailerEnhancer;
-import play.classloading.enhancers.PropertiesEnhancer;
-import play.classloading.enhancers.SigEnhancer;
-import play.exceptions.UnexpectedException;
-import play.libs.Crypto;
-import play.mvc.Http.Header;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
+import yalp.Yalp.Mode;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
+import yalp.classloading.enhancers.ContinuationEnhancer;
+import yalp.classloading.enhancers.ControllersEnhancer;
+import yalp.classloading.enhancers.Enhancer;
+import yalp.classloading.enhancers.LocalvariablesNamesEnhancer;
+import yalp.classloading.enhancers.MailerEnhancer;
+import yalp.classloading.enhancers.PropertiesEnhancer;
+import yalp.classloading.enhancers.SigEnhancer;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.Crypto;
+import yalp.mvc.Http.Header;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
 
 /**
  * Plugin used for core tasks
  */
-public class CorePlugin extends PlayPlugin {
+public class CorePlugin extends YalpPlugin {
 
     /**
      * Get the application status
@@ -37,7 +37,7 @@ public class CorePlugin extends PlayPlugin {
     public static String computeApplicationStatus(boolean json) {
         if (json) {
             JsonObject o = new JsonObject();
-            for (PlayPlugin plugin : Play.pluginCollection.getEnabledPlugins()) {
+            for (YalpPlugin plugin : Yalp.pluginCollection.getEnabledPlugins()) {
                 try {
                     JsonObject status = plugin.getJsonStatus();
                     if (status != null) {
@@ -52,7 +52,7 @@ public class CorePlugin extends PlayPlugin {
             return o.toString();
         }
         StringBuilder dump = new StringBuilder(16);
-        for (PlayPlugin plugin : Play.pluginCollection.getEnabledPlugins()) {
+        for (YalpPlugin plugin : Yalp.pluginCollection.getEnabledPlugins()) {
             try {
                 String status = plugin.getStatus();
                 if (status != null) {
@@ -71,27 +71,27 @@ public class CorePlugin extends PlayPlugin {
      * Then ask each plugin for a status dump and send it over the HTTP response.
      *
      * You can ask the /@status using the authorization header and putting your status secret key in it.
-     * Prior to that you would be required to start play with  a -DstatusKey=yourkey
+     * Prior to that you would be required to start yalp with  a -DstatusKey=yourkey
      */
     @Override
     public boolean rawInvocation(Request request, Response response) throws Exception {
-        if (Play.mode == Mode.DEV && request.path.equals("/@kill")) {
+        if (Yalp.mode == Mode.DEV && request.path.equals("/@kill")) {
             System.out.println("@KILLED");
-            if (Play.standalonePlayServer) {
+            if (Yalp.standaloneYalpServer) {
                 System.exit(0);
             } else {
-                Logger.error("Cannot execute @kill since Play is not running as standalone server");
+                Logger.error("Cannot execute @kill since Yalp is not running as standalone server");
             }
         }
         if (request.path.equals("/@status") || request.path.equals("/@status.json")) {
-            if(!Play.started) {
+            if(!Yalp.started) {
                 response.print("Application is not started");
                 response.status = 503;
                 return true;
             }
             response.contentType = request.path.contains(".json") ? "application/json" : "text/plain";
             Header authorization = request.headers.get("authorization");
-            if (authorization != null && (Crypto.sign("@status").equals(authorization.value()) || System.getProperty("statusKey", Play.secretKey).equals(authorization.value()))) {
+            if (authorization != null && (Crypto.sign("@status").equals(authorization.value()) || System.getProperty("statusKey", Yalp.secretKey).equals(authorization.value()))) {
                 response.print(computeApplicationStatus(request.path.contains(".json")));
                 response.status = 200;
                 return true;
@@ -108,7 +108,7 @@ public class CorePlugin extends PlayPlugin {
     }
 
     /**
-     * Retrieve status about play core.
+     * Retrieve status about yalp core.
      */
     @Override
     public String getStatus() {
@@ -123,30 +123,30 @@ public class CorePlugin extends PlayPlugin {
         out.println("Total memory: " + Runtime.getRuntime().totalMemory());
         out.println("Available processors: " + Runtime.getRuntime().availableProcessors());
         out.println();
-        out.println("Play framework:");
+        out.println("Yalp framework:");
         out.println("~~~~~~~~~~~~~~~");
-        out.println("Version: " + Play.version);
-        out.println("Path: " + Play.frameworkPath);
-        out.println("ID: " + (StringUtils.isEmpty(Play.id) ? "(not set)" : Play.id));
-        out.println("Mode: " + Play.mode);
-        out.println("Tmp dir: " + (Play.tmpDir == null ? "(no tmp dir)" : Play.tmpDir));
+        out.println("Version: " + Yalp.version);
+        out.println("Path: " + Yalp.frameworkPath);
+        out.println("ID: " + (StringUtils.isEmpty(Yalp.id) ? "(not set)" : Yalp.id));
+        out.println("Mode: " + Yalp.mode);
+        out.println("Tmp dir: " + (Yalp.tmpDir == null ? "(no tmp dir)" : Yalp.tmpDir));
         out.println();
         out.println("Application:");
         out.println("~~~~~~~~~~~~");
-        out.println("Path: " + Play.applicationPath);
-        out.println("Name: " + Play.configuration.getProperty("application.name", "(not set)"));
-        out.println("Started at: " + (Play.started ? new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Date(Play.startedAt)) : "Not yet started"));
+        out.println("Path: " + Yalp.applicationPath);
+        out.println("Name: " + Yalp.configuration.getProperty("application.name", "(not set)"));
+        out.println("Started at: " + (Yalp.started ? new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Date(Yalp.startedAt)) : "Not yet started"));
         out.println();
         out.println("Loaded modules:");
         out.println("~~~~~~~~~~~~~~");
-        for (String module : Play.modules.keySet()) {
-            out.println(module + " at " + Play.modules.get(module).getRealFile());
+        for (String module : Yalp.modules.keySet()) {
+            out.println(module + " at " + Yalp.modules.get(module).getRealFile());
         }
         out.println();
         out.println("Loaded plugins:");
         out.println("~~~~~~~~~~~~~~");
-        for (PlayPlugin plugin : Play.pluginCollection.getAllPlugins()) {
-            out.println(plugin.index + ":" + plugin.getClass().getName() + " [" + (Play.pluginCollection.isEnabled(plugin) ? "enabled" : "disabled") + "]");
+        for (YalpPlugin plugin : Yalp.pluginCollection.getAllPlugins()) {
+            out.println(plugin.index + ":" + plugin.getClass().getName() + " [" + (Yalp.pluginCollection.isEnabled(plugin) ? "enabled" : "disabled") + "]");
         }
         out.println();
         out.println("Threads:");
@@ -205,8 +205,8 @@ public class CorePlugin extends PlayPlugin {
 
         {
             JsonObject application = new JsonObject();
-            application.addProperty("uptime", Play.started ? System.currentTimeMillis() - Play.startedAt : -1);
-            application.addProperty("path", Play.applicationPath.getAbsolutePath());
+            application.addProperty("uptime", Yalp.started ? System.currentTimeMillis() - Yalp.startedAt : -1);
+            application.addProperty("path", Yalp.applicationPath.getAbsolutePath());
             status.add("application", application);
         }
 

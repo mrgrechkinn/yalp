@@ -1,11 +1,11 @@
-package play.exceptions;
+package yalp.exceptions;
 
 import java.util.Arrays;
 import java.util.List;
 import org.yaml.snakeyaml.scanner.ScannerException;
-import play.vfs.VirtualFile;
+import yalp.vfs.VirtualFile;
 
-public class YAMLException extends PlayException implements SourceAttachment {
+public class YAMLException extends YalpException implements SourceAttachment {
 
     ScannerException e;
     VirtualFile yaml;

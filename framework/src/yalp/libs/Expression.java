@@ -19,9 +19,9 @@
  * Date: ${date}
  *
  */
-package play.libs;
+package yalp.libs;
 
-import play.Play;
+import yalp.Yalp;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,7 +33,7 @@ public class Expression {
     public static Object evaluate(String value, String defaultValue) {
         Matcher matcher = expression.matcher(value);
         if (matcher.matches()) {
-            return Play.configuration.getProperty(matcher.group(1), defaultValue);
+            return Yalp.configuration.getProperty(matcher.group(1), defaultValue);
         }
         return value;
     }

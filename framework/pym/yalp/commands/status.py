@@ -8,7 +8,7 @@ try:
 except ImportError:
    import sha
 
-from play.utils import *
+from yalp.utils import *
 
 COMMANDS = ['status', 'st']
 
@@ -19,7 +19,7 @@ HELP = {
 def execute(**kargs):
     app = kargs.get("app")
     args = kargs.get("args")
-    play_env = kargs.get("env")
+    yalp_env = kargs.get("env")
 
     url = ''
     secret_key = ''

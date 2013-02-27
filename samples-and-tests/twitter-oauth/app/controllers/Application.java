@@ -2,13 +2,13 @@ package controllers;
 
 import java.net.URLEncoder;
 
-import play.Logger;
-import play.libs.OAuth;
-import play.libs.OAuth.ServiceInfo;
-import play.libs.WS;
-import play.libs.WS.HttpResponse;
-import play.mvc.Controller;
-import play.mvc.Scope.Params;
+import yalp.Logger;
+import yalp.libs.OAuth;
+import yalp.libs.OAuth.ServiceInfo;
+import yalp.libs.WS;
+import yalp.libs.WS.HttpResponse;
+import yalp.mvc.Controller;
+import yalp.mvc.Scope.Params;
 
 import models.User;
 

@@ -1,15 +1,15 @@
-package play.db.jpa;
+package yalp.db.jpa;
 
 import javax.persistence.Query;
 
 /**
- * Use play.db.jpa.GenericModel insteads
+ * Use yalp.db.jpa.GenericModel insteads
  */
 @Deprecated
 public class JPASupport extends GenericModel {
 
     /**
-     * Use play.db.jpa.GenericModel.JPAQuery insteads
+     * Use yalp.db.jpa.GenericModel.JPAQuery insteads
      */
     @Deprecated
     public static class JPAQuery extends GenericModel.JPAQuery {

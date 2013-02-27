@@ -1,4 +1,4 @@
-package play.db.jpa;
+package yalp.db.jpa;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
@@ -8,20 +8,20 @@ import org.hibernate.EmptyInterceptor;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.ejb.Ejb3Configuration;
 import org.hibernate.type.Type;
-import play.Invoker.InvocationContext;
-import play.Logger;
-import play.Play;
-import play.PlayPlugin;
-import play.classloading.ApplicationClasses.ApplicationClass;
-import play.data.binding.Binder;
-import play.data.binding.NoBinding;
-import play.data.binding.ParamNode;
-import play.data.binding.RootParamNode;
-import play.db.DB;
-import play.db.Model;
-import play.exceptions.JPAException;
-import play.exceptions.UnexpectedException;
-import play.utils.Utils;
+import yalp.Invoker.InvocationContext;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.YalpPlugin;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
+import yalp.data.binding.Binder;
+import yalp.data.binding.NoBinding;
+import yalp.data.binding.ParamNode;
+import yalp.data.binding.RootParamNode;
+import yalp.db.DB;
+import yalp.db.Model;
+import yalp.exceptions.JPAException;
+import yalp.exceptions.UnexpectedException;
+import yalp.utils.Utils;
 
 import javax.persistence.*;
 import java.beans.PropertyDescriptor;
@@ -35,7 +35,7 @@ import java.util.*;
 /**
  * JPA Plugin
  */
-public class JPAPlugin extends PlayPlugin {
+public class JPAPlugin extends YalpPlugin {
 
     public static boolean autoTxs = true;
 
@@ -105,12 +105,12 @@ public class JPAPlugin extends PlayPlugin {
     @Override
     public void onApplicationStart() {
         if (JPA.entityManagerFactory == null) {
-            List<Class> classes = Play.classloader.getAnnotatedClasses(Entity.class);
-            if (classes.isEmpty() && Play.configuration.getProperty("jpa.entities", "").equals("")) {
+            List<Class> classes = Yalp.classloader.getAnnotatedClasses(Entity.class);
+            if (classes.isEmpty() && Yalp.configuration.getProperty("jpa.entities", "").equals("")) {
                 return;
             }
 
-            final String dataSource = Play.configuration.getProperty("hibernate.connection.datasource");
+            final String dataSource = Yalp.configuration.getProperty("hibernate.connection.datasource");
             if (StringUtils.isEmpty(dataSource) && DB.datasource == null) {
                 throw new JPAException("Cannot start a JPA manager without a properly configured database", new NullPointerException("No datasource configured"));
             }
@@ -121,11 +121,11 @@ public class JPAPlugin extends PlayPlugin {
                 cfg.setDataSource(DB.datasource);
             }
 
-            if (!Play.configuration.getProperty("jpa.ddl", Play.mode.isDev() ? "update" : "none").equals("none")) {
-                cfg.setProperty("hibernate.hbm2ddl.auto", Play.configuration.getProperty("jpa.ddl", "update"));
+            if (!Yalp.configuration.getProperty("jpa.ddl", Yalp.mode.isDev() ? "update" : "none").equals("none")) {
+                cfg.setProperty("hibernate.hbm2ddl.auto", Yalp.configuration.getProperty("jpa.ddl", "update"));
             }
 
-            cfg.setProperty("hibernate.dialect", getDefaultDialect(Play.configuration.getProperty("db.driver")));
+            cfg.setProperty("hibernate.dialect", getDefaultDialect(Yalp.configuration.getProperty("db.driver")));
             cfg.setProperty("javax.persistence.transaction", "RESOURCE_LOCAL");
 
             // Explicit SAVE for JPABase is implemented here
@@ -214,18 +214,18 @@ public class JPAPlugin extends PlayPlugin {
 				}
 				
 			});
-            if (Play.configuration.getProperty("jpa.debugSQL", "false").equals("true")) {
+            if (Yalp.configuration.getProperty("jpa.debugSQL", "false").equals("true")) {
                 org.apache.log4j.Logger.getLogger("org.hibernate.SQL").setLevel(Level.ALL);
             } else {
                 org.apache.log4j.Logger.getLogger("org.hibernate.SQL").setLevel(Level.OFF);
             }
-            // inject additional  hibernate.* settings declared in Play! configuration
-            cfg.addProperties((Properties) Utils.Maps.filterMap(Play.configuration, "^hibernate\\..*"));
+            // inject additional  hibernate.* settings declared in Yalp configuration
+            cfg.addProperties((Properties) Utils.Maps.filterMap(Yalp.configuration, "^hibernate\\..*"));
 
             try {
                 Field field = cfg.getClass().getDeclaredField("overridenClassLoader");
                 field.setAccessible(true);
-                field.set(cfg, Play.classloader);
+                field.set(cfg, Yalp.classloader);
             } catch (Exception e) {
                 Logger.error(e, "Error trying to override the hibernate classLoader (new hibernate version ???)");
             }
@@ -237,18 +237,18 @@ public class JPAPlugin extends PlayPlugin {
                     }
                 }
             }
-            String[] moreEntities = Play.configuration.getProperty("jpa.entities", "").split(", ");
+            String[] moreEntities = Yalp.configuration.getProperty("jpa.entities", "").split(", ");
             for (String entity : moreEntities) {
                 if (entity.trim().equals("")) {
                     continue;
                 }
                 try {
-                    cfg.addAnnotatedClass(Play.classloader.loadClass(entity));
+                    cfg.addAnnotatedClass(Yalp.classloader.loadClass(entity));
                 } catch (Exception e) {
                     Logger.warn("JPA -> Entity not found: %s", entity);
                 }
             }
-            for (ApplicationClass applicationClass : Play.classes.all()) {
+            for (ApplicationClass applicationClass : Yalp.classes.all()) {
                 if (applicationClass.isClass() || applicationClass.javaPackage == null) {
                     continue;
                 }
@@ -256,7 +256,7 @@ public class JPAPlugin extends PlayPlugin {
                 Logger.info("JPA -> Adding package: %s", p.getName());
                 cfg.addPackage(p.getName());
             }
-            String mappingFile = Play.configuration.getProperty("jpa.mapping-file", "");
+            String mappingFile = Yalp.configuration.getProperty("jpa.mapping-file", "");
             if (mappingFile != null && mappingFile.length() > 0) {
                 cfg.addResource(mappingFile);
             }
@@ -273,7 +273,7 @@ public class JPAPlugin extends PlayPlugin {
     }
 
     static String getDefaultDialect(String driver) {
-        String dialect = Play.configuration.getProperty("jpa.dialect");
+        String dialect = Yalp.configuration.getProperty("jpa.dialect");
         if (dialect != null) {
             return dialect;
         } else if (driver.equals("org.h2.Driver")) {
@@ -281,7 +281,7 @@ public class JPAPlugin extends PlayPlugin {
         } else if (driver.equals("org.hsqldb.jdbcDriver")) {
             return "org.hibernate.dialect.HSQLDialect";
         } else if (driver.equals("com.mysql.jdbc.Driver")) {
-            return "play.db.jpa.MySQLDialect";
+            return "yalp.db.jpa.MySQLDialect";
         } else if (driver.equals("org.postgresql.Driver")) {
             return "org.hibernate.dialect.PostgreSQLDialect";
         } else if (driver.toLowerCase().equals("com.ibm.db2.jdbc.app.DB2Driver")) {

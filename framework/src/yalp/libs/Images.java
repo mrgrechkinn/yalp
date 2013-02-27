@@ -1,4 +1,4 @@
-package play.libs;
+package yalp.libs;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -27,8 +27,8 @@ import jj.play.ns.nl.captcha.gimpy.GimpyRenderer;
 import jj.play.ns.nl.captcha.gimpy.RippleGimpyRenderer;
 import jj.play.ns.nl.captcha.noise.CurvedLineNoiseProducer;
 import jj.play.ns.nl.captcha.text.renderer.DefaultWordRenderer;
-import play.exceptions.UnexpectedException;
-import play.mvc.Http.Response;
+import yalp.exceptions.UnexpectedException;
+import yalp.mvc.Http.Response;
 
 /**
  * Images utils

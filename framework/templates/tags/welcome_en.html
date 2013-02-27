@@ -3,8 +3,8 @@
     <div id="docSidebar">
 
         <div id="logo">
-            <img src="@{'/public/playmanual/logo.png'}">
-            <h2 id="version">Play ${play.version}</h2>
+            <img src="@{'/public/yalpmanual/logo.png'}">
+            <h2 id="version">Play ${yalp.version}</h2>
         </div>
 
         <h2>Browse</h2>
@@ -41,23 +41,23 @@
         <div class="wikistyle">
             <h1>Your new application is ready!</h1>
             <p>
-                Congratulation, you've just created a new play application. This page will help you in the few next steps.
+                Congratulation, you've just created a new yalp application. This page will help you in the few next steps.
             </p>
             <h2 id="why">Why do you see this page?</h2>
             <p>
-                The <strong>conf/routes</strong> file defines a route that tell play to invoke the <strong>Application.index</strong> action
+                The <strong>conf/routes</strong> file defines a route that tell yalp to invoke the <strong>Application.index</strong> action
                 when a browser requests the <strong>/</strong> URI using the <strong>GET</strong> method:
             </p>
             <pre><code># Application home page
 GET     /         Application.index</code></pre>
             <p>
-                So play has invoked the <strong>controllers&#46;Application&#46;index()</strong> method:
+                So yalp has invoked the <strong>controllers&#46;Application&#46;index()</strong> method:
             </p>
             <pre><code>public static void index() {
     render();
 }</code></pre>
             <p>
-                Using the <strong>render()</strong> call, this action asks play to display a template. By convention play has
+                Using the <strong>render()</strong> call, this action asks yalp to display a template. By convention yalp has
                 displayed the <strong>app/views/Application/index.html</strong> template:
             </p>
             <pre><code>&#35;{extends 'main.html' /}
@@ -102,12 +102,12 @@ db.pass=secret</code></pre>
             <h2 id="doc">Need more help?</h2>
             <p>
                 When your application run in <strong>DEV</strong> mode, you can access directly the current documentation at the
-                <a href="/@documentation">/@documentation</a> URL or go to <a href="http://www.playframework.org">http://www.playframework.org</a>.
+                <a href="/@documentation">/@documentation</a> URL or go to <a href="http://www.yalpframework.com">http://www.yalpframework.com</a>.
             </p>
             <p>
-                The <a href="http://groups.google.com/group/play-framework">Play Google Group</a> is where Play users come to seek help, announce projects, and discuss. 
+                The <a href="http://groups.google.com/group/yalpframework">Yalp Google Group</a> is where Play users come to seek help, announce projects, and discuss. 
                 If you don't have any google account, you can still join the mailing list sending an email to
-                <br/><strong>play-framework+subscribe@googlegroups.com</strong>.
+                <br/><strong>yalpframework+subscribe@googlegroups.com</strong>.
             </p>
         </div>
     </div>

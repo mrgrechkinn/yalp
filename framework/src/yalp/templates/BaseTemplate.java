@@ -1,20 +1,20 @@
-package play.templates;
+package yalp.templates;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import play.Logger;
-import play.Play;
-import play.classloading.BytecodeCache;
-import play.exceptions.JavaExecutionException;
-import play.exceptions.NoRouteFoundException;
-import play.exceptions.TagInternalException;
-import play.exceptions.TemplateExecutionException;
-import play.exceptions.TemplateExecutionException.DoBodyException;
-import play.libs.Codec;
-import play.libs.IO;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.classloading.BytecodeCache;
+import yalp.exceptions.JavaExecutionException;
+import yalp.exceptions.NoRouteFoundException;
+import yalp.exceptions.TagInternalException;
+import yalp.exceptions.TemplateExecutionException;
+import yalp.exceptions.TemplateExecutionException.DoBodyException;
+import yalp.libs.Codec;
+import yalp.libs.IO;
 
 /**
  * A template
@@ -40,7 +40,7 @@ public abstract class BaseTemplate extends Template {
 
     public void loadPrecompiled() {
         try {
-            File file = Play.getFile("precompiled/templates/" + name);
+            File file = Yalp.getFile("precompiled/templates/" + name);
             byte[] code = IO.readContent(file);
             directLoad(code);
         } catch (Exception e) {
@@ -86,8 +86,8 @@ public abstract class BaseTemplate extends Template {
                     throw new TemplateExecutionException(this, this.linesMatrix.get(stackTraceElement.getLineNumber()), e.getMessage(), cleanStackTrace(e));
                 }
             }
-            if (stackTraceElement.getLineNumber() > 0 && Play.classes.hasClass(stackTraceElement.getClassName())) {
-                throw new JavaExecutionException(Play.classes.getApplicationClass(stackTraceElement.getClassName()), stackTraceElement.getLineNumber(), cleanStackTrace(e));
+            if (stackTraceElement.getLineNumber() > 0 && Yalp.classes.hasClass(stackTraceElement.getClassName())) {
+                throw new JavaExecutionException(Yalp.classes.getApplicationClass(stackTraceElement.getClassName()), stackTraceElement.getLineNumber(), cleanStackTrace(e));
             }
         }
         throw new RuntimeException(e);

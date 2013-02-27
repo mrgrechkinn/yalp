@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import play.Logger;
-import play.mvc.Controller;
+import yalp.Logger;
+import yalp.mvc.Controller;
 
 public class CustomEncoding extends Controller {
 

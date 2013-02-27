@@ -1,4 +1,4 @@
-package play.classloading.enhancers;
+package yalp.classloading.enhancers;
 
 /**
  * This interface is added to all classes enhanced for Continuations.

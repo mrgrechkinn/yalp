@@ -6,7 +6,7 @@
   		$("#joinForm").validate({
 			rules: {
 			%{
-				play.data.validation.Validation.getValidators(_class, _key).each() {
+				yalp.data.validation.Validation.getValidators(_class, _key).each() {
 					out.println "'" + it.key + "': {"
 					for(validator in it.value) {
 						switch (validator.annotation.annotationType().name.substring(21)) {

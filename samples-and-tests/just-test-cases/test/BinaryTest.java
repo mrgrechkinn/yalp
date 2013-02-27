@@ -5,15 +5,15 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import play.Logger;
-import play.Play;
-import play.data.MemoryUpload;
-import play.data.Upload;
-import play.mvc.Http;
-import play.mvc.Http.Response;
-import play.mvc.results.Redirect;
-import play.test.Fixtures;
-import play.test.FunctionalTest;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.data.MemoryUpload;
+import yalp.data.Upload;
+import yalp.mvc.Http;
+import yalp.mvc.Http.Response;
+import yalp.mvc.results.Redirect;
+import yalp.test.Fixtures;
+import yalp.test.FunctionalTest;
 import controllers.Binary;
 
 public class BinaryTest extends FunctionalTest {
@@ -43,7 +43,7 @@ public class BinaryTest extends FunctionalTest {
         Map<String,String> parameters= new HashMap<String,String>();
         parameters.put("user.username", "username");
         Map<String, File> files= new HashMap<String, File>();
-        File f = Play.getFile("test/fond1.png");
+        File f = Yalp.getFile("test/fond1.png");
         assertTrue(f.exists());
         files.put("user.avatar", f);
         Response uploadResponse = POST(url, parameters, files);
@@ -62,7 +62,7 @@ public class BinaryTest extends FunctionalTest {
         Map<String,String> parameters= new HashMap<String,String>();
 
         Map<String, File> files= new HashMap<String, File>();
-        File file = Play.getFile("test/winie.jpg");
+        File file = Yalp.getFile("test/winie.jpg");
         assertTrue(file.exists());
         files.put("file", file);
         Response uploadResponse = POST("/Binary/uploadFile", parameters, files);
@@ -80,7 +80,7 @@ public class BinaryTest extends FunctionalTest {
         Map<String,String> parameters= new HashMap<String,String>();
 
         Map<String, File> files= new HashMap<String, File>();
-        File file = Play.getFile("test/winie.jpg");
+        File file = Yalp.getFile("test/winie.jpg");
         assertTrue(file.exists());
 
         files.put("upload", file);
@@ -99,7 +99,7 @@ public class BinaryTest extends FunctionalTest {
         Map<String,String> parameters= new HashMap<String,String>();
 
         Map<String, File> files= new HashMap<String, File>();
-        File file = Play.getFile("test/angel.gif");
+        File file = Yalp.getFile("test/angel.gif");
         assertTrue(file.exists());
         files.put("file", file);
         Response uploadResponse = POST("/Binary/uploadFile", parameters, files);
@@ -117,7 +117,7 @@ public class BinaryTest extends FunctionalTest {
         Map<String,String> parameters= new HashMap<String,String>();
 
         Map<String, File> files= new HashMap<String, File>();
-        File file = Play.getFile("test/angel.gif");
+        File file = Yalp.getFile("test/angel.gif");
         assertTrue(file.exists());
 
         files.put("upload", file);
@@ -131,17 +131,17 @@ public class BinaryTest extends FunctionalTest {
     }
 
 //  TODO: Missing possibility to upload multiple files at once
-//  See: http://play.lighthouseapp.com/projects/57987-play-framework/tickets/472-functionaltest-and-ws-client-library-dont-allow-upload-of-multiple-file#ticket-472-2 
+//  See: http://yalp.lighthouseapp.com/projects/57987-play-framework/tickets/472-functionaltest-and-ws-client-library-dont-allow-upload-of-multiple-file#ticket-472-2 
 //    @Test
 //    public void testMultipleUpload() {
 //
 //        Map<String,String> parameters= new HashMap<String,String>();
 //
 //        Map<String, File[]> files= new HashMap<String, File[]>();
-//        File file1 = Play.getFile("test/angel.gif");
+//        File file1 = Yalp.getFile("test/angel.gif");
 //        assertTrue(file1.exists());
 //
-//        File file2 = Play.getFile("test/winie   .gif");
+//        File file2 = Yalp.getFile("test/winie   .gif");
 //        assertTrue(file1.exists());
 //
 //        files.put("upload", new File[] {file1, file2 });

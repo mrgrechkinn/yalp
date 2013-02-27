@@ -1,4 +1,4 @@
-package play.exceptions;
+package yalp.exceptions;
 
 import java.util.List;
 

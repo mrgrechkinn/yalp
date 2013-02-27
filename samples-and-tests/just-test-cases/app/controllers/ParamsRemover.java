@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import play.Logger;
-import play.mvc.Controller;
-import play.mvc.Before;
+import yalp.Logger;
+import yalp.mvc.Controller;
+import yalp.mvc.Before;
 
 public class ParamsRemover extends Controller {
 

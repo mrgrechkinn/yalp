@@ -1,4 +1,4 @@
-package play.data.binding;
+package yalp.data.binding;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;

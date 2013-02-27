@@ -3,7 +3,7 @@ package utils;
 import java.util.*;
 import java.lang.reflect.*;
 import java.lang.annotation.*;
-import play.data.binding.*;
+import yalp.data.binding.*;
 import java.awt.Point;
 
 @Global

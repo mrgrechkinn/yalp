@@ -1,11 +1,11 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
-import play.db.jpa.*;
-import play.libs.*;
-import play.libs.F.*;
-import static play.libs.F.*;
+import yalp.*;
+import yalp.mvc.*;
+import yalp.db.jpa.*;
+import yalp.libs.*;
+import yalp.libs.F.*;
+import static yalp.libs.F.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
@@ -13,11 +13,11 @@ import java.util.concurrent.*;
 
 import models.*;
 
-import play.jobs.*;
+import yalp.jobs.*;
 
-import play.exceptions.*;
-import play.utils.*;
-import play.data.validation.*;
+import yalp.exceptions.*;
+import yalp.utils.*;
+import yalp.data.validation.*;
 
 public class WithContinuations extends Controller {
     
@@ -50,7 +50,7 @@ public class WithContinuations extends Controller {
     public static void waitAndThenRedirect() {
         String hello = "Hello";
         String r = await(new jobs.DoSomething(100).now());
-        System.out.println(play.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.isActionCallAllowed());
+        System.out.println(yalp.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.isActionCallAllowed());
         sayHello(hello + " -> " + r);
     }
     
@@ -445,9 +445,9 @@ public class WithContinuations extends Controller {
     }
     
     
-    private static List<String> getErrorStringList(List<play.data.validation.Error> errorList) {
+    private static List<String> getErrorStringList(List<yalp.data.validation.Error> errorList) {
         List<String> list = new ArrayList<String>();
-        for ( play.data.validation.Error e : errorList ) {
+        for ( yalp.data.validation.Error e : errorList ) {
             list.add(e.getKey()+"="+e.message());
         }
         return list;

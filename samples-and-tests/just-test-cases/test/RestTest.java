@@ -8,12 +8,12 @@ import java.util.concurrent.Future;
 import org.junit.Before;
 import org.junit.Test;
 
-import play.Logger;
-import play.libs.WS;
-import play.libs.WS.FileParam;
-import play.libs.WS.HttpResponse;
-import play.mvc.Http.Header;
-import play.test.UnitTest;
+import yalp.Logger;
+import yalp.libs.WS;
+import yalp.libs.WS.FileParam;
+import yalp.libs.WS.HttpResponse;
+import yalp.mvc.Http.Header;
+import yalp.test.UnitTest;
 
 import com.google.gson.JsonObject;
 import controllers.Rest;
@@ -128,7 +128,7 @@ public class RestTest extends UnitTest {
     @Test
     public void testEncodingEcho() {
         // verify that we have no encoding regression bugs related to raw urls and params
-        if ( play.Play.defaultWebEncoding.equalsIgnoreCase("utf-8") ) {
+        if ( yalp.Yalp.defaultWebEncoding.equalsIgnoreCase("utf-8") ) {
             assertEquals("æøå|id|æøå|body||b|æøå|a|æøå|a|x", WS.url("http://localhost:9003/encoding/echo/%C3%A6%C3%B8%C3%A5?a=%C3%A6%C3%B8%C3%A5&a=x&b=%C3%A6%C3%B8%C3%A5").get().getString());
         }
         assertEquals("abc|id|abc|body||b|æøå|a|æøå|a|x", WS.url("http://localhost:9003/encoding/echo/abc?a=æøå&a=x&b=æøå").get().getString());

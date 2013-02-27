@@ -1,7 +1,7 @@
-package play.data.binding;
+package yalp.data.binding;
 
-import play.data.binding.As;
-import play.data.binding.NoBinding;
+import yalp.data.binding.As;
+import yalp.data.binding.NoBinding;
 
 import java.lang.annotation.Annotation;
 

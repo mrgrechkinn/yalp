@@ -1,13 +1,13 @@
-package play.libs.ws;
+package yalp.libs.ws;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
-import play.Logger;
-import play.libs.IO;
-import play.libs.WS.HttpResponse;
-import play.libs.WS.WSImpl;
-import play.libs.WS.WSRequest;
-import play.mvc.Http.Header;
+import yalp.Logger;
+import yalp.libs.IO;
+import yalp.libs.WS.HttpResponse;
+import yalp.libs.WS.WSImpl;
+import yalp.libs.WS.WSRequest;
+import yalp.mvc.Http.Header;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class WSUrlFetch implements WSImpl {
 
     public void stop() {}
 
-    public play.libs.WS.WSRequest newRequest(String url, String encoding) {
+    public yalp.libs.WS.WSRequest newRequest(String url, String encoding) {
         return new WSUrlfetchRequest(url, encoding);
     }
 

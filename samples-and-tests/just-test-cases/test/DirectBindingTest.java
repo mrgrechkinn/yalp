@@ -1,9 +1,9 @@
 import org.junit.*;
-import play.test.*;
-import play.cache.*;
+import yalp.test.*;
+import yalp.cache.*;
 import java.util.*;
 import java.math.*;
-import static play.data.binding.Binder.directBind;
+import static yalp.data.binding.Binder.directBind;
 
 import models.*;
 

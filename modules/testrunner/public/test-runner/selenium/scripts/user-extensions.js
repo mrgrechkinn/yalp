@@ -1,4 +1,4 @@
-// For Play!
+// For Yalp
 
 Selenium.prototype.doClearSession = function() {
     this.doDeleteAllVisibleCookies();

@@ -1,9 +1,9 @@
-package play.exceptions;
+package yalp.exceptions;
 
 /**
  * Missing action
  */
-public class ActionNotFoundException extends PlayException {
+public class ActionNotFoundException extends YalpException {
 
     private String action;
    

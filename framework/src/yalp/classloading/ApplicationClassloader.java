@@ -1,4 +1,4 @@
-package play.classloading;
+package yalp.classloading;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -25,14 +25,14 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import play.Logger;
-import play.Play;
-import play.classloading.hash.ClassStateHashCreator;
-import play.vfs.VirtualFile;
-import play.cache.Cache;
-import play.classloading.ApplicationClasses.ApplicationClass;
-import play.exceptions.UnexpectedException;
-import play.libs.IO;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.classloading.hash.ClassStateHashCreator;
+import yalp.vfs.VirtualFile;
+import yalp.cache.Cache;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.IO;
 
 /**
  * The application classLoader. 
@@ -59,12 +59,12 @@ public class ApplicationClassloader extends ClassLoader {
     public ApplicationClassloader() {
         super(ApplicationClassloader.class.getClassLoader());
         // Clean the existing classes
-        for (ApplicationClass applicationClass : Play.classes.all()) {
+        for (ApplicationClass applicationClass : Yalp.classes.all()) {
             applicationClass.uncompile();
         }
         pathHash = computePathHash();
         try {
-            CodeSource codeSource = new CodeSource(new URL("file:" + Play.applicationPath.getAbsolutePath()), (Certificate[]) null);
+            CodeSource codeSource = new CodeSource(new URL("file:" + Yalp.applicationPath.getAbsolutePath()), (Certificate[]) null);
             Permissions permissions = new Permissions();
             permissions.add(new AllPermission());
             protectionDomain = new ProtectionDomain(codeSource, permissions);
@@ -108,9 +108,9 @@ public class ApplicationClassloader extends ClassLoader {
             }
         }
 
-        if (Play.usePrecompiled) {
+        if (Yalp.usePrecompiled) {
             try {
-                File file = Play.getFile("precompiled/java/" + name.replace(".", "/") + ".class");
+                File file = Yalp.getFile("precompiled/java/" + name.replace(".", "/") + ".class");
                 if (!file.exists()) {
                     return null;
                 }
@@ -124,7 +124,7 @@ public class ApplicationClassloader extends ClassLoader {
                     }
                     clazz = defineClass(name, code, 0, code.length, protectionDomain);
                 }
-                ApplicationClass applicationClass = Play.classes.getApplicationClass(name);
+                ApplicationClass applicationClass = Yalp.classes.getApplicationClass(name);
                 if (applicationClass != null) {
                     applicationClass.javaClass = clazz;
                     if (!applicationClass.isClass()) {
@@ -138,7 +138,7 @@ public class ApplicationClassloader extends ClassLoader {
         }
 
         long start = System.currentTimeMillis();
-        ApplicationClass applicationClass = Play.classes.getApplicationClass(name);
+        ApplicationClass applicationClass = Yalp.classes.getApplicationClass(name);
         if (applicationClass != null) {
             if (applicationClass.isDefinable()) {
                 return applicationClass.javaClass;
@@ -183,7 +183,7 @@ public class ApplicationClassloader extends ClassLoader {
 
                 return applicationClass.javaClass;
             }
-            Play.classes.classes.remove(name);
+            Yalp.classes.classes.remove(name);
         }
         return null;
     }
@@ -243,7 +243,7 @@ public class ApplicationClassloader extends ClassLoader {
      */
     @Override
     public InputStream getResourceAsStream(String name) {
-        for (VirtualFile vf : Play.javaPath) {
+        for (VirtualFile vf : Yalp.javaPath) {
             VirtualFile res = vf.child(name);
             if (res != null && res.exists()) {
                 return res.inputstream();
@@ -257,7 +257,7 @@ public class ApplicationClassloader extends ClassLoader {
      */
     @Override
     public URL getResource(String name) {
-        for (VirtualFile vf : Play.javaPath) {
+        for (VirtualFile vf : Yalp.javaPath) {
             VirtualFile res = vf.child(name);
             if (res != null && res.exists()) {
                 try {
@@ -276,7 +276,7 @@ public class ApplicationClassloader extends ClassLoader {
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
         List<URL> urls = new ArrayList<URL>();
-        for (VirtualFile vf : Play.javaPath) {
+        for (VirtualFile vf : Yalp.javaPath) {
             VirtualFile res = vf.child(name);
             if (res != null && res.exists()) {
                 try {
@@ -312,7 +312,7 @@ public class ApplicationClassloader extends ClassLoader {
     public void detectChanges() {
         // Now check for file modification
         List<ApplicationClass> modifieds = new ArrayList<ApplicationClass>();
-        for (ApplicationClass applicationClass : Play.classes.all()) {
+        for (ApplicationClass applicationClass : Yalp.classes.all()) {
             if (applicationClass.timestamp < applicationClass.javaFile.lastModified()) {
                 applicationClass.refresh();
                 modifieds.add(applicationClass);
@@ -321,13 +321,13 @@ public class ApplicationClassloader extends ClassLoader {
         Set<ApplicationClass> modifiedWithDependencies = new HashSet<ApplicationClass>();
         modifiedWithDependencies.addAll(modifieds);
         if (modifieds.size() > 0) {
-            modifiedWithDependencies.addAll(Play.pluginCollection.onClassesChange(modifieds));
+            modifiedWithDependencies.addAll(Yalp.pluginCollection.onClassesChange(modifieds));
         }
         List<ClassDefinition> newDefinitions = new ArrayList<ClassDefinition>();
         boolean dirtySig = false;
         for (ApplicationClass applicationClass : modifiedWithDependencies) {
             if (applicationClass.compile() == null) {
-                Play.classes.classes.remove(applicationClass.name);
+                Yalp.classes.classes.remove(applicationClass.name);
                 currentState = new ApplicationClassloaderState();//show others that we have changed..
             } else {
                 int sigChecksum = applicationClass.sigChecksum;
@@ -361,19 +361,19 @@ public class ApplicationClassloader extends ClassLoader {
         int hash = computePathHash();
         if (hash != this.pathHash) {
             // Remove class for deleted files !!
-            for (ApplicationClass applicationClass : Play.classes.all()) {
+            for (ApplicationClass applicationClass : Yalp.classes.all()) {
                 if (!applicationClass.javaFile.exists()) {
-                    Play.classes.classes.remove(applicationClass.name);
+                    Yalp.classes.classes.remove(applicationClass.name);
                     currentState = new ApplicationClassloaderState();//show others that we have changed..
                 }
                 if (applicationClass.name.contains("$")) {
-                    Play.classes.classes.remove(applicationClass.name);
+                    Yalp.classes.classes.remove(applicationClass.name);
                     currentState = new ApplicationClassloaderState();//show others that we have changed..
                     // Ok we have to remove all classes from the same file ...
                     VirtualFile vf = applicationClass.javaFile;
-                    for (ApplicationClass ac : Play.classes.all()) {
+                    for (ApplicationClass ac : Yalp.classes.all()) {
                         if (ac.javaFile.equals(vf)) {
-                            Play.classes.classes.remove(ac.name);
+                            Yalp.classes.classes.remove(ac.name);
                         }
                     }
                 }
@@ -387,7 +387,7 @@ public class ApplicationClassloader extends ClassLoader {
     int pathHash = 0;
 
     int computePathHash() {
-        return classStateHashCreator.computePathHash(Play.javaPath);
+        return classStateHashCreator.computePathHash(Yalp.javaPath);
     }
 
     /**
@@ -398,13 +398,13 @@ public class ApplicationClassloader extends ClassLoader {
         if (allClasses == null) {
             allClasses = new ArrayList<Class>();
 
-            if (Play.usePrecompiled) {
+            if (Yalp.usePrecompiled) {
 
                 List<ApplicationClass> applicationClasses = new ArrayList<ApplicationClass>();
-                scanPrecompiled(applicationClasses, "", Play.getVirtualFile("precompiled/java"));
-                Play.classes.clear();
+                scanPrecompiled(applicationClasses, "", Yalp.getVirtualFile("precompiled/java"));
+                Yalp.classes.clear();
                 for (ApplicationClass applicationClass : applicationClasses) {
-                    Play.classes.add(applicationClass);
+                    Yalp.classes.add(applicationClass);
                     Class clazz = loadApplicationClass(applicationClass.name);
                     applicationClass.javaClass = clazz;
                     applicationClass.compiled = true;
@@ -413,11 +413,11 @@ public class ApplicationClassloader extends ClassLoader {
 
             } else {
 
-                if(!Play.pluginCollection.compileSources()) {
+                if(!Yalp.pluginCollection.compileSources()) {
 
                     List<ApplicationClass> all = new ArrayList<ApplicationClass>();
 
-                    for (VirtualFile virtualFile : Play.javaPath) {
+                    for (VirtualFile virtualFile : Yalp.javaPath) {
                         all.addAll(getAllClasses(virtualFile));
                     }
                     List<String> classNames = new ArrayList<String>();
@@ -428,11 +428,11 @@ public class ApplicationClassloader extends ClassLoader {
                         }
                     }
 
-                    Play.classes.compiler.compile(classNames.toArray(new String[classNames.size()]));
+                    Yalp.classes.compiler.compile(classNames.toArray(new String[classNames.size()]));
 
                 }
 
-                for (ApplicationClass applicationClass : Play.classes.all()) {
+                for (ApplicationClass applicationClass : Yalp.classes.all()) {
                     Class clazz = loadApplicationClass(applicationClass.name);
                     if (clazz != null) {
                         allClasses.add(clazz);
@@ -459,7 +459,7 @@ public class ApplicationClassloader extends ClassLoader {
     public List<Class> getAssignableClasses(Class clazz) {
         getAllClasses();
         List<Class> results = new ArrayList<Class>();
-        for (ApplicationClass c : Play.classes.getAssignableClasses(clazz)) {
+        for (ApplicationClass c : Yalp.classes.getAssignableClasses(clazz)) {
             results.add(c.javaClass);
         }
         return results;
@@ -472,9 +472,9 @@ public class ApplicationClassloader extends ClassLoader {
      */
     public Class getClassIgnoreCase(String name) {
         getAllClasses();
-        for (ApplicationClass c : Play.classes.all()) {
+        for (ApplicationClass c : Yalp.classes.all()) {
             if (c.name.equalsIgnoreCase(name) || c.name.replace("$", ".").equalsIgnoreCase(name)) {
-                if (Play.usePrecompiled) {
+                if (Yalp.usePrecompiled) {
                     return c.javaClass;
                 }
                 return loadApplicationClass(c.name);
@@ -491,7 +491,7 @@ public class ApplicationClassloader extends ClassLoader {
     public List<Class> getAnnotatedClasses(Class<? extends Annotation> clazz) {
         getAllClasses();
         List<Class> results = new ArrayList<Class>();
-        for (ApplicationClass c : Play.classes.getAnnotatedClasses(clazz)) {
+        for (ApplicationClass c : Yalp.classes.getAnnotatedClasses(clazz)) {
             results.add(c.javaClass);
         }
         return results;
@@ -508,7 +508,7 @@ public class ApplicationClassloader extends ClassLoader {
     // ~~~ Intern
     List<ApplicationClass> getAllClasses(String basePackage) {
         List<ApplicationClass> res = new ArrayList<ApplicationClass>();
-        for (VirtualFile virtualFile : Play.javaPath) {
+        for (VirtualFile virtualFile : Yalp.javaPath) {
             res.addAll(getAllClasses(virtualFile, basePackage));
         }
         return res;
@@ -533,7 +533,7 @@ public class ApplicationClassloader extends ClassLoader {
         if (!current.isDirectory()) {
             if (current.getName().endsWith(".java") && !current.getName().startsWith(".")) {
                 String classname = packageName + current.getName().substring(0, current.getName().length() - 5);
-                classes.add(Play.classes.getApplicationClass(classname));
+                classes.add(Yalp.classes.getApplicationClass(classname));
             }
         } else {
             for (VirtualFile virtualFile : current.list()) {
@@ -557,7 +557,7 @@ public class ApplicationClassloader extends ClassLoader {
 
     @Override
     public String toString() {
-        return "(play) " + (allClasses == null ? "" : allClasses.toString());
+        return "(yalp) " + (allClasses == null ? "" : allClasses.toString());
     }
 
 }

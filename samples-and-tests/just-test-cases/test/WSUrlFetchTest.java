@@ -1,9 +1,9 @@
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import play.libs.WS;
-import play.libs.ws.WSUrlFetch;
-import play.test.UnitTest;
+import yalp.libs.WS;
+import yalp.libs.ws.WSUrlFetch;
+import yalp.test.UnitTest;
 
 import java.lang.reflect.Field;
 

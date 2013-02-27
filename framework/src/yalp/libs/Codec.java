@@ -1,4 +1,4 @@
-package play.libs;
+package yalp.libs;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import play.exceptions.UnexpectedException;
+import yalp.exceptions.UnexpectedException;
 
 /**
  * Codec utils

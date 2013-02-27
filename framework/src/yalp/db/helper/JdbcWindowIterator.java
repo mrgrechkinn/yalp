@@ -1,4 +1,4 @@
-package play.db.helper;
+package yalp.db.helper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

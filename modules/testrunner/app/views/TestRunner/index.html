@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
-        <title>Play! - Tests runner</title>
+        <title>Yalp - Tests runner</title>
         <meta http-equiv="Content-Type" content="text/html; charset=${_response_encoding}"/>
         <script src="@{'/public/test-runner/jquery-1.3.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/test-runner/jquery.scrollTo-min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
@@ -378,11 +378,11 @@
                         %{
                             protocol = "http";
                             port = 9000;
-                            if(play.configuration['https.port'] != null) {
-                                port = play.configuration['https.port'];
+                            if(yalp.configuration['https.port'] != null) {
+                                port = yalp.configuration['https.port'];
                                 protocol = "https";
-                            } else if (play.configuration['http.port'] != null) {
-                                port = play.configuration['http.port'];
+                            } else if (yalp.configuration['http.port'] != null) {
+                                port = yalp.configuration['http.port'];
                             }
                         }%
                         $('#selenium-runner').attr('src', '@{'/public/test-runner/selenium/TestRunner.html'}?baseUrl=${protocol}://localhost:${port}&test=/@tests/'+testId+'.suite&auto=true&close=true&resultsUrl=/@tests/'+testId);
@@ -625,11 +625,11 @@
                 %{
                     protocol = "http";
                     port = 9000;
-                    if(play.configuration['https.port'] != null) {
-                        port = play.configuration['https.port'];
+                    if(yalp.configuration['https.port'] != null) {
+                        port = yalp.configuration['https.port'];
                         protocol = "https";
-                    } else if (play.configuration['http.port'] != null) {
-                        port = play.configuration['http.port'];
+                    } else if (yalp.configuration['http.port'] != null) {
+                        port = yalp.configuration['http.port'];
                     }
                 }%
                 #{list items:seleniumTests, as:'test'}
@@ -650,7 +650,7 @@
         </div>
         <div id="selenium-mask"></div>
         <div id="selenium">
-            Play is running a selenium test... <span id="stopSelenium">Stop it</span>
+            Yalp is running a selenium test... <span id="stopSelenium">Stop it</span>
             <iframe id="selenium-runner" width="100%" height="100%" src="about:blank"></iframe>
         </div>
     </body>

@@ -1,4 +1,4 @@
-package play.libs;
+package yalp.libs;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -9,8 +9,8 @@ import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import play.Play;
-import play.exceptions.UnexpectedException;
+import yalp.Yalp;
+import yalp.exceptions.UnexpectedException;
 
 /**
  * Cryptography utils
@@ -41,7 +41,7 @@ public class Crypto {
      * Sign a message using the application secret key (HMAC-SHA1)
      */
     public static String sign(String message) {
-        return sign(message, Play.secretKey.getBytes());
+        return sign(message, Yalp.secretKey.getBytes());
     }
 
     /**
@@ -112,7 +112,7 @@ public class Crypto {
      * @return An hexadecimal encrypted string
      */
     public static String encryptAES(String value) {
-        return encryptAES(value, Play.configuration.getProperty("application.secret").substring(0, 16));
+        return encryptAES(value, Yalp.configuration.getProperty("application.secret").substring(0, 16));
     }
 
     /**
@@ -139,7 +139,7 @@ public class Crypto {
      * @return The decrypted String
      */
     public static String decryptAES(String value) {
-        return decryptAES(value, Play.configuration.getProperty("application.secret").substring(0, 16));
+        return decryptAES(value, Yalp.configuration.getProperty("application.secret").substring(0, 16));
     }
 
     /**

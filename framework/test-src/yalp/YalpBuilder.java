@@ -1,9 +1,9 @@
-package play;
+package yalp;
 
 
-import play.classloading.ApplicationClasses;
-import play.classloading.ApplicationClassloader;
-import play.vfs.VirtualFile;
+import yalp.classloading.ApplicationClasses;
+import yalp.classloading.ApplicationClassloader;
+import yalp.vfs.VirtualFile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,16 +12,16 @@ import java.util.Collections;
 import java.util.Properties;
 
 /**
- * Builder-pattern-builder for Play-class..
+ * Builder-pattern-builder for Yalp-class..
  *
- * It's kind of odd since Play only uses statics,
- * But it basically inits the needed properties for Play-object to work in unittests
+ * It's kind of odd since Yalp only uses statics,
+ * But it basically inits the needed properties for Yalp-object to work in unittests
  */
-public class PlayBuilder {
+public class YalpBuilder {
 
     public Properties configuration = new Properties();
 
-    public PlayBuilder withConfiguration(Properties config){
+    public YalpBuilder withConfiguration(Properties config){
         this.configuration = config;
         return this;
     }
@@ -30,12 +30,12 @@ public class PlayBuilder {
     @SuppressWarnings({"deprecation"})
     public void build(){
         
-        Play.configuration = configuration;
-        Play.classes = new ApplicationClasses();
-        Play.javaPath = new ArrayList<VirtualFile>();
-        Play.applicationPath = new File(".");
-        Play.classloader = new ApplicationClassloader();
-        Play.plugins = Collections.unmodifiableList( new ArrayList<PlayPlugin>());
+        Yalp.configuration = configuration;
+        Yalp.classes = new ApplicationClasses();
+        Yalp.javaPath = new ArrayList<VirtualFile>();
+        Yalp.applicationPath = new File(".");
+        Yalp.classloader = new ApplicationClassloader();
+        Yalp.plugins = Collections.unmodifiableList( new ArrayList<YalpPlugin>());
 
     }
 }

@@ -9,10 +9,10 @@ import javax.persistence.Version;
 
 import controllers.CRUD.Hidden;
 
-import play.data.validation.Check;
-import play.data.validation.CheckWith;
-import play.db.jpa.GenericModel;
-import play.mvc.Http.Request;
+import yalp.data.validation.Check;
+import yalp.data.validation.CheckWith;
+import yalp.db.jpa.GenericModel;
+import yalp.mvc.Http.Request;
 
 /**
  * Model which supports optimistic locking.

@@ -2,8 +2,8 @@ package controllers;
 
 import models.*;
 
-import play.*;
-import play.mvc.*;
+import yalp.*;
+import yalp.mvc.*;
 
 public class Administration extends CRUD {
 
@@ -34,7 +34,7 @@ public class Administration extends CRUD {
     }
 
     public static void authenticate(String email, String password) {
-        if (Play.configuration.getProperty("application.superadmin").equals(email) && Play.configuration.getProperty("application.superadminpwd").equals(password)) {
+        if (Yalp.configuration.getProperty("application.superadmin").equals(email) && Yalp.configuration.getProperty("application.superadminpwd").equals(password)) {
             session.put("superadmin", "yes!");
             index();
         }

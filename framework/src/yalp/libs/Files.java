@@ -1,4 +1,4 @@
-package play.libs;
+package yalp.libs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,7 +9,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 import org.apache.commons.io.FileUtils;
-import play.exceptions.UnexpectedException;
+import yalp.exceptions.UnexpectedException;
 
 /**
  * Files utils

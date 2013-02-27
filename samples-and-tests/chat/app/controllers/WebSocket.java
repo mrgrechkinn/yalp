@@ -1,14 +1,14 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
-import play.libs.*;
-import play.libs.F.*;
-import play.mvc.Http.*;
+import yalp.*;
+import yalp.mvc.*;
+import yalp.libs.*;
+import yalp.libs.F.*;
+import yalp.mvc.Http.*;
 
-import static play.libs.F.*;
-import static play.libs.F.Matcher.*;
-import static play.mvc.Http.WebSocketEvent.*;
+import static yalp.libs.F.*;
+import static yalp.libs.F.Matcher.*;
+import static yalp.mvc.Http.WebSocketEvent.*;
 
 import java.util.*;
 

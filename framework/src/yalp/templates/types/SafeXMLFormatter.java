@@ -1,9 +1,9 @@
-package play.templates.types;
+package yalp.templates.types;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import play.templates.SafeFormatter;
-import play.templates.TagContext;
-import play.templates.Template;
+import yalp.templates.SafeFormatter;
+import yalp.templates.TagContext;
+import yalp.templates.Template;
 
 public class SafeXMLFormatter implements SafeFormatter {
 

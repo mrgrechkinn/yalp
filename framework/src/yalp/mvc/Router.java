@@ -1,19 +1,19 @@
-package play.mvc;
+package yalp.mvc;
 
 import jregex.Matcher;
 import jregex.Pattern;
 import jregex.REFlags;
 import org.apache.commons.lang.StringUtils;
-import play.Logger;
-import play.Play;
-import play.Play.Mode;
-import play.exceptions.NoRouteFoundException;
-import play.mvc.results.NotFound;
-import play.mvc.results.RenderStatic;
-import play.templates.TemplateLoader;
-import play.utils.Default;
-import play.utils.Utils;
-import play.vfs.VirtualFile;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.Yalp.Mode;
+import yalp.exceptions.NoRouteFoundException;
+import yalp.mvc.results.NotFound;
+import yalp.mvc.results.RenderStatic;
+import yalp.templates.TemplateLoader;
+import yalp.utils.Default;
+import yalp.utils.Utils;
+import yalp.vfs.VirtualFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,10 +45,10 @@ public class Router {
      */
     public static void load(String prefix) {
         routes.clear();
-        parse(Play.routes, prefix);
+        parse(Yalp.routes, prefix);
         lastLoading = System.currentTimeMillis();
         // Plugins
-        Play.pluginCollection.onRoutesLoaded();
+        Yalp.pluginCollection.onRoutesLoaded();
     }
 
     /**
@@ -183,11 +183,11 @@ public class Router {
                         newPrefix = newPrefix.substring(0, newPrefix.length() - 1);
                     }
                     if (moduleName.equals("*")) {
-                        for (String p : Play.modulesRoutes.keySet()) {
-                            parse(Play.modulesRoutes.get(p), newPrefix + p);
+                        for (String p : Yalp.modulesRoutes.keySet()) {
+                            parse(Yalp.modulesRoutes.get(p), newPrefix + p);
                         }
-                    } else if (Play.modulesRoutes.containsKey(moduleName)) {
-                        parse(Play.modulesRoutes.get(moduleName), newPrefix);
+                    } else if (Yalp.modulesRoutes.containsKey(moduleName)) {
+                        parse(Yalp.modulesRoutes.get(moduleName), newPrefix);
                     } else {
                         Logger.error("Cannot include routes for module %s (not found)", moduleName);
                     }
@@ -212,13 +212,13 @@ public class Router {
      * @param prefix The prefix that the path of all routes in this route file start with. This prefix should not end with a '/' character.
      */
     public static void detectChanges(String prefix) {
-        if (Play.mode == Mode.PROD && lastLoading > 0) {
+        if (Yalp.mode == Mode.PROD && lastLoading > 0) {
             return;
         }
-        if (Play.routes.lastModified() > lastLoading) {
+        if (Yalp.routes.lastModified() > lastLoading) {
             load(prefix);
         } else {
-            for (VirtualFile file : Play.modulesRoutes.values()) {
+            for (VirtualFile file : Yalp.modulesRoutes.values()) {
                 if (file.lastModified() > lastLoading) {
                     load(prefix);
                     return;
@@ -330,7 +330,7 @@ public class Router {
     protected static String getBaseUrl() {
         if (Http.Request.current() == null) {
             // No current request is present - must get baseUrl from config
-            String appBaseUrl = Play.configuration.getProperty("application.baseUrl", "application.baseUrl");
+            String appBaseUrl = Yalp.configuration.getProperty("application.baseUrl", "application.baseUrl");
             if (appBaseUrl.endsWith("/")) {
                 // remove the trailing slash
                 appBaseUrl = appBaseUrl.substring(0, appBaseUrl.length()-1);
@@ -399,7 +399,7 @@ public class Router {
 
     public static ActionDefinition reverse(String action, Map<String, Object> args) {
 
-        String encoding = Http.Response.current() == null ? Play.defaultWebEncoding : Http.Response.current().encoding;
+        String encoding = Http.Response.current() == null ? Yalp.defaultWebEncoding : Http.Response.current().encoding;
 
         if (action.startsWith("controllers.")) {
             action = action.substring(12);
@@ -825,7 +825,7 @@ public class Router {
          */
         public Map<String, String> matches(String method, String path, String accept, String domain) {
             // Normalize
-            if (path.equals(Play.ctxPath)) {
+            if (path.equals(Yalp.ctxPath)) {
                 path = path + "/";
             }
             // If method is HEAD and we have a GET

@@ -1,4 +1,4 @@
-package play.templates;
+package yalp.templates;
 
 public class GroovyInlineTags {
     
@@ -13,9 +13,9 @@ public class GroovyInlineTags {
                 s.append("if(attrs").append(index).append("['arg']) {");
                 break;
             case END:
-                s.append("play.templates.TagContext.parent().data.put('_executeNextElse', false);");
+                s.append("yalp.templates.TagContext.parent().data.put('_executeNextElse', false);");
                 s.append("} else {");
-                s.append("play.templates.TagContext.parent().data.put('_executeNextElse', true);");
+                s.append("yalp.templates.TagContext.parent().data.put('_executeNextElse', true);");
                 s.append("}");
                 break;
         }
@@ -29,9 +29,9 @@ public class GroovyInlineTags {
                 s.append("if(!attrs").append(index).append("['arg']) {");
                 break;
             case END:
-                s.append("play.templates.TagContext.parent().data.put('_executeNextElse', false);");
+                s.append("yalp.templates.TagContext.parent().data.put('_executeNextElse', false);");
                 s.append("} else {");
-                s.append("play.templates.TagContext.parent().data.put('_executeNextElse', true);");
+                s.append("yalp.templates.TagContext.parent().data.put('_executeNextElse', true);");
                 s.append("}");
                 break;
         }
@@ -42,11 +42,11 @@ public class GroovyInlineTags {
         StringBuilder s = new StringBuilder();
         switch(f) {
             case START:
-                s.append("if(play.templates.TagContext.parent().data.get('_executeNextElse')) {");
+                s.append("if(yalp.templates.TagContext.parent().data.get('_executeNextElse')) {");
                 break;
             case END:
                 s.append("};");
-                s.append("play.templates.TagContext.parent().data.remove('_executeNextElse');");
+                s.append("yalp.templates.TagContext.parent().data.remove('_executeNextElse');");
                 break;
         }
         return s.toString();
@@ -56,10 +56,10 @@ public class GroovyInlineTags {
         StringBuilder s = new StringBuilder();
         switch(f) {
             case START:
-                s.append("if(play.templates.TagContext.parent().data.get('_executeNextElse') && attrs").append(index).append("['arg']) {");
+                s.append("if(yalp.templates.TagContext.parent().data.get('_executeNextElse') && attrs").append(index).append("['arg']) {");
                 break;
             case END:
-                s.append("play.templates.TagContext.parent().data.put('_executeNextElse', false);");
+                s.append("yalp.templates.TagContext.parent().data.put('_executeNextElse', false);");
                 s.append("};");
                 break;
         }
@@ -72,7 +72,7 @@ public class GroovyInlineTags {
             case START:
                 s.append("if(!attrs").append(index).append("['as']) {attrs").append(index).append("['as'] = '';};");
                 s.append("if(!attrs").append(index).append("['items']) {attrs").append(index).append("['items'] = attrs").append(index).append("['arg'];};");
-                s.append("if(attrs").append(index).append("['items']) { play.templates.TagContext.parent().data.put('_executeNextElse', false);");
+                s.append("if(attrs").append(index).append("['items']) { yalp.templates.TagContext.parent().data.put('_executeNextElse', false);");
                 s.append("_iter").append(index).append(" = attrs").append(index).append("['items'].iterator();");
                 s.append("for (_").append(index).append("_i = 1; _iter").append(index).append(".hasNext(); _").append(index).append("_i++) {");
                 s.append("_item").append(index).append(" = _iter").append(index).append(".next();");
@@ -84,7 +84,7 @@ public class GroovyInlineTags {
                 break;
             case END:
                 s.append("};");
-                s.append("} else { play.templates.TagContext.parent().data.put('_executeNextElse', true); }");
+                s.append("} else { yalp.templates.TagContext.parent().data.put('_executeNextElse', true); }");
                 break;
         }
         return s.toString();

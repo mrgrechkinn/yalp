@@ -5,17 +5,17 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 
-import play.Logger;
-import play.Play;
-import play.cache.Cache;
-import play.jobs.Job;
-import play.libs.IO;
-import play.libs.Mail;
-import play.mvc.*;
-import play.templates.Template;
-import play.templates.TemplateLoader;
-import play.test.*;
-import play.vfs.*;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.cache.Cache;
+import yalp.jobs.Job;
+import yalp.libs.IO;
+import yalp.libs.Mail;
+import yalp.mvc.*;
+import yalp.templates.Template;
+import yalp.templates.TemplateLoader;
+import yalp.test.*;
+import yalp.vfs.*;
 
 public class TestRunner extends Controller {
 
@@ -30,8 +30,8 @@ public class TestRunner extends Controller {
         StringWriter list = new StringWriter();
         PrintWriter p = new PrintWriter(list);
         p.println("---");
-        p.println(Play.getFile("test-result").getAbsolutePath());
-        p.println(Router.reverse(Play.modules.get("_testrunner").child("/public/test-runner/selenium/TestRunner.html")));
+        p.println(Yalp.getFile("test-result").getAbsolutePath());
+        p.println(Router.reverse(Yalp.modules.get("_testrunner").child("/public/test-runner/selenium/TestRunner.html")));
         for(Class c : TestEngine.allUnitTests()) {
             p.println(c.getName() + ".class");
         }
@@ -46,7 +46,7 @@ public class TestRunner extends Controller {
 
     public static void run(String test) throws Exception {
         if (test.equals("init")) {
-            File testResults = Play.getFile("test-result");
+            File testResults = Yalp.getFile("test-result");
             if (!testResults.exists()) {
                 testResults.mkdir();
             }
@@ -58,12 +58,12 @@ public class TestRunner extends Controller {
             renderText("done");
         }
         if (test.equals("end")) {
-            File testResults = Play.getFile("test-result/result." + params.get("result"));
+            File testResults = Yalp.getFile("test-result/result." + params.get("result"));
             IO.writeContent(params.get("result"), testResults);
             renderText("done");
         }
         if (test.endsWith(".class")) {
-            Play.getFile("test-result").mkdir();
+            Yalp.getFile("test-result").mkdir();
             final String testname = test.substring(0, test.length() - 6);
             final TestEngine.TestResults results = await(new Job<TestEngine.TestResults>() {
                 @Override
@@ -77,14 +77,14 @@ public class TestRunner extends Controller {
             options.put("test", test);
             options.put("results", results);
             String result = resultTemplate.render(options);
-            File testResults = Play.getFile("test-result/" + test + (results.passed ? ".passed" : ".failed") + ".html");
+            File testResults = Yalp.getFile("test-result/" + test + (results.passed ? ".passed" : ".failed") + ".html");
             IO.writeContent(result, testResults);
             try {
                 // Write xml output
                 options.remove("out");
                 resultTemplate = TemplateLoader.load("TestRunner/results-xunit.xml");
                 String resultXunit = resultTemplate.render(options);
-                File testXunitResults = Play.getFile("test-result/TEST-" + test.substring(0, test.length()-6) + ".xml");
+                File testXunitResults = Yalp.getFile("test-result/TEST-" + test.substring(0, test.length()-6) + ".xml");
                 IO.writeContent(resultXunit, testXunitResults);
             } catch(Exception e) {
                 Logger.error(e, "Cannot ouput XML unit output");
@@ -97,10 +97,10 @@ public class TestRunner extends Controller {
             render("TestRunner/selenium-suite.html", test);
         }
         if (test.endsWith(".test.html")) {
-            File testFile = Play.getFile("test/" + test);
+            File testFile = Yalp.getFile("test/" + test);
             if (!testFile.exists()) {
-                for(VirtualFile root : Play.roots) {
-                    File moduleTestFile = Play.getFile(root.relativePath()+"/test/" + test);
+                for(VirtualFile root : Yalp.roots) {
+                    File moduleTestFile = Yalp.getFile(root.relativePath()+"/test/" + test);
                     if(moduleTestFile.exists()) {
                         testFile = moduleTestFile;
                     }
@@ -118,13 +118,13 @@ public class TestRunner extends Controller {
         if (test.endsWith(".test.html.result")) {
             flash.keep();
             test = test.substring(0, test.length() - 7);
-            File testResults = Play.getFile("test-result/" + test.replace("/", ".") + ".passed.html");
+            File testResults = Yalp.getFile("test-result/" + test.replace("/", ".") + ".passed.html");
             if (testResults.exists()) {
                 response.contentType = "text/html";
                 response.status = 200;
                 renderText(IO.readContentAsString(testResults));
             }
-            testResults = Play.getFile("test-result/" + test.replace("/", ".") + ".failed.html");
+            testResults = Yalp.getFile("test-result/" + test.replace("/", ".") + ".failed.html");
             if (testResults.exists()) {
                 response.contentType = "text/html";
                 response.status = 500;
@@ -137,7 +137,7 @@ public class TestRunner extends Controller {
 
     public static void saveResult(String test, String result) throws Exception {
         String table = params.get("testTable.1");
-        File testResults = Play.getFile("test-result/" + test.replace("/", ".") + "." + result + ".html");
+        File testResults = Yalp.getFile("test-result/" + test.replace("/", ".") + "." + result + ".html");
         Template resultTemplate = TemplateLoader.load("TestRunner/selenium-results.html");
         Map<String, Object> options = new HashMap<String, Object>();
         options.put("test", test);

@@ -1,18 +1,18 @@
-package play.jobs;
+package yalp.jobs;
 
 import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import play.Invoker;
-import play.Invoker.InvocationContext;
-import play.Logger;
-import play.Play;
-import play.exceptions.JavaExecutionException;
-import play.exceptions.PlayException;
-import play.libs.F.Promise;
-import play.libs.Time;
+import yalp.Invoker;
+import yalp.Invoker.InvocationContext;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.exceptions.JavaExecutionException;
+import yalp.exceptions.YalpException;
+import yalp.libs.F.Promise;
+import yalp.libs.Time;
 
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
@@ -147,12 +147,12 @@ public class Job<V> extends Invoker.Invocation implements Callable<V> {
                     monitor.stop();
                     monitor = null;
                     wasError = false;
-                } catch (PlayException e) {
+                } catch (YalpException e) {
                     throw e;
                 } catch (Exception e) {
-                    StackTraceElement element = PlayException.getInterestingStrackTraceElement(e);
+                    StackTraceElement element = YalpException.getInterestingStrackTraceElement(e);
                     if (element != null) {
-                        throw new JavaExecutionException(Play.classes.getApplicationClass(element.getClassName()), element.getLineNumber(), e);
+                        throw new JavaExecutionException(Yalp.classes.getApplicationClass(element.getClassName()), element.getLineNumber(), e);
                     }
                     throw e;
                 }

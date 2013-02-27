@@ -1,4 +1,4 @@
-package play.inject;
+package yalp.inject;
 
 public interface BeanSource {
     

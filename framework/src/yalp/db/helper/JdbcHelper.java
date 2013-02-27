@@ -1,10 +1,10 @@
-package play.db.helper;
+package yalp.db.helper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import play.db.DB;
+import yalp.db.DB;
 
 public class JdbcHelper {
 

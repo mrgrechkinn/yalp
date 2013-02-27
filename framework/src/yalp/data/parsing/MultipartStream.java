@@ -1,4 +1,4 @@
-package play.data.parsing;
+package yalp.data.parsing;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -2,14 +2,14 @@ import org.junit.*;
 
 import java.util.*;
 
-import play.test.*;
-import play.jobs.*;
-import play.libs.*;
-import play.libs.F.*;
+import yalp.test.*;
+import yalp.jobs.*;
+import yalp.libs.*;
+import yalp.libs.F.*;
 
 public class Promises extends UnitTest {
     
-    public static class DoSomething extends play.jobs.Job<F.Option<String>> {
+    public static class DoSomething extends yalp.jobs.Job<F.Option<String>> {
         
         long d;
         
@@ -27,7 +27,7 @@ public class Promises extends UnitTest {
         
     }
     
-    public static class DoSomething2 extends play.jobs.Job<String> {
+    public static class DoSomething2 extends yalp.jobs.Job<String> {
         
         long d;
         

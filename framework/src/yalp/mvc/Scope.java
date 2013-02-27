@@ -1,4 +1,4 @@
-package play.mvc;
+package yalp.mvc;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -10,30 +10,30 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import play.Logger;
-import play.Play;
-import play.data.binding.Binder;
-import play.data.binding.ParamNode;
-import play.data.binding.RootParamNode;
-import play.data.parsing.DataParser;
-import play.data.parsing.TextParser;
-import play.data.validation.Validation;
-import play.exceptions.UnexpectedException;
-import play.libs.Codec;
-import play.libs.Crypto;
-import play.libs.Time;
-import play.utils.Utils;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.data.binding.Binder;
+import yalp.data.binding.ParamNode;
+import yalp.data.binding.RootParamNode;
+import yalp.data.parsing.DataParser;
+import yalp.data.parsing.TextParser;
+import yalp.data.validation.Validation;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.Codec;
+import yalp.libs.Crypto;
+import yalp.libs.Time;
+import yalp.utils.Utils;
 
 /**
  * All application Scopes
  */
 public class Scope {
 
-    public static final String COOKIE_PREFIX = Play.configuration.getProperty("application.session.cookie", "PLAY");
-    public static final boolean COOKIE_SECURE = Play.configuration.getProperty("application.session.secure", "false").toLowerCase().equals("true");
-    public static final String COOKIE_EXPIRE = Play.configuration.getProperty("application.session.maxAge");
-    public static final boolean SESSION_HTTPONLY = Play.configuration.getProperty("application.session.httpOnly", "false").toLowerCase().equals("true");
-    public static final boolean SESSION_SEND_ONLY_IF_CHANGED = Play.configuration.getProperty("application.session.sendOnlyIfChanged", "false").toLowerCase().equals("true");
+    public static final String COOKIE_PREFIX = Yalp.configuration.getProperty("application.session.cookie", "YALP");
+    public static final boolean COOKIE_SECURE = Yalp.configuration.getProperty("application.session.secure", "false").toLowerCase().equals("true");
+    public static final String COOKIE_EXPIRE = Yalp.configuration.getProperty("application.session.maxAge");
+    public static final boolean SESSION_HTTPONLY = Yalp.configuration.getProperty("application.session.httpOnly", "false").toLowerCase().equals("true");
+    public static final boolean SESSION_SEND_ONLY_IF_CHANGED = Yalp.configuration.getProperty("application.session.sendOnlyIfChanged", "false").toLowerCase().equals("true");
 
     /**
      * Flash scope
@@ -181,13 +181,13 @@ public class Scope {
 				final int duration = Time.parseDuration(COOKIE_EXPIRE) ;
 				final long expiration = (duration * 1000l);
 
-                if (cookie != null && Play.started && cookie.value != null && !cookie.value.trim().equals("")) {
+                if (cookie != null && Yalp.started && cookie.value != null && !cookie.value.trim().equals("")) {
                     String value = cookie.value;
 				 	int firstDashIndex = value.indexOf("-");
 				    if(firstDashIndex > -1) {
                     	String sign = value.substring(0, firstDashIndex);
                     	String data = value.substring(firstDashIndex + 1);
-                    	if (sign.equals(Crypto.sign(data, Play.secretKey.getBytes()))) {
+                    	if (sign.equals(Crypto.sign(data, Yalp.secretKey.getBytes()))) {
                         	String sessionData = URLDecoder.decode(data, "utf-8");
                         	Matcher matcher = sessionParser.matcher(sessionData);
                         	while (matcher.find()) {
@@ -279,7 +279,7 @@ public class Scope {
                     session.append("\u0000");
                 }
                 String sessionData = URLEncoder.encode(session.toString(), "utf-8");
-                String sign = Crypto.sign(sessionData, Play.secretKey.getBytes());
+                String sign = Crypto.sign(sessionData, Yalp.secretKey.getBytes());
                 if (COOKIE_EXPIRE == null) {
                     Http.Response.current().setCookie(COOKIE_PREFIX + "_SESSION", sign + "-" + sessionData, null, "/", null, COOKIE_SECURE, SESSION_HTTPONLY);
                 } else {

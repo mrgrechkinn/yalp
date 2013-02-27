@@ -3,10 +3,10 @@ package models;
 import javax.persistence.*;
 import java.util.*;
 
-import play.*;
-import play.db.jpa.*;
-import play.libs.*;
-import play.data.validation.*;
+import yalp.*;
+import yalp.db.jpa.*;
+import yalp.libs.*;
+import yalp.data.validation.*;
 
 @Entity
 public class User extends Model {
@@ -40,7 +40,7 @@ public class User extends Model {
     }
 
     public boolean isAdmin() {
-        return email.equals(Play.configuration.getProperty("forum.adminEmail", ""));
+        return email.equals(Yalp.configuration.getProperty("forum.adminEmail", ""));
     }
     
     // ~~~~~~~~~~~~ 

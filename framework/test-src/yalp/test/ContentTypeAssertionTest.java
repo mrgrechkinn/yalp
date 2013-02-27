@@ -1,11 +1,11 @@
-package play.test;
+package yalp.test;
 
 import static org.junit.Assert.*;
-import static play.test.FunctionalTest.*;
+import static yalp.test.FunctionalTest.*;
 
 import org.junit.Test;
 
-import play.mvc.Http.Response;
+import yalp.mvc.Http.Response;
 
 public class ContentTypeAssertionTest {
 

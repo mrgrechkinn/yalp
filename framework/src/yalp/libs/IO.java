@@ -1,4 +1,4 @@
-package play.libs;
+package yalp.libs;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import play.exceptions.UnexpectedException;
-import play.utils.OrderSafeProperties;
+import yalp.exceptions.UnexpectedException;
+import yalp.utils.OrderSafeProperties;
 
 /**
  * IO utils

@@ -1,4 +1,4 @@
-package play.modules.grizzly;
+package yalp.modules.grizzly;
 
 import com.sun.grizzly.tcp.http11.GrizzlyAdapter;
 import com.sun.grizzly.tcp.http11.GrizzlyRequest;
@@ -18,31 +18,31 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import play.Invoker;
-import play.Logger;
-import play.Play;
-import play.PlayPlugin;
-import play.data.validation.Validation;
-import play.exceptions.PlayException;
-import play.libs.MimeTypes;
-import play.mvc.ActionInvoker;
-import play.mvc.Http;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
-import play.mvc.Router;
-import play.mvc.Scope;
-import play.mvc.results.NotFound;
-import play.mvc.results.RenderStatic;
-import play.templates.TemplateLoader;
-import play.utils.Utils;
-import play.vfs.VirtualFile;
+import yalp.Invoker;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.YalpPlugin;
+import yalp.data.validation.Validation;
+import yalp.exceptions.YalpException;
+import yalp.libs.MimeTypes;
+import yalp.mvc.ActionInvoker;
+import yalp.mvc.Http;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
+import yalp.mvc.Router;
+import yalp.mvc.Scope;
+import yalp.mvc.results.NotFound;
+import yalp.mvc.results.RenderStatic;
+import yalp.templates.TemplateLoader;
+import yalp.utils.Utils;
+import yalp.vfs.VirtualFile;
 
-public class PlayGrizzlyAdapter extends GrizzlyAdapter {
+public class YalpGrizzlyAdapter extends GrizzlyAdapter {
 
-    public PlayGrizzlyAdapter(File application, String id, String ctx) {
-        Play.forceProd = true;
-        Play.ctxPath = ctx;
-        Play.init(application, id);
+    public YalpGrizzlyAdapter(File application, String id, String ctx) {
+        Yalp.forceProd = true;
+        Yalp.ctxPath = ctx;
+        Yalp.init(application, id);
     }
 
     // ------------
@@ -55,7 +55,7 @@ public class PlayGrizzlyAdapter extends GrizzlyAdapter {
             Response.current.set(response);
             request = parseRequest(grizzlyRequest);
             boolean raw = false;
-            for (PlayPlugin plugin : Play.plugins) {
+            for (YalpPlugin plugin : Yalp.plugins) {
                 if (plugin.rawInvocation(request, response)) {
                     raw = true;
                     break;
@@ -78,13 +78,13 @@ public class PlayGrizzlyAdapter extends GrizzlyAdapter {
     }
 
     public void serveStatic(GrizzlyRequest grizzlyRequest, GrizzlyResponse grizzlyResponse, RenderStatic renderStatic) {
-        VirtualFile file = Play.getVirtualFile(renderStatic.file);
+        VirtualFile file = Yalp.getVirtualFile(renderStatic.file);
         if (file == null || file.isDirectory() || !file.exists()) {
             serve404(grizzlyRequest, grizzlyResponse, new NotFound("The file " + renderStatic.file + " does not exist"));
         } else {
             grizzlyResponse.setContentType(MimeTypes.getContentType(file.getName()));
             boolean raw = false;
-            for (PlayPlugin plugin : Play.plugins) {
+            for (YalpPlugin plugin : Yalp.plugins) {
                 if (plugin.serveStatic(file, Request.current(), Response.current())) {
                     raw = true;
                     break;
@@ -94,7 +94,7 @@ public class PlayGrizzlyAdapter extends GrizzlyAdapter {
                 if (raw) {
                     copyResponse(Request.current(), Response.current(), grizzlyRequest, grizzlyResponse);
                 } else {
-                    if (Play.mode == Play.Mode.DEV) {
+                    if (Yalp.mode == Yalp.Mode.DEV) {
                         grizzlyResponse.setHeader("Cache-Control", "no-cache");
                         grizzlyResponse.setHeader("Content-Length", String.valueOf(file.length()));
                         if (!grizzlyRequest.getMethod().equals("HEAD")) {
@@ -110,7 +110,7 @@ public class PlayGrizzlyAdapter extends GrizzlyAdapter {
                             grizzlyResponse.setStatus(304);
                         } else {
                             grizzlyResponse.setHeader("Last-Modified", Utils.getHttpDateFormatter().format(new Date(last)));
-                            grizzlyResponse.setHeader("Cache-Control", "max-age=" + Play.configuration.getProperty("http.cacheControl", "3600"));
+                            grizzlyResponse.setHeader("Cache-Control", "max-age=" + Yalp.configuration.getProperty("http.cacheControl", "3600"));
                             grizzlyResponse.setHeader("Etag", etag);
                             copyStream(grizzlyResponse, file.inputstream());
                         }
@@ -179,13 +179,13 @@ public class PlayGrizzlyAdapter extends GrizzlyAdapter {
 
         request.remoteAddress = grizzlyRequest.getRemoteAddr();
 
-        if (Play.configuration.containsKey("XForwardedSupport") && grizzlyRequest.getHeader("X-Forwarded-For") != null) {
-            if (!Arrays.asList(Play.configuration.getProperty("XForwardedSupport", "127.0.0.1").split(",")).contains(request.remoteAddress)) {
+        if (Yalp.configuration.containsKey("XForwardedSupport") && grizzlyRequest.getHeader("X-Forwarded-For") != null) {
+            if (!Arrays.asList(Yalp.configuration.getProperty("XForwardedSupport", "127.0.0.1").split(",")).contains(request.remoteAddress)) {
                 throw new RuntimeException("This proxy request is not authorized");
             } else {
-                request.secure = ("https".equals(Play.configuration.get("XForwardedProto")) || "https".equals(grizzlyRequest.getHeader("X-Forwarded-Proto")) || "on".equals(grizzlyRequest.getHeader("X-Forwarded-Ssl")));
-                if (Play.configuration.containsKey("XForwardedHost")) {
-                    request.host = (String) Play.configuration.get("XForwardedHost");
+                request.secure = ("https".equals(Yalp.configuration.get("XForwardedProto")) || "https".equals(grizzlyRequest.getHeader("X-Forwarded-Proto")) || "on".equals(grizzlyRequest.getHeader("X-Forwarded-Ssl")));
+                if (Yalp.configuration.containsKey("XForwardedHost")) {
+                    request.host = (String) Yalp.configuration.get("XForwardedHost");
                 } else if (grizzlyRequest.getHeader("X-Forwarded-Host") != null) {
                     request.host = grizzlyRequest.getHeader("X-Forwarded-Host");
                 }
@@ -213,14 +213,14 @@ public class PlayGrizzlyAdapter extends GrizzlyAdapter {
         Cookie[] cookies = grizzlyRequest.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                Http.Cookie playCookie = new Http.Cookie();
-                playCookie.name = cookie.getName();
-                playCookie.path = cookie.getPath();
-                playCookie.domain = cookie.getDomain();
-                playCookie.secure = cookie.getSecure();
-                playCookie.value = cookie.getValue();
-                playCookie.maxAge = cookie.getMaxAge();
-                request.cookies.put(playCookie.name, playCookie);
+                Http.Cookie yalpCookie = new Http.Cookie();
+                yalpCookie.name = cookie.getName();
+                yalpCookie.path = cookie.getPath();
+                yalpCookie.domain = cookie.getDomain();
+                yalpCookie.secure = cookie.getSecure();
+                yalpCookie.value = cookie.getValue();
+                yalpCookie.maxAge = cookie.getMaxAge();
+                request.cookies.put(yalpCookie.name, yalpCookie);
             }
         }
 
@@ -239,7 +239,7 @@ public class PlayGrizzlyAdapter extends GrizzlyAdapter {
         binding.put("request", Http.Request.current());
         binding.put("flash", Scope.Flash.current());
         binding.put("params", Scope.Params.current());
-        binding.put("play", new Play());
+        binding.put("yalp", new Yalp());
         try {
             binding.put("errors", Validation.errors());
         } catch (Exception ex) {
@@ -266,8 +266,8 @@ public class PlayGrizzlyAdapter extends GrizzlyAdapter {
     public void serve500(Exception e, GrizzlyRequest request, GrizzlyResponse response) {
         try {
             Map<String, Object> binding = new HashMap<String, Object>();
-            if (!(e instanceof PlayException)) {
-                e = new play.exceptions.UnexpectedException(e);
+            if (!(e instanceof YalpException)) {
+                e = new yalp.exceptions.UnexpectedException(e);
             }
             // Flush some cookies
             try {
@@ -291,7 +291,7 @@ public class PlayGrizzlyAdapter extends GrizzlyAdapter {
             binding.put("request", Http.Request.current());
             binding.put("flash", Scope.Flash.current());
             binding.put("params", Scope.Params.current());
-            binding.put("play", new Play());
+            binding.put("yalp", new Yalp());
             try {
                 binding.put("errors", Validation.errors());
             } catch (Exception ex) {

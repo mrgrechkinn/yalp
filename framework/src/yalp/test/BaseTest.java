@@ -1,15 +1,15 @@
-package play.test;
+package yalp.test;
 
 import org.junit.Rule;
 import org.junit.runner.RunWith;
-import play.db.jpa.JPA;
-import play.exceptions.UnexpectedException;
+import yalp.db.jpa.JPA;
+import yalp.exceptions.UnexpectedException;
 
-@RunWith(PlayJUnitRunner.class)
+@RunWith(YalpJUnitRunner.class)
 public class BaseTest extends org.junit.Assert {
 
     @Rule
-    public PlayJUnitRunner.StartPlay startPlayBeforeTests = PlayJUnitRunner.StartPlay.rule();
+    public YalpJUnitRunner.StartYalp startYalpBeforeTests = YalpJUnitRunner.StartYalp.rule();
 
     /**
      * Pause the current thread

@@ -6,8 +6,8 @@ import java.util.List;
 import javax.persistence.Version;
 
 import models.Company;
-import play.db.Model;
-import play.exceptions.UnexpectedException;
+import yalp.db.Model;
+import yalp.exceptions.UnexpectedException;
 import controllers.CRUD;
 
 @CRUD.For(Company.class)

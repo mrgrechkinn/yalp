@@ -1,4 +1,4 @@
-package play.db.jpa;
+package yalp.db.jpa;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

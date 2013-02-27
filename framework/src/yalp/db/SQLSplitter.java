@@ -1,4 +1,4 @@
-package play.db;
+package yalp.db;
 
 import java.util.*;
 

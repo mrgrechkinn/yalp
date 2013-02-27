@@ -47,14 +47,14 @@
 	%{
 	for(job in jobs) {
                 out.print("<h4>"+job.getClass().getName()+"</h4>");
-                if(job.getClass().isAnnotationPresent(play.jobs.OnApplicationStart.class)) {
+                if(job.getClass().isAnnotationPresent(yalp.jobs.OnApplicationStart.class)) {
                     out.print(" run at application start.");
                 }
-                if(job.getClass().isAnnotationPresent(play.jobs.On.class)) {
-                    out.print(" run with cron expression " + job.getClass().getAnnotation(play.jobs.On.class).value() + ".");
+                if(job.getClass().isAnnotationPresent(yalp.jobs.On.class)) {
+                    out.print(" run with cron expression " + job.getClass().getAnnotation(yalp.jobs.On.class).value() + ".");
                 }
-                if(job.getClass().isAnnotationPresent(play.jobs.Every.class)) {
-                    out.print(" run every " + job.getClass().getAnnotation(play.jobs.Every.class).value() + ".");
+                if(job.getClass().isAnnotationPresent(yalp.jobs.Every.class)) {
+                    out.print(" run every " + job.getClass().getAnnotation(yalp.jobs.Every.class).value() + ".");
                 }
                 if(job.lastRun > 0) {
                     out.print(" (last run at " + df.format(new Date(job.lastRun)));

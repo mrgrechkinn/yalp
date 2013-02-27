@@ -1,8 +1,8 @@
-package play.utils;
+package yalp.utils;
 
 import org.junit.Test;
-import play.Logger;
-import play.libs.IO;
+import yalp.Logger;
+import yalp.libs.IO;
 
 import java.io.InputStream;
 import java.util.*;
@@ -17,17 +17,17 @@ public class OrderSafePropertiesTest {
     public void verifyThatEscaping_properties_content_giveSameResultAs_java_util_properties() throws Exception {
         // see info about escaping - http://download.oracle.com/javase/1.5.0/docs/api/java/util/Properties.html - "public void load(InputStream inStream)"
         Properties javaP = new Properties();
-        Properties playP = new OrderSafeProperties();
-        javaP.load(getClass().getResourceAsStream("/play/utils/OrderSaferPropertiesTest2.properties"));
-        playP.load(getClass().getResourceAsStream("/play/utils/OrderSaferPropertiesTest2.properties"));
-        assertThat(playP.getProperty("a")).isEqualTo(javaP.getProperty("a"));
-        Logger.info("playP.getProperty(\"a\"):" + playP.getProperty("a"));
+        Properties yalpP = new OrderSafeProperties();
+        javaP.load(getClass().getResourceAsStream("/yalp/utils/OrderSaferPropertiesTest2.properties"));
+        yalpP.load(getClass().getResourceAsStream("/yalp/utils/OrderSaferPropertiesTest2.properties"));
+        assertThat(yalpP.getProperty("a")).isEqualTo(javaP.getProperty("a"));
+        Logger.info("yalpP.getProperty(\"a\"):" + yalpP.getProperty("a"));
 
     }
 
     @Test
     public void verifyCorrectOrder() throws Exception{
-        InputStream in = getClass().getResourceAsStream("/play/utils/OrderSaferPropertiesTest.properties");
+        InputStream in = getClass().getResourceAsStream("/yalp/utils/OrderSaferPropertiesTest.properties");
         assertThat(in).isNotNull();
         Properties p = new OrderSafeProperties();
         p.load(in);
@@ -65,7 +65,7 @@ public class OrderSafePropertiesTest {
     @Test
     public void verifyUTF8() throws Exception {
 
-        InputStream in = getClass().getResourceAsStream("/play/utils/OrderSaferPropertiesTest.properties");
+        InputStream in = getClass().getResourceAsStream("/yalp/utils/OrderSaferPropertiesTest.properties");
         assertThat(in).isNotNull();
         Properties p = new OrderSafeProperties();
         p.load(in);
@@ -77,7 +77,7 @@ public class OrderSafePropertiesTest {
     @Test
     public void verifyUTF8_via_readUtf8Properties() throws Exception {
 
-        InputStream in = getClass().getResourceAsStream("/play/utils/OrderSaferPropertiesTest.properties");
+        InputStream in = getClass().getResourceAsStream("/yalp/utils/OrderSaferPropertiesTest.properties");
         assertThat(in).isNotNull();
         Properties p = IO.readUtf8Properties(in);
 

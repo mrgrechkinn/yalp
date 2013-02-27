@@ -1,12 +1,12 @@
-package play.classloading;
+package yalp.classloading;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.security.MessageDigest;
-import play.Logger;
-import play.Play;
-import play.PlayPlugin;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.YalpPlugin;
 
 /**
  * Used to speed up compilation time
@@ -19,7 +19,7 @@ public class BytecodeCache {
      */
     public static void deleteBytecode(String name) {
         try {
-            if (!Play.initialized || Play.tmpDir == null || Play.readOnlyTmp || !Play.configuration.getProperty("play.bytecodeCache", "true").equals("true")) {
+            if (!Yalp.initialized || Yalp.tmpDir == null || Yalp.readOnlyTmp || !Yalp.configuration.getProperty("yalp.bytecodeCache", "true").equals("true")) {
                 return;
             }
             File f = cacheFile(name.replace("/", "_").replace("{", "_").replace("}", "_").replace(":", "_"));
@@ -39,7 +39,7 @@ public class BytecodeCache {
      */
     public static byte[] getBytecode(String name, String source) {
         try {
-            if (!Play.initialized || Play.tmpDir == null || !Play.configuration.getProperty("play.bytecodeCache", "true").equals("true")) {
+            if (!Yalp.initialized || Yalp.tmpDir == null || !Yalp.configuration.getProperty("yalp.bytecodeCache", "true").equals("true")) {
                 return null;
             }
             File f = cacheFile(name.replace("/", "_").replace("{", "_").replace("}", "_").replace(":", "_"));
@@ -83,7 +83,7 @@ public class BytecodeCache {
      */
     public static void cacheBytecode(byte[] byteCode, String name, String source) {
         try {
-            if (!Play.initialized || Play.tmpDir == null || Play.readOnlyTmp || !Play.configuration.getProperty("play.bytecodeCache", "true").equals("true")) {
+            if (!Yalp.initialized || Yalp.tmpDir == null || Yalp.readOnlyTmp || !Yalp.configuration.getProperty("yalp.bytecodeCache", "true").equals("true")) {
                 return;
             }
             File f = cacheFile(name.replace("/", "_").replace("{", "_").replace("}", "_").replace(":", "_"));
@@ -95,7 +95,7 @@ public class BytecodeCache {
 
             // emit bytecode to standard class layout as well
             if(!name.contains("/") && !name.contains("{")) {
-                f = new File(Play.tmpDir, "classes/"+(name.replace(".", "/"))+".class");
+                f = new File(Yalp.tmpDir, "classes/"+(name.replace(".", "/"))+".class");
                 f.getParentFile().mkdirs();
                 fos = new FileOutputStream(f);
                 fos.write(byteCode);
@@ -117,12 +117,12 @@ public class BytecodeCache {
     static String hash(String text) {
         try {
             StringBuffer plugins = new StringBuffer();
-            for(PlayPlugin plugin : Play.pluginCollection.getEnabledPlugins()) {
+            for(YalpPlugin plugin : Yalp.pluginCollection.getEnabledPlugins()) {
                 plugins.append(plugin.getClass().getName());
             }
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             messageDigest.reset();
-            messageDigest.update((Play.version + plugins.toString() + text).getBytes("utf-8"));
+            messageDigest.update((Yalp.version + plugins.toString() + text).getBytes("utf-8"));
             byte[] digest = messageDigest.digest();
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < digest.length; ++i) {
@@ -142,8 +142,8 @@ public class BytecodeCache {
      * Retrieve the real file that will be used as cache.
      */
     static File cacheFile(String id) {
-        File dir = new File(Play.tmpDir, "bytecode/" + Play.mode.name());
-        if (!dir.exists() && Play.tmpDir != null && !Play.readOnlyTmp) {
+        File dir = new File(Yalp.tmpDir, "bytecode/" + Yalp.mode.name());
+        if (!dir.exists() && Yalp.tmpDir != null && !Yalp.readOnlyTmp) {
             dir.mkdirs();
         }
         return new File(dir, id);

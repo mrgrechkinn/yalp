@@ -1,4 +1,4 @@
-package play.server;
+package yalp.server;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Date;
-import play.utils.Utils;
+import yalp.utils.Utils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletInputStream;

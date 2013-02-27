@@ -1,4 +1,4 @@
-package play.db.jpa;
+package yalp.db.jpa;
 
 import java.util.List;
 import java.util.Map;
@@ -6,11 +6,11 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import play.Play;
-import play.data.binding.ParamNode;
-import play.data.binding.RootParamNode;
-import play.db.jpa.GenericModel.JPAQuery;
-import play.mvc.Scope.Params;
+import yalp.Yalp;
+import yalp.data.binding.ParamNode;
+import yalp.data.binding.RootParamNode;
+import yalp.db.jpa.GenericModel.JPAQuery;
+import yalp.mvc.Scope.Params;
 
 public class JPQL {
 
@@ -33,7 +33,7 @@ public class JPQL {
     }
 
     public JPABase findById(String entity, Object id) throws Exception {
-        return (JPABase) em().find(Play.classloader.loadClass(entity), id);
+        return (JPABase) em().find(Yalp.classloader.loadClass(entity), id);
     }
 
     public List findBy(String entity, String query, Object[] params) {
@@ -86,7 +86,7 @@ public class JPQL {
     }
 
     public JPABase create(String entity, String name, Params params) throws Exception {
-        Object o = Play.classloader.loadClass(entity).newInstance();
+        Object o = Yalp.classloader.loadClass(entity).newInstance();
 
         RootParamNode rootParamNode = ParamNode.convert(params.all());
 
@@ -256,8 +256,8 @@ public class JPQL {
     }
 
     private boolean isHSQL() {
-        String db = Play.configuration.getProperty("db");
-        return ("mem".equals(db) || "fs".equals(db) || "org.hsqldb.jdbcDriver".equals(Play.configuration.getProperty("db.driver")));
+        String db = Yalp.configuration.getProperty("db");
+        return ("mem".equals(db) || "fs".equals(db) || "org.hsqldb.jdbcDriver".equals(Yalp.configuration.getProperty("db.driver")));
     }
 
     protected static String extractProp(String part, String end) {

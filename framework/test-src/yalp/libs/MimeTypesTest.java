@@ -1,11 +1,11 @@
-package play.libs;
+package yalp.libs;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import play.mvc.Http.Response;
+import yalp.mvc.Http.Response;
 
 
 /**
@@ -30,7 +30,7 @@ public class MimeTypesTest {
         Response originalResponse = Response.current();
         try {
             Response.current.set(null);
-            assertEquals("text/xml; charset=" + play.Play.defaultWebEncoding,
+            assertEquals("text/xml; charset=" + yalp.Yalp.defaultWebEncoding,
                          MimeTypes.getContentType("test.xml"));
         }
         finally {

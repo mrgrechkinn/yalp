@@ -1,6 +1,6 @@
-package play.data.binding.types;
+package yalp.data.binding.types;
 
-import play.data.binding.TypeBinder;
+import yalp.data.binding.TypeBinder;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.text.ParseException;
@@ -8,9 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import play.data.binding.AnnotationHelper;
-import play.i18n.Lang;
-import play.libs.I18N;
+import yalp.data.binding.AnnotationHelper;
+import yalp.i18n.Lang;
+import yalp.libs.I18N;
 
 /**
  * Binder that support Calendar class.

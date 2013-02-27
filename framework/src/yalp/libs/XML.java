@@ -1,4 +1,4 @@
-package play.libs;
+package yalp.libs;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +39,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import play.Logger;
+import yalp.Logger;
 
 /**
  * XML utils

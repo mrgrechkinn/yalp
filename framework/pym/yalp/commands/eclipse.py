@@ -2,7 +2,7 @@ import os, os.path
 import shutil
 import time
 
-from play.utils import *
+from yalp.utils import *
 
 COMMANDS = ['eclipsify', 'ec']
 
@@ -13,7 +13,7 @@ HELP = {
 def execute(**kargs):
     app = kargs.get("app")
     args = kargs.get("args")
-    play_env = kargs.get("env")
+    yalp_env = kargs.get("env")
 
     is_application = os.path.exists(os.path.join(app.path, 'conf', 'application.conf'))
     if is_application:
@@ -46,17 +46,17 @@ def execute(**kargs):
         if os.name == 'nt':
             time.sleep(1)
 
-    shutil.copyfile(os.path.join(play_env["basedir"], 'resources/eclipse/.project'), dotProject)
-    shutil.copyfile(os.path.join(play_env["basedir"], 'resources/eclipse/.classpath'), dotClasspath)
+    shutil.copyfile(os.path.join(yalp_env["basedir"], 'resources/eclipse/.project'), dotProject)
+    shutil.copyfile(os.path.join(yalp_env["basedir"], 'resources/eclipse/.classpath'), dotClasspath)
     if is_application:
-        shutil.copytree(os.path.join(play_env["basedir"], 'resources/eclipse'), eclipse)
-    shutil.copytree(os.path.join(play_env["basedir"], 'resources/eclipse/.settings'), dotSettings)
+        shutil.copytree(os.path.join(yalp_env["basedir"], 'resources/eclipse'), eclipse)
+    shutil.copytree(os.path.join(yalp_env["basedir"], 'resources/eclipse/.settings'), dotSettings)
     replaceAll(dotProject, r'%PROJECT_NAME%', application_name)
 
-    playJarPath = os.path.join(play_env["basedir"], 'framework', 'play-%s.jar' % play_env['version'])
-    playSourcePath = os.path.join(os.path.dirname(playJarPath), 'src')
+    yalpJarPath = os.path.join(yalp_env["basedir"], 'framework', 'yalp-%s.jar' % yalp_env['version'])
+    yalpSourcePath = os.path.join(os.path.dirname(yalpJarPath), 'src')
     if os.name == 'nt':
-        playSourcePath=playSourcePath.replace('\\','/').capitalize()
+        yalpSourcePath=yalpSourcePath.replace('\\','/').capitalize()
 
     cpJarToSource = {}
     lib_src = os.path.join(app.path, 'tmp/lib-src')
@@ -65,7 +65,7 @@ def execute(**kargs):
         if os.path.basename(el) != "conf" and el.endswith('-sources.jar'):
             cpJarToSource[el.replace('-sources', '')] = el
 
-        # pointers to source jars produced by 'play deps'
+        # pointers to source jars produced by 'yalp deps'
         src_file = os.path.join(lib_src, os.path.basename(el) + '.src')
         if os.path.exists(src_file):
             f = file(src_file)
@@ -81,8 +81,8 @@ def execute(**kargs):
     cpXML = ""
     for el in classpath:
         if os.path.basename(el) != "conf":
-            if el == playJarPath:
-                cpXML += '<classpathentry kind="lib" path="%s" sourcepath="%s" />\n\t' % (os.path.normpath(el) , playSourcePath)
+            if el == yalpJarPath:
+                cpXML += '<classpathentry kind="lib" path="%s" sourcepath="%s" />\n\t' % (os.path.normpath(el) , yalpSourcePath)
             else:
                 if cpJarToSource.has_key(el):
                     cpXML += '<classpathentry kind="lib" path="%s" sourcepath="%s"/>\n\t' % (os.path.normpath(el), cpJarToSource[el])
@@ -126,17 +126,17 @@ def execute(**kargs):
 
     if is_application:
         replaceAll(os.path.join(app.path, 'eclipse/debug.launch'), r'%PROJECT_NAME%', application_name)
-        replaceAll(os.path.join(app.path, 'eclipse/debug.launch'), r'%PLAY_BASE%', play_env["basedir"])
-        replaceAll(os.path.join(app.path, 'eclipse/debug.launch'), r'%PLAY_ID%', play_env["id"])
+        replaceAll(os.path.join(app.path, 'eclipse/debug.launch'), r'%PLAY_BASE%', yalp_env["basedir"])
+        replaceAll(os.path.join(app.path, 'eclipse/debug.launch'), r'%PLAY_ID%', yalp_env["id"])
         replaceAll(os.path.join(app.path, 'eclipse/debug.launch'), r'%JPDA_PORT%', str(app.jpda_port))
-        replaceAll(os.path.join(app.path, 'eclipse/debug.launch'), r'%PLAY_VERSION%', play_env["version"])
+        replaceAll(os.path.join(app.path, 'eclipse/debug.launch'), r'%PLAY_VERSION%', yalp_env["version"])
         replaceAll(os.path.join(app.path, 'eclipse/debug.launch'), r'%VM_ARGUMENTS%', vm_arguments)
 
         replaceAll(os.path.join(app.path, 'eclipse/test.launch'), r'%PROJECT_NAME%', application_name)
-        replaceAll(os.path.join(app.path, 'eclipse/test.launch'), r'%PLAY_BASE%', play_env["basedir"])
-        replaceAll(os.path.join(app.path, 'eclipse/test.launch'), r'%PLAY_ID%', play_env["id"])
+        replaceAll(os.path.join(app.path, 'eclipse/test.launch'), r'%PLAY_BASE%', yalp_env["basedir"])
+        replaceAll(os.path.join(app.path, 'eclipse/test.launch'), r'%PLAY_ID%', yalp_env["id"])
         replaceAll(os.path.join(app.path, 'eclipse/test.launch'), r'%JPDA_PORT%', str(app.jpda_port))
-        replaceAll(os.path.join(app.path, 'eclipse/test.launch'), r'%PLAY_VERSION%', play_env["version"])
+        replaceAll(os.path.join(app.path, 'eclipse/test.launch'), r'%PLAY_VERSION%', yalp_env["version"])
         replaceAll(os.path.join(app.path, 'eclipse/test.launch'), r'%VM_ARGUMENTS%', vm_arguments)
 
         replaceAll(os.path.join(app.path, 'eclipse/connect.launch'), r'%PROJECT_NAME%', application_name)

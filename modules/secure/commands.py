@@ -1,7 +1,7 @@
 # Secure
 
 import getopt
-from play.utils import *
+from yalp.utils import *
 
 MODULE = "secure"
 

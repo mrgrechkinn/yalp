@@ -1,11 +1,11 @@
-package play.libs;
+package yalp.libs;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
-import play.Logger;
-import play.Play;
-import play.exceptions.MailException;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.exceptions.MailException;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -34,7 +34,7 @@ public class Mail {
         try {
             email = buildMessage(email);
 
-            if (Play.configuration.getProperty("mail.smtp", "").equals("mock") && Play.mode == Play.Mode.DEV) {
+            if (Yalp.configuration.getProperty("mail.smtp", "").equals("mock") && Yalp.mode == Yalp.Mode.DEV) {
                 Mock.send(email);
                 return new Future<Boolean>() {
 
@@ -72,7 +72,7 @@ public class Mail {
      */
     public static Email buildMessage(Email email) throws EmailException {
 
-        String from = Play.configuration.getProperty("mail.smtp.from");
+        String from = Yalp.configuration.getProperty("mail.smtp.from");
         if (email.getFromAddress() == null && !StringUtils.isEmpty(from)) {
             email.setFrom(from);
         } else if (email.getFromAddress() == null) {
@@ -98,14 +98,14 @@ public class Mail {
         if (session == null) {
             Properties props = new Properties();
             // Put a bogus value even if we are on dev mode, otherwise JavaMail will complain
-            props.put("mail.smtp.host", Play.configuration.getProperty("mail.smtp.host", "localhost"));
+            props.put("mail.smtp.host", Yalp.configuration.getProperty("mail.smtp.host", "localhost"));
 
             String channelEncryption;
-            if (Play.configuration.containsKey("mail.smtp.protocol") && Play.configuration.getProperty("mail.smtp.protocol", "smtp").equals("smtps")) {
+            if (Yalp.configuration.containsKey("mail.smtp.protocol") && Yalp.configuration.getProperty("mail.smtp.protocol", "smtp").equals("smtps")) {
                 // Backward compatibility before stable5
                 channelEncryption = "starttls";
             } else {
-                channelEncryption = Play.configuration.getProperty("mail.smtp.channel", "clear");
+                channelEncryption = Yalp.configuration.getProperty("mail.smtp.channel", "clear");
             }
 
             if (channelEncryption.equals("clear")) {
@@ -114,7 +114,7 @@ public class Mail {
                 // port 465 + setup yes ssl socket factory (won't verify that the server certificate is signed with a root ca.)
                 props.put("mail.smtp.port", "465");
                 props.put("mail.smtp.socketFactory.port", "465");
-                props.put("mail.smtp.socketFactory.class", "play.utils.YesSSLSocketFactory");
+                props.put("mail.smtp.socketFactory.class", "yalp.utils.YesSSLSocketFactory");
                 props.put("mail.smtp.socketFactory.fallback", "false");
             } else if (channelEncryption.equals("starttls")) {
                 // port 25 + enable starttls + ssl socket factory
@@ -124,28 +124,28 @@ public class Mail {
                 // story to be continued in javamail 1.4.2 : https://glassfish.dev.java.net/issues/show_bug.cgi?id=5189
             }
 
-            if (Play.configuration.containsKey("mail.smtp.localhost")) {
-                props.put("mail.smtp.localhost", Play.configuration.get("mail.smtp.localhost"));            //override defaults
+            if (Yalp.configuration.containsKey("mail.smtp.localhost")) {
+                props.put("mail.smtp.localhost", Yalp.configuration.get("mail.smtp.localhost"));            //override defaults
             }
-            if (Play.configuration.containsKey("mail.smtp.socketFactory.class")) {
-                props.put("mail.smtp.socketFactory.class", Play.configuration.get("mail.smtp.socketFactory.class"));
+            if (Yalp.configuration.containsKey("mail.smtp.socketFactory.class")) {
+                props.put("mail.smtp.socketFactory.class", Yalp.configuration.get("mail.smtp.socketFactory.class"));
             }
-            if (Play.configuration.containsKey("mail.smtp.port")) {
-                props.put("mail.smtp.port", Play.configuration.get("mail.smtp.port"));
+            if (Yalp.configuration.containsKey("mail.smtp.port")) {
+                props.put("mail.smtp.port", Yalp.configuration.get("mail.smtp.port"));
             }
-            String user = Play.configuration.getProperty("mail.smtp.user");
-            String password = Play.configuration.getProperty("mail.smtp.pass");
+            String user = Yalp.configuration.getProperty("mail.smtp.user");
+            String password = Yalp.configuration.getProperty("mail.smtp.pass");
             if (password == null) {
                 // Fallback to old convention
-                password = Play.configuration.getProperty("mail.smtp.password");
+                password = Yalp.configuration.getProperty("mail.smtp.password");
             }
-            String authenticator = Play.configuration.getProperty("mail.smtp.authenticator");
+            String authenticator = Yalp.configuration.getProperty("mail.smtp.authenticator");
             session = null;
 
             if (authenticator != null) {
                 props.put("mail.smtp.auth", "true");
                 try {
-                    session = Session.getInstance(props, (Authenticator) Play.classloader.loadClass(authenticator).newInstance());
+                    session = Session.getInstance(props, (Authenticator) Yalp.classloader.loadClass(authenticator).newInstance());
                 } catch (Exception e) {
                     Logger.error(e, "Cannot instanciate custom SMTP authenticator (%s)", authenticator);
                 }
@@ -161,7 +161,7 @@ public class Mail {
                 }
             }
 
-            if (Boolean.parseBoolean(Play.configuration.getProperty("mail.debug", "false"))) {
+            if (Boolean.parseBoolean(Yalp.configuration.getProperty("mail.debug", "false"))) {
                 session.setDebug(true);
             }
         }

@@ -1,4 +1,4 @@
-package play.data.validation;
+package yalp.data.validation;
 
 import java.net.Inet6Address;
 import java.net.InetAddress;

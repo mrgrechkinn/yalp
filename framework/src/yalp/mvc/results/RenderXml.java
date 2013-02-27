@@ -1,11 +1,11 @@
-package play.mvc.results;
+package yalp.mvc.results;
 
 import org.w3c.dom.Document;
 
-import play.exceptions.UnexpectedException;
-import play.libs.XML;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.XML;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
 
 import com.thoughtworks.xstream.XStream;
 

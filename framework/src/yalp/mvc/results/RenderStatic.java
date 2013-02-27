@@ -1,8 +1,8 @@
-package play.mvc.results;
+package yalp.mvc.results;
 
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
-import play.vfs.VirtualFile;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
+import yalp.vfs.VirtualFile;
 
 public class RenderStatic extends Result {
 

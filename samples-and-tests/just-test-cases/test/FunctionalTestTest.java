@@ -1,6 +1,6 @@
 import org.junit.*;
-import play.test.*;
-import play.mvc.Http.*;
+import yalp.test.*;
+import yalp.mvc.Http.*;
 import models.*;
 
 import java.util.HashMap;

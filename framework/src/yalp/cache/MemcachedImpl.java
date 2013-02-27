@@ -1,4 +1,4 @@
-package play.cache;
+package yalp.cache;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,9 +20,9 @@ import net.spy.memcached.MemcachedClient;
 import net.spy.memcached.auth.AuthDescriptor;
 import net.spy.memcached.auth.PlainCallbackHandler;
 import net.spy.memcached.transcoders.SerializingTranscoder;
-import play.Logger;
-import play.Play;
-import play.exceptions.ConfigurationException;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.exceptions.ConfigurationException;
 
 /**
  * Memcached implementation (using http://code.google.com/p/spymemcached/)
@@ -65,7 +65,7 @@ public class MemcachedImpl implements CacheImpl {
                         @Override
                         protected Class<?> resolveClass(ObjectStreamClass desc)
                                 throws IOException, ClassNotFoundException {
-                            return Class.forName(desc.getName(), false, Play.classloader);
+                            return Class.forName(desc.getName(), false, Yalp.classloader);
                         }
                     }.readObject();
                 } catch (Exception e) {
@@ -93,13 +93,13 @@ public class MemcachedImpl implements CacheImpl {
         System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.Log4JLogger");
         
         List<InetSocketAddress> addrs;
-        if (Play.configuration.containsKey("memcached.host")) {
-            addrs = AddrUtil.getAddresses(Play.configuration.getProperty("memcached.host"));
-        } else if (Play.configuration.containsKey("memcached.1.host")) {
+        if (Yalp.configuration.containsKey("memcached.host")) {
+            addrs = AddrUtil.getAddresses(Yalp.configuration.getProperty("memcached.host"));
+        } else if (Yalp.configuration.containsKey("memcached.1.host")) {
             int nb = 1;
             String addresses = "";
-            while (Play.configuration.containsKey("memcached." + nb + ".host")) {
-                addresses += Play.configuration.get("memcached." + nb + ".host") + " ";
+            while (Yalp.configuration.containsKey("memcached." + nb + ".host")) {
+                addresses += Yalp.configuration.get("memcached." + nb + ".host") + " ";
                 nb++;
             }
             addrs = AddrUtil.getAddresses(addresses);
@@ -107,9 +107,9 @@ public class MemcachedImpl implements CacheImpl {
             throw new ConfigurationException("Bad configuration for memcached: missing host(s)");
         }
         
-        if (Play.configuration.containsKey("memcached.user")) {
-            String memcacheUser = Play.configuration.getProperty("memcached.user");
-            String memcachePassword = Play.configuration.getProperty("memcached.password");
+        if (Yalp.configuration.containsKey("memcached.user")) {
+            String memcacheUser = Yalp.configuration.getProperty("memcached.user");
+            String memcachePassword = Yalp.configuration.getProperty("memcached.password");
             if (memcachePassword == null) {
                 throw new ConfigurationException("Bad configuration for memcached: missing password");
             }

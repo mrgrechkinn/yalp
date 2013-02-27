@@ -1,6 +1,6 @@
 package helpers;
 
-import play.Play;
+import yalp.Yalp;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CheatSheetHelper {
-    private static final File cheatSheetBaseDir = new File(Play.frameworkPath, "documentation/cheatsheets");
+    private static final File cheatSheetBaseDir = new File(Yalp.frameworkPath, "documentation/cheatsheets");
 
     public static File[] getSheets(String category, String docLang) {
         String docLangDir = (docLang != null && (!"en".equalsIgnoreCase(docLang) && !docLang.matches("en-.*"))) ? "_" + docLang : "";

@@ -3,11 +3,11 @@ package controllers;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Date;
-import play.Play;
-import play.mvc.*;
-import play.data.validation.*;
-import play.libs.*;
-import play.utils.*;
+import yalp.Yalp;
+import yalp.mvc.*;
+import yalp.data.validation.*;
+import yalp.libs.*;
+import yalp.utils.*;
 
 public class Secure extends Controller {
 
@@ -15,7 +15,7 @@ public class Secure extends Controller {
     static void checkAccess() throws Throwable {
         // Authent
         if(!session.contains("username")) {
-            flash.put("url", "GET".equals(request.method) ? request.url : Play.ctxPath + "/"); // seems a good default
+            flash.put("url", "GET".equals(request.method) ? request.url : Yalp.ctxPath + "/"); // seems a good default
             login();
         }
         // Checks
@@ -86,7 +86,7 @@ public class Secure extends Controller {
         // Remember if needed
         if(remember) {
             Date expiration = new Date();
-            String duration = Play.configuration.getProperty("secure.rememberme.duration","30d"); 
+            String duration = Yalp.configuration.getProperty("secure.rememberme.duration","30d"); 
             expiration.setTime(expiration.getTime() + Time.parseDuration(duration) * 1000 );
             response.setCookie("rememberme", Crypto.sign(username + "-" + expiration.getTime()) + "-" + username + "-" + expiration.getTime(), duration);
 
@@ -110,7 +110,7 @@ public class Secure extends Controller {
         Security.invoke("onAuthenticated");
         String url = flash.get("url");
         if(url == null) {
-            url = Play.ctxPath + "/";
+            url = Yalp.ctxPath + "/";
         }
         redirect(url);
     }

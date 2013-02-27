@@ -10,7 +10,7 @@ import webbrowser
 import time
 import signal
 
-from play.utils import *
+from yalp.utils import *
 
 COMMANDS = ['run', 'new', 'clean', 'test', 'autotest', 'auto-test', 'id', 'new,run', 'clean,run', 'modules']
 
@@ -79,7 +79,7 @@ def new(app, args, env, cmdloader=None):
         
         if not dirname:
             print "~ Oops. No module %s found" % m
-            print "~ Try to install it using 'play install %s'" % m
+            print "~ Try to install it using 'yalp install %s'" % m
             print "~"
             sys.exit(-1)
 
@@ -107,7 +107,7 @@ def new(app, args, env, cmdloader=None):
             deps = open(depsYaml).read()
             try:
                 moduleDefinition = re.search(r'self:\s*(.*)\s*', deps).group(1)
-                replaceAll(os.path.join(app.path, 'conf/dependencies.yml'), r'- play\n', '- play\n    - %s\n' % moduleDefinition )
+                replaceAll(os.path.join(app.path, 'conf/dependencies.yml'), r'- yalp\n', '- yalp\n    - %s\n' % moduleDefinition )
                 runDepsAfter = True
             except Exception:
                 pass
@@ -116,7 +116,7 @@ def new(app, args, env, cmdloader=None):
         cmdloader.commands['dependencies'].execute(command='dependencies', app=app, args=['--sync'], env=env, cmdloader=cmdloader)
 
     print "~ OK, the application is created."
-    print "~ Start it with : play run %s" % sys.argv[2]
+    print "~ Start it with : yalp run %s" % sys.argv[2]
     print "~ Have fun!"
     print "~"
 
@@ -227,7 +227,7 @@ def autotest(app, args):
     # Do not run the app if SSL is configured and no cert store is configured
     keystore = app.readConf('keystore.file')
     if protocol == 'https' and not keystore:
-      print "https without keystore configured. play auto-test will fail. Exiting now."
+      print "https without keystore configured. yalp auto-test will fail. Exiting now."
       sys.exit(-1)
     # Run app
     test_result = os.path.join(app.path, 'test-result')
@@ -236,13 +236,13 @@ def autotest(app, args):
     sout = open(os.path.join(app.log_path(), 'system.out'), 'w')
     java_cmd = app.java_cmd(args)
     try:
-        play_process = subprocess.Popen(java_cmd, env=os.environ, stdout=sout)
+        yalp_process = subprocess.Popen(java_cmd, env=os.environ, stdout=sout)
     except OSError:
         print "Could not execute the java executable, please make sure the JAVA_HOME environment variable is set properly (the java executable should reside at JAVA_HOME/bin/java). "
         sys.exit(-1)
     soutint = open(os.path.join(app.log_path(), 'system.out'), 'r')
     while True:
-        if play_process.poll():
+        if yalp_process.poll():
             print "~"
             print "~ Oops, application has not started?"
             print "~"
@@ -261,15 +261,15 @@ def autotest(app, args):
     if app.readConf('headlessBrowser'):
         headless_browser = app.readConf('headlessBrowser')
 
-    fpcp = [os.path.join(app.play_env["basedir"], 'modules/testrunner/lib/play-testrunner.jar')]
-    fpcp_libs = os.path.join(app.play_env["basedir"], 'modules/testrunner/firephoque')
+    fpcp = [os.path.join(app.yalp_env["basedir"], 'modules/testrunner/lib/yalp-testrunner.jar')]
+    fpcp_libs = os.path.join(app.yalp_env["basedir"], 'modules/testrunner/firephoque')
     for jar in os.listdir(fpcp_libs):
         if jar.endswith('.jar'):
            fpcp.append(os.path.normpath(os.path.join(fpcp_libs, jar)))
     cp_args = ':'.join(fpcp)
     if os.name == 'nt':
         cp_args = ';'.join(fpcp)    
-    java_cmd = [app.java_path(), '-classpath', cp_args, '-Dapplication.url=%s://localhost:%s' % (protocol, http_port), '-DheadlessBrowser=%s' % (headless_browser), 'play.modules.testrunner.FirePhoque']
+    java_cmd = [app.java_path(), '-classpath', cp_args, '-Dapplication.url=%s://localhost:%s' % (protocol, http_port), '-DheadlessBrowser=%s' % (headless_browser), 'yalp.modules.testrunner.FirePhoque']
     if protocol == 'https':
         java_cmd.insert(-1, '-Djavax.net.ssl.trustStore=' + app.readConf('keystore.file'))
     try:
@@ -298,21 +298,21 @@ def autotest(app, args):
         print "~"
         sys.exit(1)
 
-def id(play_env):
-    if not play_env["id"]:
+def id(yalp_env):
+    if not yalp_env["id"]:
         print "~ framework ID is not set"
     new_id = raw_input("~ What is the new framework ID (or blank to unset)? ")
     if new_id:
         print "~"
         print "~ OK, the framework ID is now %s" % new_id
         print "~"
-        open(play_env["id_file"], 'w').write(new_id)
+        open(yalp_env["id_file"], 'w').write(new_id)
     else:
         print "~"
         print "~ OK, the framework ID is unset"
         print "~"
-        if os.path.exists(play_env["id_file"]):
-            os.remove(play_env["id_file"])
+        if os.path.exists(yalp_env["id_file"]):
+            os.remove(yalp_env["id_file"])
 
 # ~~~~~~~~~ UTILS
 
@@ -328,6 +328,6 @@ def kill(pid):
         try:
             os.kill(int(pid), 15)
         except OSError:
-            print "~ Play was not running (Process id %s not found)" % pid
+            print "~ Yalp was not running (Process id %s not found)" % pid
             print "~"
             sys.exit(-1)

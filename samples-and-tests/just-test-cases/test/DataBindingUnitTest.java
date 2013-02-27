@@ -8,12 +8,12 @@ import java.util.concurrent.Future;
 import org.junit.Before;
 import org.junit.Test;
 
-import play.Logger;
-import play.libs.WS;
-import play.libs.WS.FileParam;
-import play.libs.WS.HttpResponse;
-import play.mvc.Http.Header;
-import play.test.UnitTest;
+import yalp.Logger;
+import yalp.libs.WS;
+import yalp.libs.WS.FileParam;
+import yalp.libs.WS.HttpResponse;
+import yalp.mvc.Http.Header;
+import yalp.test.UnitTest;
 
 import com.google.gson.JsonObject;
 import controllers.Rest;

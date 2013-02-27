@@ -4,7 +4,7 @@ import re
 import shutil
 import socket
 
-from play.utils import *
+from yalp.utils import *
 
 
 class ModuleNotFound(Exception):
@@ -13,8 +13,8 @@ class ModuleNotFound(Exception):
     def __str__(self):
         return repr(self.value)
 
-class PlayApplication(object):
-    """A Play Application: conf file, java"""
+class YalpApplication(object):
+    """A Yalp Application: conf file, java"""
 
     # ~~~~~~~~~~~~~~~~~~~~~~ Constructor
 
@@ -26,13 +26,13 @@ class PlayApplication(object):
         if application_path is not None and confExists:
             confFolder = os.path.join(application_path, 'conf/')
             try:
-                self.conf = PlayConfParser(confFolder, env)
+                self.conf = YalpConfParser(confFolder, env)
             except Exception as err:
                 print "~ Failed to parse application configuration", err
                 self.conf = None # No app / Invalid app
         else:
             self.conf = None
-        self.play_env = env
+        self.yalp_env = env
         self.jpda_port = self.readConf('jpda.port')
         self.ignoreMissingModules = ignoreMissingModules
 
@@ -63,16 +63,16 @@ class PlayApplication(object):
     def modules(self):
         modules = []
         for m in self.readConfs('module.'):
-            if '${play.path}' in m:
-                m = m.replace('${play.path}', self.play_env["basedir"])
+            if '${yalp.path}' in m:
+                m = m.replace('${yalp.path}', self.yalp_env["basedir"])
             if m[0] is not '/':
                 m = os.path.normpath(os.path.join(self.path, m))
             if not os.path.exists(m) and not self.ignoreMissingModules:
                 print "~ Oops,"
                 print "~ Module not found: %s" % (m)
                 print "~"
-                if m.startswith('${play.path}/modules'):
-                    print "~ You can try to install the missing module using 'play install %s'" % (m[21:])
+                if m.startswith('${yalp.path}/modules'):
+                    print "~ You can try to install the missing module using 'yalp install %s'" % (m[21:])
                     print "~"
                 sys.exit(-1)
             modules.append(m)
@@ -85,8 +85,8 @@ class PlayApplication(object):
                     modules.append(mf)
                 else:
                     modules.append(open(mf, 'r').read().strip())
-        if isTestFrameworkId( self.play_env["id"] ):
-            modules.append(os.path.normpath(os.path.join(self.play_env["basedir"], 'modules/testrunner')))
+        if isTestFrameworkId( self.yalp_env["id"] ):
+            modules.append(os.path.normpath(os.path.join(self.yalp_env["basedir"], 'modules/testrunner')))
         return set(modules) # Ensure we don't have duplicates
 
     def module_names(self):
@@ -135,7 +135,7 @@ class PlayApplication(object):
 
         # The default
         classpath.append(os.path.normpath(os.path.join(self.path, 'conf')))
-        classpath.append(os.path.normpath(os.path.join(self.play_env["basedir"], 'framework/play-%s.jar' % self.play_env['version'])))
+        classpath.append(os.path.normpath(os.path.join(self.yalp_env["basedir"], 'framework/yalp-%s.jar' % self.yalp_env['version'])))
 
         # The application - recursively add jars to the classpath inside the lib folder to allow for subdirectories
         if os.path.exists(os.path.join(self.path, 'lib')):
@@ -151,9 +151,9 @@ class PlayApplication(object):
                             classpath.append(os.path.normpath(os.path.join(libs, '%s' % jar)))
 
         # The framework
-        for jar in os.listdir(os.path.join(self.play_env["basedir"], 'framework/lib')):
+        for jar in os.listdir(os.path.join(self.yalp_env["basedir"], 'framework/lib')):
             if jar.endswith('.jar'):
-                classpath.append(os.path.normpath(os.path.join(self.play_env["basedir"], 'framework/lib/%s' % jar)))
+                classpath.append(os.path.normpath(os.path.join(self.yalp_env["basedir"], 'framework/lib/%s' % jar)))
 
         return classpath
 
@@ -162,17 +162,17 @@ class PlayApplication(object):
 
         # The default
         classpath.append(os.path.normpath(os.path.join(self.path, 'conf')))
-        classpath.append(os.path.normpath(os.path.join(self.play_env["basedir"], 'framework/play-%s.jar' % self.play_env['version'])))
+        classpath.append(os.path.normpath(os.path.join(self.yalp_env["basedir"], 'framework/yalp-%s.jar' % self.yalp_env['version'])))
 
         # The framework
-        for jar in os.listdir(os.path.join(self.play_env["basedir"], 'framework/lib')):
+        for jar in os.listdir(os.path.join(self.yalp_env["basedir"], 'framework/lib')):
             if jar.endswith('.jar'):
-                classpath.append(os.path.normpath(os.path.join(self.play_env["basedir"], 'framework/lib/%s' % jar)))
+                classpath.append(os.path.normpath(os.path.join(self.yalp_env["basedir"], 'framework/lib/%s' % jar)))
 
         return classpath
 
     def agent_path(self):
-        return os.path.join(self.play_env["basedir"], 'framework/play-%s.jar' % self.play_env['version'])
+        return os.path.join(self.yalp_env["basedir"], 'framework/yalp-%s.jar' % self.yalp_env['version'])
 
     def cp_args(self):
         classpath = self.getClasspath()
@@ -196,18 +196,18 @@ class PlayApplication(object):
             return os.path.normpath("%s/bin/java" % os.environ['JAVA_HOME'])
 
     def pid_path(self):
-        if self.play_env.has_key('pid_file'):
-            return os.path.join(self.path, self.play_env['pid_file'])
-        elif os.environ.has_key('PLAY_PID_PATH'):
-            return os.environ['PLAY_PID_PATH']
+        if self.yalp_env.has_key('pid_file'):
+            return os.path.join(self.path, self.yalp_env['pid_file'])
+        elif os.environ.has_key('YALP_PID_PATH'):
+            return os.environ['YALP_PID_PATH']
         else:
             return os.path.join(self.path, 'server.pid')
 
     def log_path(self):
-        if not os.environ.has_key('PLAY_LOG_PATH'):
+        if not os.environ.has_key('YALP_LOG_PATH'):
             log_path = os.path.join(self.path, 'logs')
         else:
-            log_path = os.environ['PLAY_LOG_PATH']
+            log_path = os.environ['YALP_LOG_PATH']
         if not os.path.exists(log_path):
             os.mkdir(log_path)
         return log_path
@@ -222,7 +222,7 @@ class PlayApplication(object):
             print 'JPDA port %s is already used. Will try to use any free port for debugging' % self.jpda_port
             self.jpda_port = 0
 
-    def java_cmd(self, java_args, cp_args=None, className='play.server.Server', args = None):
+    def java_cmd(self, java_args, cp_args=None, className='yalp.server.Server', args = None):
         if args is None:
             args = ['']
         memory_in_args=False
@@ -254,20 +254,20 @@ class PlayApplication(object):
                 java_args.append('-Djava.security.manager')
                 java_args.append('-Djava.security.policy==%s' % policyFile)
 
-        if self.play_env.has_key('http.port'):
-            args += ["--http.port=%s" % self.play_env['http.port']]
-        if self.play_env.has_key('https.port'):
-            args += ["--https.port=%s" % self.play_env['https.port']]
+        if self.yalp_env.has_key('http.port'):
+            args += ["--http.port=%s" % self.yalp_env['http.port']]
+        if self.yalp_env.has_key('https.port'):
+            args += ["--https.port=%s" % self.yalp_env['https.port']]
             
         java_args.append('-Dfile.encoding=utf-8')
 
         if self.readConf('application.mode').lower() == 'dev':
-            if not self.play_env["disable_check_jpda"]: self.check_jpda()
+            if not self.yalp_env["disable_check_jpda"]: self.check_jpda()
             java_args.append('-Xdebug')
             java_args.append('-Xrunjdwp:transport=dt_socket,address=%s,server=y,suspend=n' % self.jpda_port)
-            java_args.append('-Dplay.debug=yes')
+            java_args.append('-Dyalp.debug=yes')
         
-        java_cmd = [self.java_path(), '-javaagent:%s' % self.agent_path()] + java_args + ['-classpath', cp_args, '-Dapplication.path=%s' % self.path, '-Dplay.id=%s' % self.play_env["id"], className] + args
+        java_cmd = [self.java_path(), '-javaagent:%s' % self.agent_path()] + java_args + ['-classpath', cp_args, '-Dapplication.path=%s' % self.path, '-Dyalp.id=%s' % self.yalp_env["id"], className] + args
         return java_cmd
 
     # ~~~~~~~~~~~~~~~~~~~~~~ MISC
@@ -289,7 +289,7 @@ def _absoluteToRelative(path, start):
         return os.path.curdir
     return os.path.join(*rel_list)
 
-class PlayConfParser:
+class YalpConfParser:
 
     DEFAULTS = {
         'http.port': '9000',
@@ -377,7 +377,7 @@ class PlayConfParser:
     def _expandValue(self, value):
         def expandvar(match):
             key = match.group(1)
-            if key == 'play.id':
+            if key == 'yalp.id':
                 return self.id
             else: # unkonwn
                 return '${%s}' % key

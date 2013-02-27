@@ -1,4 +1,4 @@
-package play;
+package yalp;
 /**
  * 
  */
@@ -30,7 +30,7 @@ public class LoggerTest {
     
 //    private static String applicationLogPath;
     
-    private static Properties playConfig;
+    private static Properties yalpConfig;
     
     private static File applicationPath;
     
@@ -44,9 +44,9 @@ public class LoggerTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        playConfig = Play.configuration;
-        applicationPath = Play.applicationPath;
-        id = Play.id;
+        yalpConfig = Yalp.configuration;
+        applicationPath = Yalp.applicationPath;
+        id = Yalp.id;
         log4j = Logger.log4j;        
     }
 
@@ -56,20 +56,20 @@ public class LoggerTest {
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
-        Play.configuration = playConfig;
-        Play.applicationPath = applicationPath;
-        Play.id = id ;
+        Yalp.configuration = yalpConfig;
+        Yalp.applicationPath = applicationPath;
+        Yalp.id = id ;
         Logger.log4j = log4j;
-        if (Play.configuration != null) {
+        if (Yalp.configuration != null) {
                 Logger.init();
         }
     }
     
     @Before
     public void setUp() throws Exception {
-        Play.configuration = new Properties();
-        Play.applicationPath = new File(".");
-        Play.id="test";   
+        Yalp.configuration = new Properties();
+        Yalp.applicationPath = new File(".");
+        Yalp.id="test";   
     }
 
     @After
@@ -78,11 +78,11 @@ public class LoggerTest {
 
 
     /**
-     * Test method for {@link play.Logger#init()}.
+     * Test method for {@link yalp.Logger#init()}.
      */
     @Test
     public void testInitWithProperties() {        
-        Play.configuration.put(APPLICATION_LOG_PATH_PROPERTYNAME, "/play/testlog4j.properties");
+        Yalp.configuration.put(APPLICATION_LOG_PATH_PROPERTYNAME, "/yalp/testlog4j.properties");
         Logger.log4j=null;
         Logger.init();
         org.apache.log4j.Logger log4jLogger = org.apache.log4j.Logger.getLogger("logtest.properties");
@@ -90,11 +90,11 @@ public class LoggerTest {
     }
 
     /**
-     * Test method for {@link play.Logger#init()}.
+     * Test method for {@link yalp.Logger#init()}.
      */
     @Test
     public void testInitWithXML() {        
-        Play.configuration.put(APPLICATION_LOG_PATH_PROPERTYNAME, "/play/testlog4j.xml");
+        Yalp.configuration.put(APPLICATION_LOG_PATH_PROPERTYNAME, "/yalp/testlog4j.xml");
         Logger.log4j=null;
         Logger.init();
         org.apache.log4j.Logger log4jLogger = org.apache.log4j.Logger.getLogger("logtest.xml");

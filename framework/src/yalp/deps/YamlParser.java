@@ -1,4 +1,4 @@
-package play.deps;
+package yalp.deps;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class YamlParser extends AbstractModuleDescriptorParser {
                     if (m.matches()) {
                         String org = m.group(1);
                         String name = m.group(2);
-                        String rev = m.group(3).replace("$version", System.getProperty("play.version"));
+                        String rev = m.group(3).replace("$version", System.getProperty("yalp.version"));
                         id = ModuleRevisionId.newInstance(org, name, rev);
                     } else {
                         throw new Oops("Unknown self format -> " + data.get("self"));
@@ -77,7 +77,7 @@ public class YamlParser extends AbstractModuleDescriptorParser {
                     throw new Oops("Unknown self format -> " + data.get("self"));
                 }
             } else {
-                String org = "play-application";
+                String org = "yalp-application";
                 String name = new File(System.getProperty("application.path")).getName();
                 String rev = "1.0";
                 id = ModuleRevisionId.newInstance(org, name, rev);
@@ -115,15 +115,15 @@ public class YamlParser extends AbstractModuleDescriptorParser {
                         }
 
                         // Hack
-                        depName = depName.replace("$version", System.getProperty("play.version"));
-                        if(depName.matches("play\\s+->\\s+play") || depName.equals("play")) {
-                            depName = "play -> play " + System.getProperty("play.version");
+                        depName = depName.replace("$version", System.getProperty("yalp.version"));
+                        if(depName.matches("yalp\\s+->\\s+yalp") || depName.equals("yalp")) {
+                            depName = "yalp -> yalp " + System.getProperty("yalp.version");
                         }
-                        if(depName.matches("play\\s+->\\s+crud") || depName.equals("crud")) {
-                            depName = "play -> crud " + System.getProperty("play.version");
+                        if(depName.matches("yalp\\s+->\\s+crud") || depName.equals("crud")) {
+                            depName = "yalp -> crud " + System.getProperty("yalp.version");
                         }
-                        if(depName.matches("play\\s+->\\s+secure") || depName.equals("secure")) {
-                            depName = "play -> secure " + System.getProperty("play.version");
+                        if(depName.matches("yalp\\s+->\\s+secure") || depName.equals("secure")) {
+                            depName = "yalp -> secure " + System.getProperty("yalp.version");
                         }
 
                         Matcher m = Pattern.compile("([^\\s]+)\\s*[-][>]\\s*([^\\s]+)\\s+([^\\s]+)(\\s+[^\\s]+)?.*").matcher(depName);
@@ -176,7 +176,7 @@ public class YamlParser extends AbstractModuleDescriptorParser {
 
                         // Ids
                         boolean useIt = true;
-                        String currentId = System.getProperty("play.id");
+                        String currentId = System.getProperty("yalp.id");
                         if (currentId == null || currentId.trim().equals("")) {
                             currentId = "unset";
                         }
@@ -221,7 +221,7 @@ public class YamlParser extends AbstractModuleDescriptorParser {
             Object o = data.get(key);
             if (type.isAssignableFrom(o.getClass())) {
                 if(o instanceof String) {
-                    o = o.toString().replace("${play.path}", System.getProperty("play.path"));
+                    o = o.toString().replace("${yalp.path}", System.getProperty("yalp.path"));
                     o = o.toString().replace("${application.path}", System.getProperty("application.path"));
                 }
                 return (T) o;

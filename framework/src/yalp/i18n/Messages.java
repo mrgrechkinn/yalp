@@ -1,12 +1,12 @@
-package play.i18n;
+package yalp.i18n;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import play.Logger;
-import play.Play;
-import play.data.binding.Binder;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.data.binding.Binder;
 
 /**
  * I18n Helper
@@ -80,7 +80,7 @@ public class Messages {
 
     public static String getMessage(String locale, Object key, Object... args) {
         // Check if there is a plugin that handles translation
-        String message = Play.pluginCollection.getMessage(locale, key, args);
+        String message = Yalp.pluginCollection.getMessage(locale, key, args);
 
         if(message != null) {
             return message;

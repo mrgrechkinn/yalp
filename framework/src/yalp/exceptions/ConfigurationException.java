@@ -1,9 +1,9 @@
-package play.exceptions;
+package yalp.exceptions;
 
 /**
  * Error in application.conf
  */
-public class ConfigurationException extends PlayException {
+public class ConfigurationException extends YalpException {
 
     public ConfigurationException(String message) {
         super(message);

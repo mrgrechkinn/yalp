@@ -1,4 +1,4 @@
-package play.classloading.enhancers;
+package yalp.classloading.enhancers;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -18,10 +18,10 @@ import javassist.NotFoundException;
 import javassist.bytecode.AccessFlag;
 import javassist.expr.ExprEditor;
 import javassist.expr.FieldAccess;
-import play.Logger;
-import play.Play;
-import play.classloading.ApplicationClasses.ApplicationClass;
-import play.exceptions.UnexpectedException;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
+import yalp.exceptions.UnexpectedException;
 
 /**
  * Generate valid JavaBeans. 
@@ -99,7 +99,7 @@ public class PropertiesEnhancer extends Enhancer {
                             CtMethod setMethod = CtMethod.make("public void " + setter + "(" + ctField.getType().getName() + " value) { this." + ctField.getName() + " = value; }", ctClass);
                             setMethod.setModifiers(setMethod.getModifiers() | AccessFlag.SYNTHETIC);
                             ctClass.addMethod(setMethod);
-                            createAnnotation(getAnnotations(setMethod), PlayPropertyAccessor.class);
+                            createAnnotation(getAnnotations(setMethod), YalpPropertyAccessor.class);
                         }
                     }
 
@@ -161,12 +161,12 @@ public class PropertiesEnhancer extends Enhancer {
                                 if (fieldAccess.isReader()) {
 
                                     // Réécris l'accés en lecture à la property
-                                    fieldAccess.replace("$_ = ($r)play.classloading.enhancers.PropertiesEnhancer.FieldAccessor.invokeReadProperty($0, \"" + fieldAccess.getFieldName() + "\", \"" + fieldAccess.getClassName() + "\", \"" + invocationPoint + "\");");
+                                    fieldAccess.replace("$_ = ($r)yalp.classloading.enhancers.PropertiesEnhancer.FieldAccessor.invokeReadProperty($0, \"" + fieldAccess.getFieldName() + "\", \"" + fieldAccess.getClassName() + "\", \"" + invocationPoint + "\");");
 
                                 } else if (!isFinal(fieldAccess.getField()) && fieldAccess.isWriter()) {
 
                                     // Réécris l'accés en ecriture à la property
-                                    fieldAccess.replace("play.classloading.enhancers.PropertiesEnhancer.FieldAccessor.invokeWriteProperty($0, \"" + fieldAccess.getFieldName() + "\", " + fieldAccess.getField().getType().getName() + ".class, $1, \"" + fieldAccess.getClassName() + "\", \"" + invocationPoint + "\");");
+                                    fieldAccess.replace("yalp.classloading.enhancers.PropertiesEnhancer.FieldAccessor.invokeWriteProperty($0, \"" + fieldAccess.getFieldName() + "\", " + fieldAccess.getField().getType().getName() + ".class, $1, \"" + fieldAccess.getClassName() + "\", \"" + invocationPoint + "\");");
 
 
                                 }
@@ -212,7 +212,7 @@ public class PropertiesEnhancer extends Enhancer {
             if (o == null) {
                 throw new NullPointerException("Try to read " + property + " on null object " + targetType + " (" + invocationPoint + ")");
             }
-            if (o.getClass().getClassLoader() == null || !o.getClass().getClassLoader().equals(Play.classloader)) {
+            if (o.getClass().getClassLoader() == null || !o.getClass().getClassLoader().equals(Yalp.classloader)) {
                 return o.getClass().getField(property).get(o);
             }
             String getter = "get" + property.substring(0, 1).toUpperCase() + property.substring(1);
@@ -277,6 +277,6 @@ public class PropertiesEnhancer extends Enhancer {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
-    public @interface PlayPropertyAccessor {
+    public @interface YalpPropertyAccessor {
     }
 }

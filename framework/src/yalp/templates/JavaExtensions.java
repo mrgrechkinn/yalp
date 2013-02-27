@@ -1,4 +1,4 @@
-package play.templates;
+package yalp.templates;
 
 import groovy.lang.Closure;
 import groovy.util.XmlSlurper;
@@ -22,13 +22,13 @@ import java.util.TimeZone;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
-import play.Logger;
-import play.i18n.Lang;
-import play.i18n.Messages;
-import play.libs.I18N;
-import play.mvc.Http;
-import play.templates.BaseTemplate.RawData;
-import play.utils.HTML;
+import yalp.Logger;
+import yalp.i18n.Lang;
+import yalp.i18n.Messages;
+import yalp.libs.I18N;
+import yalp.mvc.Http;
+import yalp.templates.BaseTemplate.RawData;
+import yalp.utils.HTML;
 
 /**
  * Java extensions in templates
@@ -241,7 +241,7 @@ public class JavaExtensions {
 
     public static String urlEncode(String entity) {
         try {
-            String encoding = play.Play.defaultWebEncoding;
+            String encoding = yalp.Yalp.defaultWebEncoding;
             if (Http.Response.current() != null) {
                 encoding = Http.Response.current().encoding;
             }
@@ -383,7 +383,7 @@ public class JavaExtensions {
     }
 
     public static String yesno(Object o, String[] values) {
-        boolean value = play.templates.FastTags._evaluateCondition(o);
+        boolean value = yalp.templates.FastTags._evaluateCondition(o);
         if (value) {
             return values[0];
         }

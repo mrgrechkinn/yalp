@@ -1,4 +1,4 @@
-package play.data.parsing;
+package yalp.data.parsing;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -26,14 +26,14 @@ import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.output.DeferredFileOutputStream;
-import play.Logger;
-import play.Play;
-import play.data.FileUpload;
-import play.data.MemoryUpload;
-import play.data.Upload;
-import play.exceptions.UnexpectedException;
-import play.mvc.Http.Request;
-import play.utils.HTTP;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.data.FileUpload;
+import yalp.data.MemoryUpload;
+import yalp.data.Upload;
+import yalp.exceptions.UnexpectedException;
+import yalp.mvc.Http.Request;
+import yalp.utils.HTTP;
 
 /**
  * From Apache commons fileupload.
@@ -144,7 +144,7 @@ public class ApacheMultipartParser extends DataParser {
             this.contentType = stream.getContentType();
             this.isFormField = stream.isFormField();
             this.fileName = FilenameUtils.getName(stream.getName());
-            this.sizeThreshold = Integer.parseInt(Play.configuration.getProperty("upload.threshold", "10240"));
+            this.sizeThreshold = Integer.parseInt(Yalp.configuration.getProperty("upload.threshold", "10240"));
             this.repository = null;
         }
         // ------------------------------- Methods from javax.activation.DataSource
@@ -502,7 +502,7 @@ public class ApacheMultipartParser extends DataParser {
         protected File getTempFile() {
             File tempDir = repository;
             if (tempDir == null) {
-                tempDir = Play.tmpDir;
+                tempDir = Yalp.tmpDir;
             }
 
             String fileName = "upload_" + getUniqueId() + ".tmp";

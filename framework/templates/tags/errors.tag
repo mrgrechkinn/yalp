@@ -8,9 +8,9 @@ errors are returned
 %{ 
         _field = _arg ?: _field 
         if (! _field) { 
-                validations = play.data.validation.Validation.errors() 
+                validations = yalp.data.validation.Validation.errors() 
         } else { 
-                validations = play.data.validation.Validation.errors(_field) 
+                validations = yalp.data.validation.Validation.errors(_field) 
         } 
         size = validations.size()
         validations.eachWithIndex() { item, i -> 

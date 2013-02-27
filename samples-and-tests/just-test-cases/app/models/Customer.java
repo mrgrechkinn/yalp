@@ -1,6 +1,6 @@
 package models;
 
-import play.db.jpa.Model;
+import yalp.db.jpa.Model;
 import javax.persistence.*;
 import java.util.*;
 

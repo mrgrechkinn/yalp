@@ -1,13 +1,13 @@
-package play.cache;
+package yalp.cache;
 
 import java.io.NotSerializableException;
 import java.io.Serializable;
 import java.util.Map;
 
-import play.Logger;
-import play.Play;
-import play.exceptions.CacheException;
-import play.libs.Time;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.exceptions.CacheException;
+import yalp.libs.Time;
 
 /**
  * The Cache. Mainly an interface to memcached or EhCache.
@@ -228,7 +228,7 @@ public abstract class Cache {
             cacheImpl = forcedCacheImpl;
             return;
         }
-        if (Play.configuration.getProperty("memcached", "disabled").equals("enabled")) {
+        if (Yalp.configuration.getProperty("memcached", "disabled").equals("enabled")) {
             try {
                 cacheImpl = MemcachedImpl.getInstance(true);
                 Logger.info("Connected to memcached");

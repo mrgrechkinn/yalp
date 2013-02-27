@@ -1,6 +1,6 @@
-package play.exceptions;
+package yalp.exceptions;
 
-import play.classloading.ApplicationClasses.ApplicationClass;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
 
 /**
  * An exception occured during Java execution

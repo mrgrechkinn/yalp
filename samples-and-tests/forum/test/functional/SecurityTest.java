@@ -2,7 +2,7 @@ package functional;
 
 import org.junit.*;
 
-import play.test.*;
+import yalp.test.*;
 
 public class SecurityTest extends FunctionalTest {
 

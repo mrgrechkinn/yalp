@@ -2,7 +2,7 @@ package models;
 
 import java.util.*;
 
-import play.data.validation.*;
+import yalp.data.validation.*;
 
 public class MyAddress {
 

@@ -1,4 +1,4 @@
-package play.mvc;
+package yalp.mvc;
 
 import java.io.File;
 import java.io.InputStream;
@@ -14,52 +14,52 @@ import java.util.concurrent.Future;
 
 import org.w3c.dom.Document;
 
-import play.Invoker.Suspend;
-import play.Logger;
-import play.Play;
-import play.classloading.ApplicationClasses;
-import play.classloading.ApplicationClasses.ApplicationClass;
-import play.classloading.enhancers.ContinuationEnhancer;
-import play.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation;
-import play.classloading.enhancers.ControllersEnhancer.ControllerSupport;
-import play.classloading.enhancers.LocalvariablesNamesEnhancer;
-import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
-import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesSupport;
-import play.data.binding.Unbinder;
-import play.data.validation.Validation;
-import play.data.validation.ValidationPlugin;
-import play.exceptions.*;
-import play.libs.Time;
-import play.mvc.Http.Request;
-import play.mvc.Router.ActionDefinition;
-import play.mvc.results.BadRequest;
-import play.mvc.results.Error;
-import play.mvc.results.Forbidden;
-import play.mvc.results.NotFound;
-import play.mvc.results.NotModified;
-import play.mvc.results.Ok;
-import play.mvc.results.Redirect;
-import play.mvc.results.RedirectToStatic;
-import play.mvc.results.RenderBinary;
-import play.mvc.results.RenderHtml;
-import play.mvc.results.RenderJson;
-import play.mvc.results.RenderTemplate;
-import play.mvc.results.RenderText;
-import play.mvc.results.RenderXml;
-import play.mvc.results.Result;
-import play.mvc.results.Unauthorized;
-import play.templates.Template;
-import play.templates.TemplateLoader;
-import play.utils.Default;
-import play.utils.Java;
-import play.vfs.VirtualFile;
+import yalp.Invoker.Suspend;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.classloading.ApplicationClasses;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
+import yalp.classloading.enhancers.ContinuationEnhancer;
+import yalp.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation;
+import yalp.classloading.enhancers.ControllersEnhancer.ControllerSupport;
+import yalp.classloading.enhancers.LocalvariablesNamesEnhancer;
+import yalp.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
+import yalp.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesSupport;
+import yalp.data.binding.Unbinder;
+import yalp.data.validation.Validation;
+import yalp.data.validation.ValidationPlugin;
+import yalp.exceptions.*;
+import yalp.libs.Time;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Router.ActionDefinition;
+import yalp.mvc.results.BadRequest;
+import yalp.mvc.results.Error;
+import yalp.mvc.results.Forbidden;
+import yalp.mvc.results.NotFound;
+import yalp.mvc.results.NotModified;
+import yalp.mvc.results.Ok;
+import yalp.mvc.results.Redirect;
+import yalp.mvc.results.RedirectToStatic;
+import yalp.mvc.results.RenderBinary;
+import yalp.mvc.results.RenderHtml;
+import yalp.mvc.results.RenderJson;
+import yalp.mvc.results.RenderTemplate;
+import yalp.mvc.results.RenderText;
+import yalp.mvc.results.RenderXml;
+import yalp.mvc.results.Result;
+import yalp.mvc.results.Unauthorized;
+import yalp.templates.Template;
+import yalp.templates.TemplateLoader;
+import yalp.utils.Default;
+import yalp.utils.Java;
+import yalp.vfs.VirtualFile;
 
 import com.google.gson.JsonSerializer;
 import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.Type;
 import org.apache.commons.javaflow.Continuation;
 import org.apache.commons.javaflow.bytecode.StackRecorder;
-import play.libs.F;
+import yalp.libs.F;
 
 import javax.management.RuntimeErrorException;
 
@@ -88,7 +88,7 @@ public class Controller implements ControllerSupport, LocalVariablesSupport {
      */
     protected static Http.Response response = null;
     /**
-     * The current HTTP session. The Play! session is not living on the server side but on the client side.
+     * The current HTTP session. The Yalp session is not living on the server side but on the client side.
      * In fact, it is stored in a signed cookie. This session is therefore limited to 4kb.
      *
      * From Wikipedia:
@@ -435,7 +435,7 @@ public class Controller implements ControllerSupport, LocalVariablesSupport {
     /**
      * Check that the token submitted from a form is valid.
      *
-     * @see play.templates.FastTags._authenticityToken()
+     * @see yalp.templates.FastTags._authenticityToken()
      */
     protected static void checkAuthenticity() {
         if(Scope.Params.current().get("authenticityToken") == null || !Scope.Params.current().get("authenticityToken").equals(Scope.Session.current().getAuthenticityToken())) {
@@ -514,15 +514,15 @@ public class Controller implements ControllerSupport, LocalVariablesSupport {
      */
     protected static void redirectToStatic(String file) {
         try {
-            VirtualFile vf = Play.getVirtualFile(file);
+            VirtualFile vf = Yalp.getVirtualFile(file);
             if (vf == null || !vf.exists()) {
                 throw new NoRouteFoundException(file);
             }
-            throw new RedirectToStatic(Router.reverse(Play.getVirtualFile(file)));
+            throw new RedirectToStatic(Router.reverse(Yalp.getVirtualFile(file)));
         } catch (NoRouteFoundException e) {
-            StackTraceElement element = PlayException.getInterestingStrackTraceElement(e);
+            StackTraceElement element = YalpException.getInterestingStrackTraceElement(e);
             if (element != null) {
-                throw new NoRouteFoundException(file, Play.classes.getApplicationClass(element.getClassName()), element.getLineNumber());
+                throw new NoRouteFoundException(file, Yalp.classes.getApplicationClass(element.getClassName()), element.getLineNumber());
             } else {
                 throw e;
             }
@@ -603,9 +603,9 @@ public class Controller implements ControllerSupport, LocalVariablesSupport {
                     throw new Redirect(actionDefinition.toString(), permanent);
                 }
             } catch (NoRouteFoundException e) {
-                StackTraceElement element = PlayException.getInterestingStrackTraceElement(e);
+                StackTraceElement element = YalpException.getInterestingStrackTraceElement(e);
                 if (element != null) {
-                    throw new NoRouteFoundException(action, newArgs, Play.classes.getApplicationClass(element.getClassName()), element.getLineNumber());
+                    throw new NoRouteFoundException(action, newArgs, Yalp.classes.getApplicationClass(element.getClassName()), element.getLineNumber());
                 } else {
                     throw e;
                 }
@@ -614,8 +614,8 @@ public class Controller implements ControllerSupport, LocalVariablesSupport {
             if (e instanceof Redirect) {
                 throw (Redirect) e;
             }
-            if (e instanceof PlayException) {
-                throw (PlayException) e;
+            if (e instanceof YalpException) {
+                throw (YalpException) e;
             }
             throw new UnexpectedException(e);
         }
@@ -669,9 +669,9 @@ public class Controller implements ControllerSupport, LocalVariablesSupport {
             if (ex.isSourceAvailable()) {
                 throw ex;
             }
-            StackTraceElement element = PlayException.getInterestingStrackTraceElement(ex);
+            StackTraceElement element = YalpException.getInterestingStrackTraceElement(ex);
             if (element != null) {
-                ApplicationClass applicationClass = Play.classes.getApplicationClass(element.getClassName());
+                ApplicationClass applicationClass = Yalp.classes.getApplicationClass(element.getClassName());
                 if (applicationClass != null) {
                     throw new TemplateNotFoundException(templateName, applicationClass, element.getLineNumber());
                 }
@@ -821,7 +821,7 @@ public class Controller implements ControllerSupport, LocalVariablesSupport {
             String name = method.getName();
             Class<?> clazz = method.getDeclaringClass().getSuperclass();
             Method superMethod = null;
-            while (!clazz.getName().equals("play.mvc.Controller") && !clazz.getName().equals("java.lang.Object")) {
+            while (!clazz.getName().equals("yalp.mvc.Controller") && !clazz.getName().equals("java.lang.Object")) {
                 for (Method m : clazz.getDeclaredMethods()) {
                     if (m.getName().equalsIgnoreCase(name) && Modifier.isPublic(m.getModifiers()) && Modifier.isStatic(m.getModifiers())) {
                         superMethod = m;
@@ -1032,7 +1032,7 @@ public class Controller implements ControllerSupport, LocalVariablesSupport {
      */
     private static void verifyContinuationsEnhancement() {
         // only check in dev mode..
-        if (Play.mode == Play.Mode.PROD) {
+        if (Yalp.mode == Yalp.Mode.PROD) {
             return;
         }
         
@@ -1044,13 +1044,13 @@ public class Controller implements ControllerSupport, LocalVariablesSupport {
                 String className = ste.getClassName();
 
                 if (!haveSeenFirstApplicationClass) {
-                    haveSeenFirstApplicationClass = Play.classes.getApplicationClass(className) != null;
+                    haveSeenFirstApplicationClass = Yalp.classes.getApplicationClass(className) != null;
                     // when haveSeenFirstApplicationClass is set to true, we are entering the user application code..
                 }
 
                 if (haveSeenFirstApplicationClass) {
-                    if (className.startsWith("sun.") || className.startsWith("play.")) {
-                        // we're back into the play framework code...
+                    if (className.startsWith("sun.") || className.startsWith("yalp.")) {
+                        // we're back into the yalp framework code...
                         return ; // done checking
                     } else {
                         // is this class enhanched?

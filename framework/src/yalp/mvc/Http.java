@@ -1,4 +1,4 @@
-package play.mvc;
+package yalp.mvc;
 
 import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
@@ -17,17 +17,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import play.Logger;
-import play.Play;
-import play.exceptions.UnexpectedException;
-import play.libs.Codec;
-import play.libs.F;
-import play.libs.F.Option;
-import play.libs.F.Promise;
-import play.libs.F.EventStream;
-import play.libs.Time;
-import play.utils.HTTP;
-import play.utils.Utils;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.Codec;
+import yalp.libs.F;
+import yalp.libs.F.Option;
+import yalp.libs.F.Promise;
+import yalp.libs.F.EventStream;
+import yalp.libs.Time;
+import yalp.utils.HTTP;
+import yalp.utils.Utils;
 
 /**
  * HTTP interface
@@ -140,7 +140,7 @@ public class Http {
         /**
          * Cookie path
          */
-        public String path = Play.ctxPath + "/";
+        public String path = Yalp.ctxPath + "/";
         /**
          * for HTTPS ?
          */
@@ -202,9 +202,9 @@ public class Http {
         public String contentType;
         /**
          * This is the encoding used to decode this request.
-         * If encoding-info is not found in request, then Play.defaultWebEncoding is used
+         * If encoding-info is not found in request, then Yalp.defaultWebEncoding is used
          */
-        public String encoding = Play.defaultWebEncoding;
+        public String encoding = Yalp.defaultWebEncoding;
         /**
          * Controller to invoke
          */
@@ -295,7 +295,7 @@ public class Http {
          * Deprecate the default constructor to encourage the use of createRequest() when creating new
          * requests.
          *
-         * Cannot hide it with protected because we have to be backward compatible with modules - ie PlayGrizzlyAdapter.java
+         * Cannot hide it with protected because we have to be backward compatible with modules - ie YalpGrizzlyAdapter.java
          */
         @Deprecated
         public Request() {
@@ -374,13 +374,13 @@ public class Http {
 
         protected void parseXForwarded() {
 
-            if (Play.configuration.containsKey("XForwardedSupport") && headers.get("x-forwarded-for") != null) {
-            	if (!"ALL".equalsIgnoreCase(Play.configuration.getProperty("XForwardedSupport")) && !Arrays.asList(Play.configuration.getProperty("XForwardedSupport", "127.0.0.1").split("[\\s,]+")).contains(remoteAddress)) {
+            if (Yalp.configuration.containsKey("XForwardedSupport") && headers.get("x-forwarded-for") != null) {
+            	if (!"ALL".equalsIgnoreCase(Yalp.configuration.getProperty("XForwardedSupport")) && !Arrays.asList(Yalp.configuration.getProperty("XForwardedSupport", "127.0.0.1").split("[\\s,]+")).contains(remoteAddress)) {
                     throw new RuntimeException("This proxy request is not authorized: " + remoteAddress);
                 } else {
                     secure = isRequestSecure();
-                    if (Play.configuration.containsKey("XForwardedHost")) {
-                        host = (String) Play.configuration.get("XForwardedHost");
+                    if (Yalp.configuration.containsKey("XForwardedHost")) {
+                        host = (String) Yalp.configuration.get("XForwardedHost");
                     } else if (headers.get("x-forwarded-host") != null) {
                         host = headers.get("x-forwarded-host").value();
                     }
@@ -398,7 +398,7 @@ public class Http {
             // used apparently only by "Microsoft Internet Security and Acceleration Server"
             // and Squid when using Squid as a SSL frontend.
             Header frontEndHttpsHeader = headers.get("front-end-https");
-            return ("https".equals(Play.configuration.get("XForwardedProto")) ||
+            return ("https".equals(Yalp.configuration.get("XForwardedProto")) ||
                     (xForwardedProtoHeader != null && "https".equals(xForwardedProtoHeader.value())) ||
                     (xForwardedSslHeader != null && "on".equals(xForwardedSslHeader.value())) ||
                     (frontEndHttpsHeader != null && "on".equals(frontEndHttpsHeader.value().toLowerCase())));
@@ -599,7 +599,7 @@ public class Http {
         /**
          * The encoding used when writing response to client
          */
-        public String encoding = Play.defaultWebEncoding;
+        public String encoding = Yalp.defaultWebEncoding;
         /**
          * Bind to thread
          */
@@ -689,7 +689,7 @@ public class Http {
         }
 
         public void setCookie(String name, String value, String domain, String path, Integer maxAge, boolean secure, boolean httpOnly) {
-            path = Play.ctxPath + path;
+            path = Yalp.ctxPath + path;
             if (cookies.containsKey(name) && cookies.get(name).path.equals(path) && ((cookies.get(name).domain == null && domain == null) || (cookies.get(name).domain.equals(domain)))) {
                 cookies.get(name).value = value;
                 if (maxAge != null) {

@@ -1,6 +1,6 @@
 package models;
 
-import play.db.jpa.*;
+import yalp.db.jpa.*;
 import javax.persistence.*;
 
 @Entity

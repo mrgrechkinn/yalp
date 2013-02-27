@@ -1,4 +1,4 @@
-package play.deps;
+package yalp.deps;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -193,13 +193,13 @@ public class SettingsParser {
                 if (m.matches()) {
                     organisation = m.group(1);
                     module = m.group(2);
-                    revision = m.group(3).replace("$version", System.getProperty("play.version"));
+                    revision = m.group(3).replace("$version", System.getProperty("yalp.version"));
                 } else {
                     m = Pattern.compile("(([^\\s]+))\\s+([^\\s]+)").matcher(v);
                     if (m.matches()) {
                         organisation = m.group(1);
                         module = m.group(2);
-                        revision = m.group(3).replace("$version", System.getProperty("play.version"));
+                        revision = m.group(3).replace("$version", System.getProperty("yalp.version"));
                     } else {
                         m = Pattern.compile("([^\\s]+)\\s*[-][>]\\s*([^\\s]+)").matcher(v);
                         if (m.matches()) {

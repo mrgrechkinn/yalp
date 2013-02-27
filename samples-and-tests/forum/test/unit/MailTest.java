@@ -1,8 +1,8 @@
 package unit;
 
 import org.junit.*;
-import play.test.*;
-import play.libs.*;
+import yalp.test.*;
+import yalp.libs.*;
 
 import models.*;
 import notifiers.*;

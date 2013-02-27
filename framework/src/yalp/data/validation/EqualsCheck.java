@@ -1,4 +1,4 @@
-package play.data.validation;
+package yalp.data.validation;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -10,11 +10,11 @@ import net.sf.oval.configuration.annotation.AbstractAnnotationCheck;
 import net.sf.oval.context.FieldContext;
 import net.sf.oval.context.MethodParameterContext;
 import net.sf.oval.context.OValContext;
-import play.data.binding.Binder;
-import play.data.binding.RootParamNode;
-import play.exceptions.UnexpectedException;
-import play.utils.Java;
-import play.mvc.Scope;
+import yalp.data.binding.Binder;
+import yalp.data.binding.RootParamNode;
+import yalp.exceptions.UnexpectedException;
+import yalp.utils.Java;
+import yalp.mvc.Scope;
 
 @SuppressWarnings("serial")
 public class EqualsCheck extends AbstractAnnotationCheck<Equals> {

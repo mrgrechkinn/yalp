@@ -1,26 +1,26 @@
-package play.server;
+package yalp.server;
 
 import org.apache.commons.lang.StringUtils;
-import play.Invoker;
-import play.Invoker.InvocationContext;
-import play.Logger;
-import play.Play;
-import play.data.binding.CachedBoundActionMethodArgs;
-import play.data.validation.Validation;
-import play.exceptions.PlayException;
-import play.exceptions.UnexpectedException;
-import play.libs.MimeTypes;
-import play.mvc.ActionInvoker;
-import play.mvc.Http;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
-import play.mvc.Router;
-import play.mvc.Scope;
-import play.mvc.results.NotFound;
-import play.mvc.results.RenderStatic;
-import play.templates.TemplateLoader;
-import play.utils.Utils;
-import play.vfs.VirtualFile;
+import yalp.Invoker;
+import yalp.Invoker.InvocationContext;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.data.binding.CachedBoundActionMethodArgs;
+import yalp.data.validation.Validation;
+import yalp.exceptions.YalpException;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.MimeTypes;
+import yalp.mvc.ActionInvoker;
+import yalp.mvc.Http;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
+import yalp.mvc.Router;
+import yalp.mvc.Scope;
+import yalp.mvc.results.NotFound;
+import yalp.mvc.results.RenderStatic;
+import yalp.templates.TemplateLoader;
+import yalp.utils.Utils;
+import yalp.vfs.VirtualFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -47,14 +47,14 @@ public class ServletWrapper extends HttpServlet implements ServletContextListene
     public static final String IF_NONE_MATCH = "If-None-Match";
 
     /**
-     * Constant for accessing the underlying HttpServletRequest from Play's Request
+     * Constant for accessing the underlying HttpServletRequest from Yalp's Request
      * in a Servlet based deployment.
      * <p>Sample usage:</p>
      * <p> {@code HttpServletRequest req = Request.current().args.get(ServletWrapper.SERVLET_REQ);}</p>
      */
     public static final String SERVLET_REQ = "__SERVLET_REQ";
     /**
-     * Constant for accessing the underlying HttpServletResponse from Play's Request
+     * Constant for accessing the underlying HttpServletResponse from Yalp's Request
      * in a Servlet based deployment.
      * <p>Sample usage:</p>
      * <p> {@code HttpServletResponse res = Request.current().args.get(ServletWrapper.SERVLET_RES);}</p>
@@ -64,19 +64,19 @@ public class ServletWrapper extends HttpServlet implements ServletContextListene
     private static boolean routerInitializedWithContext = false;
 
     public void contextInitialized(ServletContextEvent e) {
-        Play.standalonePlayServer = false;
+        Yalp.standaloneYalpServer = false;
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         String appDir = e.getServletContext().getRealPath("/WEB-INF/application");
         File root = new File(appDir);
-        final String playId = System.getProperty("play.id", e.getServletContext().getInitParameter("play.id"));
-        if (StringUtils.isEmpty(playId)) {
-            throw new UnexpectedException("Please define a play.id parameter in your web.xml file. Without that parameter, play! cannot start your application. Please add a context-param into the WEB-INF/web.xml file.");
+        final String yalpId = System.getProperty("yalp.id", e.getServletContext().getInitParameter("yalp.id"));
+        if (StringUtils.isEmpty(yalpId)) {
+            throw new UnexpectedException("Please define a yalp.id parameter in your web.xml file. Without that parameter, yalp cannot start your application. Please add a context-param into the WEB-INF/web.xml file.");
         }
         // This is really important as we know this parameter already (we are running in a servlet container)
-        Play.frameworkPath = root.getParentFile();
-        Play.usePrecompiled = true;
-        Play.init(root, playId);
-        Play.Mode mode = Play.Mode.valueOf(Play.configuration.getProperty("application.mode", "DEV").toUpperCase());
+        Yalp.frameworkPath = root.getParentFile();
+        Yalp.usePrecompiled = true;
+        Yalp.init(root, yalpId);
+        Yalp.Mode mode = Yalp.Mode.valueOf(Yalp.configuration.getProperty("application.mode", "DEV").toUpperCase());
         if (mode.isDev()) {
             Logger.info("Forcing PROD mode because deploying as a war file.");
         }
@@ -90,20 +90,20 @@ public class ServletWrapper extends HttpServlet implements ServletContextListene
     }
 
     public void contextDestroyed(ServletContextEvent e) {
-        Play.stop();
+        Yalp.stop();
     }
 
     @Override
     public void destroy() {
         Logger.trace("ServletWrapper>destroy");
-        Play.stop();
+        Yalp.stop();
     }
 
     private static synchronized void loadRouter(String contextPath) {
         // Reload the rules, but this time with the context. Not really efficient through...
         // Servlet 2.4 does not allow you to get the context path from the servletcontext...
         if (routerInitializedWithContext) return;
-        Play.ctxPath = contextPath;
+        Yalp.ctxPath = contextPath;
         Router.load(contextPath);
         routerInitializedWithContext = true;
     }
@@ -136,7 +136,7 @@ public class ServletWrapper extends HttpServlet implements ServletContextListene
                 Logger.trace("ServletWrapper>service, request: " + request);
             }
 
-            boolean raw = Play.pluginCollection.rawInvocation(request, response);
+            boolean raw = Yalp.pluginCollection.rawInvocation(request, response);
             if (raw) {
                 copyResponse(Request.current(), Response.current(), httpServletRequest, httpServletResponse);
             } else {
@@ -173,16 +173,16 @@ public class ServletWrapper extends HttpServlet implements ServletContextListene
 
     public void serveStatic(HttpServletResponse servletResponse, HttpServletRequest servletRequest, RenderStatic renderStatic) throws IOException {
 
-        VirtualFile file = Play.getVirtualFile(renderStatic.file);
+        VirtualFile file = Yalp.getVirtualFile(renderStatic.file);
         if (file == null || file.isDirectory() || !file.exists()) {
             serve404(servletRequest, servletResponse, new NotFound("The file " + renderStatic.file + " does not exist"));
         } else {
             servletResponse.setContentType(MimeTypes.getContentType(file.getName()));
-            boolean raw = Play.pluginCollection.serveStatic(file, Request.current(), Response.current());
+            boolean raw = Yalp.pluginCollection.serveStatic(file, Request.current(), Response.current());
             if (raw) {
                 copyResponse(Request.current(), Response.current(), servletRequest, servletResponse);
             } else {
-                if (Play.mode == Play.Mode.DEV) {
+                if (Yalp.mode == Yalp.Mode.DEV) {
                     servletResponse.setHeader("Cache-Control", "no-cache");
                     servletResponse.setHeader("Content-Length", String.valueOf(file.length()));
                     if (!servletRequest.getMethod().equals("HEAD")) {
@@ -199,7 +199,7 @@ public class ServletWrapper extends HttpServlet implements ServletContextListene
                         servletResponse.setStatus(304);
                     } else {
                         servletResponse.setHeader("Last-Modified", lastDate);
-                        servletResponse.setHeader("Cache-Control", "max-age=" + Play.configuration.getProperty("http.cacheControl", "3600"));
+                        servletResponse.setHeader("Cache-Control", "max-age=" + Yalp.configuration.getProperty("http.cacheControl", "3600"));
                         servletResponse.setHeader("Etag", etag);
                         copyStream(servletResponse, file.inputstream());
                     }
@@ -332,14 +332,14 @@ public class ServletWrapper extends HttpServlet implements ServletContextListene
         javax.servlet.http.Cookie[] cookiesViaServlet = httpServletRequest.getCookies();
         if (cookiesViaServlet != null) {
             for (javax.servlet.http.Cookie cookie : cookiesViaServlet) {
-                Http.Cookie playCookie = new Http.Cookie();
-                playCookie.name = cookie.getName();
-                playCookie.path = cookie.getPath();
-                playCookie.domain = cookie.getDomain();
-                playCookie.secure = cookie.getSecure();
-                playCookie.value = cookie.getValue();
-                playCookie.maxAge = cookie.getMaxAge();
-                cookies.put(playCookie.name, playCookie);
+                Http.Cookie yalpCookie = new Http.Cookie();
+                yalpCookie.name = cookie.getName();
+                yalpCookie.path = cookie.getPath();
+                yalpCookie.domain = cookie.getDomain();
+                yalpCookie.secure = cookie.getSecure();
+                yalpCookie.value = cookie.getValue();
+                yalpCookie.maxAge = cookie.getMaxAge();
+                cookies.put(yalpCookie.name, yalpCookie);
             }
         }
 
@@ -356,7 +356,7 @@ public class ServletWrapper extends HttpServlet implements ServletContextListene
         binding.put("request", Http.Request.current());
         binding.put("flash", Scope.Flash.current());
         binding.put("params", Scope.Params.current());
-        binding.put("play", new Play());
+        binding.put("yalp", new Yalp());
         try {
             binding.put("errors", Validation.errors());
         } catch (Exception ex) {
@@ -383,8 +383,8 @@ public class ServletWrapper extends HttpServlet implements ServletContextListene
     public void serve500(Exception e, HttpServletRequest request, HttpServletResponse response) {
         try {
             Map<String, Object> binding = new HashMap<String, Object>();
-            if (!(e instanceof PlayException)) {
-                e = new play.exceptions.UnexpectedException(e);
+            if (!(e instanceof YalpException)) {
+                e = new yalp.exceptions.UnexpectedException(e);
             }
             // Flush some cookies
             try {
@@ -408,7 +408,7 @@ public class ServletWrapper extends HttpServlet implements ServletContextListene
             binding.put("request", Http.Request.current());
             binding.put("flash", Scope.Flash.current());
             binding.put("params", Scope.Params.current());
-            binding.put("play", new Play());
+            binding.put("yalp", new Yalp());
             try {
                 binding.put("errors", Validation.errors());
             } catch (Exception ex) {

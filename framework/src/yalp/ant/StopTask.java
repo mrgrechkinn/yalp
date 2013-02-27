@@ -1,9 +1,9 @@
-package play.ant;
+package yalp.ant;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
-import play.utils.Utils;
+import yalp.utils.Utils;
 
 public class StopTask extends Task {
 

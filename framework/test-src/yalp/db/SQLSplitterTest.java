@@ -1,4 +1,4 @@
-package play.db;
+package yalp.db;
 
 import org.junit.*;
 import static org.junit.Assert.assertEquals;
@@ -98,15 +98,15 @@ public class SQLSplitterTest {
 
 	@Test
 	public void verifyTestSplitting() throws Exception {
-		java.util.ArrayList<CharSequence> srcArrList = SQLSplitter.splitSQL(readFile("/play/db/test.sql"));
+		java.util.ArrayList<CharSequence> srcArrList = SQLSplitter.splitSQL(readFile("/yalp/db/test.sql"));
 		CharSequence [] srcArr = new CharSequence[(int)srcArrList.size()];
 		srcArr = srcArrList.toArray(srcArr);
 
-		assertEquals(readFile("/play/db/test.out.sql").split("==="), srcArr);
+		assertEquals(readFile("/yalp/db/test.out.sql").split("==="), srcArr);
 
-		srcArrList = SQLSplitter.splitSQL(readFile("/play/db/test2.sql"));
+		srcArrList = SQLSplitter.splitSQL(readFile("/yalp/db/test2.sql"));
 		srcArr = new CharSequence[(int)srcArrList.size()];
 		srcArr = srcArrList.toArray(srcArr);		
-		assertEquals(readFile("/play/db/test2.out.sql").split("==="), srcArr);
+		assertEquals(readFile("/yalp/db/test2.out.sql").split("==="), srcArr);
 	}
 }

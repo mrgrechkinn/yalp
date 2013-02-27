@@ -1,7 +1,7 @@
 package models.horse;
 
-import play.data.validation.*;
-import play.db.jpa.Model;
+import yalp.data.validation.*;
+import yalp.db.jpa.Model;
 import javax.persistence.*;
 
 @Entity

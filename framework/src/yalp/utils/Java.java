@@ -1,4 +1,4 @@
-package play.utils;
+package yalp.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,17 +17,17 @@ import java.util.concurrent.FutureTask;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.bytecode.SourceFileAttribute;
-import play.Play;
-import play.classloading.ApplicationClassloaderState;
-import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
-import play.data.binding.Binder;
-import play.data.binding.ParamNode;
-import play.data.binding.RootParamNode;
-import play.exceptions.UnexpectedException;
-import play.mvc.After;
-import play.mvc.Before;
-import play.mvc.Finally;
-import play.mvc.With;
+import yalp.Yalp;
+import yalp.classloading.ApplicationClassloaderState;
+import yalp.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
+import yalp.data.binding.Binder;
+import yalp.data.binding.ParamNode;
+import yalp.data.binding.RootParamNode;
+import yalp.exceptions.UnexpectedException;
+import yalp.mvc.After;
+import yalp.mvc.Before;
+import yalp.mvc.Finally;
+import yalp.mvc.With;
 
 /**
  * Java utils
@@ -35,13 +35,13 @@ import play.mvc.With;
 public class Java {
 
     protected static JavaWithCaching _javaWithCaching = new JavaWithCaching();
-    protected static ApplicationClassloaderState _lastKnownApplicationClassloaderState = Play.classloader.currentState;
+    protected static ApplicationClassloaderState _lastKnownApplicationClassloaderState = Yalp.classloader.currentState;
     protected static Object _javaWithCachingLock = new Object();
 
     protected static JavaWithCaching getJavaWithCaching() {
         synchronized( _javaWithCachingLock ) {
             // has the state of the ApplicationClassloader changed?
-            ApplicationClassloaderState currentApplicationClasloaderState = Play.classloader.currentState;
+            ApplicationClassloaderState currentApplicationClasloaderState = Yalp.classloader.currentState;
             if( !currentApplicationClasloaderState.equals( _lastKnownApplicationClassloaderState )) {
                 // it has changed.
                 // we must drop our current _javaWithCaching and create a new one...
@@ -121,7 +121,7 @@ public class Java {
     }
 
     public static Object invokeStatic(String clazz, String method) throws Exception {
-        return invokeStatic(Play.classloader.loadClass(clazz), method, new Object[0]);
+        return invokeStatic(Yalp.classloader.loadClass(clazz), method, new Object[0]);
     }
 
     /**
@@ -170,7 +170,7 @@ public class Java {
     public static Object invokeChildOrStatic(Class<?> clazz, String method, Object... args) throws Exception {
 
         Class invokedClass = null;
-        List<Class> assignableClasses = Play.classloader.getAssignableClasses(clazz);
+        List<Class> assignableClasses = Yalp.classloader.getAssignableClasses(clazz);
         if(assignableClasses.size() == 0)
         {
             invokedClass = clazz;
@@ -306,8 +306,8 @@ public class Java {
     public static FieldWrapper getFieldWrapper(Field field) {
         if (wrappers.get(field) == null) {
             FieldWrapper fw = new FieldWrapper(field);
-            if (play.Logger.isTraceEnabled()) {
-                play.Logger.trace("caching %s", fw);
+            if (yalp.Logger.isTraceEnabled()) {
+                yalp.Logger.trace("caching %s", fw);
             }
             wrappers.put(field, fw);
         }
@@ -375,16 +375,16 @@ public class Java {
             }
             try {
                 if (setter != null) {
-                    if (play.Logger.isTraceEnabled()) {
-                        play.Logger.trace("invoke setter %s on %s with value %s", setter, instance, value);
+                    if (yalp.Logger.isTraceEnabled()) {
+                        yalp.Logger.trace("invoke setter %s on %s with value %s", setter, instance, value);
                     }
                     setter.invoke(instance, value);
                 } else {
                     if (!accessible) {
                         field.setAccessible(true);
                     }
-                    if (play.Logger.isTraceEnabled()) {
-                        play.Logger.trace("field.set(%s, %s)", instance, value);
+                    if (yalp.Logger.isTraceEnabled()) {
+                        yalp.Logger.trace("field.set(%s, %s)", instance, value);
                     }
                     field.set(instance, value);
                     if (!accessible) {
@@ -392,7 +392,7 @@ public class Java {
                     }
                 }
             } catch (Exception ex) {
-                play.Logger.info("ERROR: when setting value for field %s - %s", field, ex);
+                yalp.Logger.info("ERROR: when setting value for field %s - %s", field, ex);
             }
         }
 
@@ -404,7 +404,7 @@ public class Java {
                     return field.get(instance);
                 }
             } catch (Exception ex) {
-                play.Logger.info("ERROR: when getting value for field %s - %s", field, ex);
+                yalp.Logger.info("ERROR: when getting value for field %s - %s", field, ex);
             }
             return null;
         }

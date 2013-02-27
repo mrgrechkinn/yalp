@@ -1,4 +1,4 @@
-package play.db.jpa;
+package yalp.db.jpa;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -7,13 +7,13 @@ import javax.persistence.*;
 
 import org.apache.commons.lang.StringUtils;
 
-import play.Play;
-import play.data.binding.BeanWrapper;
-import play.data.binding.Binder;
-import play.data.binding.ParamNode;
-import play.data.validation.Validation;
-import play.exceptions.UnexpectedException;
-import play.mvc.Scope.Params;
+import yalp.Yalp;
+import yalp.data.binding.BeanWrapper;
+import yalp.data.binding.Binder;
+import yalp.data.binding.ParamNode;
+import yalp.data.validation.Validation;
+import yalp.exceptions.UnexpectedException;
+import yalp.mvc.Scope.Params;
 
 import javax.persistence.*;
 import java.lang.annotation.Annotation;
@@ -101,7 +101,7 @@ public class GenericModel extends JPABase {
 
                     ParamNode fieldParamNode = paramNode.getChild(field.getName(), true);
 
-                    Class<Model> c = (Class<Model>) Play.classloader.loadClass(relation);
+                    Class<Model> c = (Class<Model>) Yalp.classloader.loadClass(relation);
                     if (JPABase.class.isAssignableFrom(c)) {
                         String keyName = Model.Manager.factoryFor(c).keyName();
                         if (multiple && Collection.class.isAssignableFrom(field.getType())) {
@@ -121,7 +121,7 @@ public class GenericModel extends JPABase {
                                     }
                                  
                                     Query q = JPA.em().createQuery("from " + relation + " where " + keyName + " = ?1");
-                                    q.setParameter(1, Binder.directBind(rootParamNode.getOriginalKey(), annotations,_id, Model.Manager.factoryFor((Class<Model>) Play.classloader.loadClass(relation)).keyType(), null));
+                                    q.setParameter(1, Binder.directBind(rootParamNode.getOriginalKey(), annotations,_id, Model.Manager.factoryFor((Class<Model>) Yalp.classloader.loadClass(relation)).keyType(), null));
                                     try {
                                         l.add(q.getSingleResult());
 
@@ -136,7 +136,7 @@ public class GenericModel extends JPABase {
                             if (ids != null && ids.length > 0 && !ids[0].equals("")) {
 
                                 Query q = JPA.em().createQuery("from " + relation + " where " + keyName + " = ?1");
-                                q.setParameter(1, Binder.directBind(rootParamNode.getOriginalKey(), annotations, ids[0], Model.Manager.factoryFor((Class<Model>) Play.classloader.loadClass(relation)).keyType(), null));
+                                q.setParameter(1, Binder.directBind(rootParamNode.getOriginalKey(), annotations, ids[0], Model.Manager.factoryFor((Class<Model>) Yalp.classloader.loadClass(relation)).keyType(), null));
                                 try {
                                     Object to = q.getSingleResult();
                                     edit(paramNode, field.getName(), to, field.getAnnotations());

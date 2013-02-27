@@ -1,4 +1,4 @@
-package play.test;
+package yalp.test;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

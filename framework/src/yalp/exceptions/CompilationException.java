@@ -1,13 +1,13 @@
-package play.exceptions;
+package yalp.exceptions;
 
 import java.util.Arrays;
 import java.util.List;
-import play.vfs.VirtualFile;
+import yalp.vfs.VirtualFile;
 
 /**
  * A java compilation error
  */
-public class CompilationException extends PlayException implements SourceAttachment {
+public class CompilationException extends YalpException implements SourceAttachment {
 
     private String problem;
     private VirtualFile source;

@@ -1,4 +1,4 @@
-package play;
+package yalp;
 
 import java.lang.annotation.Annotation;
 import com.google.gson.JsonObject;
@@ -10,23 +10,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import play.classloading.ApplicationClasses.ApplicationClass;
-import play.data.binding.RootParamNode;
-import play.db.Model;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
-import play.mvc.Router.Route;
-import play.mvc.results.Result;
-import play.templates.BaseTemplate;
-import play.templates.Template;
-import play.test.BaseTest;
-import play.test.TestEngine.TestResults;
-import play.vfs.VirtualFile;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
+import yalp.data.binding.RootParamNode;
+import yalp.db.Model;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
+import yalp.mvc.Router.Route;
+import yalp.mvc.results.Result;
+import yalp.templates.BaseTemplate;
+import yalp.templates.Template;
+import yalp.test.BaseTest;
+import yalp.test.TestEngine.TestResults;
+import yalp.vfs.VirtualFile;
 
 /**
  * A framework plugin
  */
-public abstract class PlayPlugin implements Comparable<PlayPlugin> {
+public abstract class YalpPlugin implements Comparable<YalpPlugin> {
 
     /**
      * Plugin priority (0 for highest priority)
@@ -60,7 +60,7 @@ public abstract class PlayPlugin implements Comparable<PlayPlugin> {
     }
 
     /**
-     * Called when play need to bind a Java object from HTTP params.
+     * Called when yalp need to bind a Java object from HTTP params.
      *
      * When overriding this method, do not call super impl.. super impl is calling old bind method
      * to be backward compatible.
@@ -79,7 +79,7 @@ public abstract class PlayPlugin implements Comparable<PlayPlugin> {
     }
 
     /**
-     * Called when play need to bind an existing Java object from HTTP params.
+     * Called when yalp need to bind an existing Java object from HTTP params.
      * When overriding this method, DO NOT call the super method, since its default impl is to
      * call the old bind method to be backward compatible.
      */
@@ -94,7 +94,7 @@ public abstract class PlayPlugin implements Comparable<PlayPlugin> {
     
     /**
      * Translate the given key for the given locale and arguments.
-     * If null is returned, Play's normal message translation mechanism will be
+     * If null is returned, Yalp's normal message translation mechanism will be
      * used.
      */
     public String getMessage(String locale, Object key, Object... args) {
@@ -133,8 +133,8 @@ public abstract class PlayPlugin implements Comparable<PlayPlugin> {
 
     /**
      * Give a chance to this plugin to fully manage this request
-     * @param request The Play request
-     * @param response The Play response
+     * @param request The Yalp request
+     * @param response The Yalp response
      * @return true if this plugin has managed this request
      */
     public boolean rawInvocation(Request request, Response response) throws Exception {
@@ -143,8 +143,8 @@ public abstract class PlayPlugin implements Comparable<PlayPlugin> {
 
     /**
      * Let a chance to this plugin to manage a static resource
-     * @param request The Play request
-     * @param response The Play response
+     * @param request The Yalp request
+     * @param response The Yalp response
      * @return true if this plugin has managed this request
      */
     public boolean serveStatic(VirtualFile file, Request request, Response response) {
@@ -194,7 +194,7 @@ public abstract class PlayPlugin implements Comparable<PlayPlugin> {
     }
 
     /**
-     * Called before a Play! invocation.
+     * Called before a Yalp invocation.
      * Time to prepare request specific things.
      */
     public void beforeInvocation() {
@@ -316,14 +316,14 @@ public abstract class PlayPlugin implements Comparable<PlayPlugin> {
      * Inter-plugin communication.
      */
     public static void postEvent(String message, Object context) {
-        Play.pluginCollection.onEvent(message, context);
+        Yalp.pluginCollection.onEvent(message, context);
     }
 
     public void onApplicationReady() {
     }
 
     // ~~~~~
-    public int compareTo(PlayPlugin o) {
+    public int compareTo(YalpPlugin o) {
         int res = index < o.index ? -1 : (index == o.index ? 0 : 1);
         if (res!=0) {
             return res;
@@ -359,7 +359,7 @@ public abstract class PlayPlugin implements Comparable<PlayPlugin> {
      * Implement to add some classes that should be considered unit tests but do not extend
      * {@link org.junit.Assert} to tests that can be executed by test runner (will be visible in test UI).
      * <p/>
-     * <strong>Note:</strong>You probably will also need to override {@link PlayPlugin#runTest(java.lang.Class)} method
+     * <strong>Note:</strong>You probably will also need to override {@link YalpPlugin#runTest(java.lang.Class)} method
      * to handle unsupported tests execution properly.
      * <p/>
      * Keep in mind that this method can only add tests to currently loaded ones.
@@ -373,9 +373,9 @@ public abstract class PlayPlugin implements Comparable<PlayPlugin> {
 
     /**
      * Implement to add some classes that should be considered functional tests but do not extend
-     * {@link play.test.FunctionalTest} to tests that can be executed by test runner (will be visible in test UI).
+     * {@link yalp.test.FunctionalTest} to tests that can be executed by test runner (will be visible in test UI).
      * <p/>
-     * <strong>Note:</strong>You probably will also need to override {@link PlayPlugin#runTest(java.lang.Class)} method
+     * <strong>Note:</strong>You probably will also need to override {@link YalpPlugin#runTest(java.lang.Class)} method
      * to handle unsupported tests execution properly.
      * <p/>
      * Keep in mind that this method can only add tests to currently loaded ones.

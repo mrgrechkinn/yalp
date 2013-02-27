@@ -1,13 +1,13 @@
-package play.mvc.results;
+package yalp.mvc.results;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSerializer;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
-import play.exceptions.UnexpectedException;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
+import yalp.exceptions.UnexpectedException;
 
 /**
  * 200 OK with application/json

@@ -1,4 +1,4 @@
-package play;
+package yalp;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -12,24 +12,24 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import play.cache.Cache;
-import play.classloading.ApplicationClasses;
-import play.classloading.ApplicationClassloader;
-import play.deps.DependenciesManager;
-import play.exceptions.PlayException;
-import play.exceptions.UnexpectedException;
-import play.libs.IO;
-import play.mvc.Http;
-import play.mvc.Router;
-import play.plugins.PluginCollection;
-import play.templates.TemplateLoader;
-import play.utils.OrderSafeProperties;
-import play.vfs.VirtualFile;
+import yalp.cache.Cache;
+import yalp.classloading.ApplicationClasses;
+import yalp.classloading.ApplicationClassloader;
+import yalp.deps.DependenciesManager;
+import yalp.exceptions.YalpException;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.IO;
+import yalp.mvc.Http;
+import yalp.mvc.Router;
+import yalp.plugins.PluginCollection;
+import yalp.templates.TemplateLoader;
+import yalp.utils.OrderSafeProperties;
+import yalp.vfs.VirtualFile;
 
 /**
  * Main framework class
  */
-public class Play {
+public class Yalp {
 
     /**
      * 2 modes
@@ -145,11 +145,11 @@ public class Play {
     /**
      * Readonly list containing currently enabled plugins.
      * This list is updated from pluginCollection when pluginCollection is modified
-     * Play plugins
+     * Yalp plugins
      * Use pluginCollection instead.
      */
     @Deprecated
-    public static List<PlayPlugin> plugins = pluginCollection.getEnabledPlugins();
+    public static List<YalpPlugin> plugins = pluginCollection.getEnabledPlugins();
     /**
      * Modules
      */
@@ -176,10 +176,10 @@ public class Play {
     public static String defaultWebEncoding = "utf-8";
 
     /**
-     * This flag indicates if the app is running in a standalone Play server or
+     * This flag indicates if the app is running in a standalone Yalp server or
      * as a WAR in an applicationServer
      */
-    public static boolean standalonePlayServer = true;
+    public static boolean standaloneYalpServer = true;
 
     /**
      * Init the framework
@@ -189,11 +189,11 @@ public class Play {
      */
     public static void init(File root, String id) {
         // Simple things
-        Play.id = id;
-        Play.started = false;
-        Play.applicationPath = root;
+        Yalp.id = id;
+        Yalp.started = false;
+        Yalp.applicationPath = root;
 
-        // load all play.static of exists
+        // load all yalp.static of exists
         initStaticStuff();
 
         guessFrameworkPath();
@@ -201,7 +201,7 @@ public class Play {
         // Read the configuration file
         readConfiguration();
 
-        Play.classes = new ApplicationClasses();
+        Yalp.classes = new ApplicationClasses();
 
         // Configure logs
         Logger.init();
@@ -215,17 +215,17 @@ public class Play {
 
         Logger.info("Starting %s", root.getAbsolutePath());
 
-        if (configuration.getProperty("play.tmp", "tmp").equals("none")) {
+        if (configuration.getProperty("yalp.tmp", "tmp").equals("none")) {
             tmpDir = null;
-            Logger.debug("No tmp folder will be used (play.tmp is set to none)");
+            Logger.debug("No tmp folder will be used (yalp.tmp is set to none)");
         } else {
-            tmpDir = new File(configuration.getProperty("play.tmp", "tmp"));
+            tmpDir = new File(configuration.getProperty("yalp.tmp", "tmp"));
             if (!tmpDir.isAbsolute()) {
                 tmpDir = new File(applicationPath, tmpDir.getPath());
             }
 
             if (Logger.isTraceEnabled()) {
-                Logger.trace("Using %s as tmp dir", Play.tmpDir);
+                Logger.trace("Using %s as tmp dir", Yalp.tmpDir);
             }
 
             if (!tmpDir.exists()) {
@@ -286,8 +286,8 @@ public class Play {
         classloader = new ApplicationClassloader();
 
         // Fix ctxPath
-        if ("/".equals(Play.ctxPath)) {
-            Play.ctxPath = "";
+        if ("/".equals(Yalp.ctxPath)) {
+            Yalp.ctxPath = "";
         }
 
         // Default cookie domain
@@ -308,21 +308,21 @@ public class Play {
                 return;
             }
         } else {
-            Logger.warn("You're running Play! in DEV mode");
+            Logger.warn("You're running Yalp in DEV mode");
         }
 
         // Plugins
         pluginCollection.onApplicationReady();
 
-        Play.initialized = true;
+        Yalp.initialized = true;
     }
 
     public static void guessFrameworkPath() {
         // Guess the framework path
         try {
-            URL versionUrl = Play.class.getResource("/play/version");
+            URL versionUrl = Yalp.class.getResource("/yalp/version");
             // Read the content of the file
-            Play.version = new LineNumberReader(new InputStreamReader(versionUrl.openStream())).readLine();
+            Yalp.version = new LineNumberReader(new InputStreamReader(versionUrl.openStream())).readLine();
 
             // This is used only by the embedded server (Mina, Netty, Jetty etc)
             URI uri = new URI(versionUrl.toString().replace(" ", "%20"));
@@ -333,7 +333,7 @@ public class Play {
                 } else if (uri.getScheme().equals("file")) {
                     frameworkPath = new File(uri).getParentFile().getParentFile().getParentFile().getParentFile();
                 } else {
-                    throw new UnexpectedException("Cannot find the Play! framework - trying with uri: " + uri + " scheme " + uri.getScheme());
+                    throw new UnexpectedException("Cannot find the Yalp framework - trying with uri: " + uri + " scheme " + uri.getScheme());
                 }
             }
         } catch (Exception e) {
@@ -342,7 +342,7 @@ public class Play {
     }
 
     /**
-     * Read application.conf and resolve overriden key using the play id mechanism.
+     * Read application.conf and resolve overriden key using the yalp id mechanism.
      */
     public static void readConfiguration() {
         confs = new HashSet<VirtualFile>();
@@ -410,9 +410,9 @@ public class Play {
                 String jp = matcher.group(1);
                 String r;
                 if (jp.equals("application.path")) {
-                    r = Play.applicationPath.getAbsolutePath();
-                } else if (jp.equals("play.path")) {
-                    r = Play.frameworkPath.getAbsolutePath();
+                    r = Yalp.applicationPath.getAbsolutePath();
+                } else if (jp.equals("yalp.path")) {
+                    r = Yalp.frameworkPath.getAbsolutePath();
                 } else {
                     r = System.getProperty(jp);
                     if (r == null) {
@@ -456,7 +456,7 @@ public class Play {
                 stop();
             }
 
-            if( standalonePlayServer) {
+            if( standaloneYalpServer) {
                 // Can only register shutdown-hook if running as standalone server
                 if (!shutdownHookEnabled) {
                     //registers shutdown hook - Now there's a good chance that we can notify
@@ -464,7 +464,7 @@ public class Play {
                     shutdownHookEnabled = true;
                     Runtime.getRuntime().addShutdownHook(new Thread() {
                         public void run() {
-                            Play.stop();
+                            Yalp.stop();
                         }
                     });
                 }
@@ -521,7 +521,7 @@ public class Play {
 
 
             // Try to load all classes
-            Play.classloader.getAllClasses();
+            Yalp.classloader.getAllClasses();
 
             // Routes
             Router.detectChanges(ctxPath);
@@ -533,7 +533,7 @@ public class Play {
             try {
                 pluginCollection.onApplicationStart();
             } catch (Exception e) {
-                if (Play.mode.isProd()) {
+                if (Yalp.mode.isProd()) {
                     Logger.error(e, "Can't start in PROD mode with errors");
                 }
                 if (e instanceof RuntimeException) {
@@ -554,7 +554,7 @@ public class Play {
             // Plugins
             pluginCollection.afterApplicationStart();
 
-        } catch (PlayException e) {
+        } catch (YalpException e) {
             started = false;
             try { Cache.stop(); } catch (Exception ignored) {}
             throw e;
@@ -570,7 +570,7 @@ public class Play {
      */
     public static synchronized void stop() {
         if (started) {
-            Logger.trace("Stopping the play application");
+            Logger.trace("Stopping the yalp application");
             pluginCollection.onApplicationStop();
             started = false;
             Cache.stop();
@@ -585,7 +585,7 @@ public class Play {
      */
     static boolean preCompile() {
         if (usePrecompiled) {
-            if (Play.getFile("precompiled").exists()) {
+            if (Yalp.getFile("precompiled").exists()) {
                 classloader.getAllClasses();
                 Logger.info("Application is precompiled");
                 return true;
@@ -596,7 +596,7 @@ public class Play {
         }
         try {
             Logger.info("Precompiling ...");
-            Thread.currentThread().setContextClassLoader(Play.classloader);
+            Thread.currentThread().setContextClassLoader(Yalp.classloader);
             long start = System.currentTimeMillis();
             classloader.getAllClasses();
 
@@ -640,10 +640,10 @@ public class Play {
                 }
             }
             pluginCollection.detectChange();
-            if (!Play.started) {
+            if (!Yalp.started) {
                 throw new RuntimeException("Not started");
             }
-        } catch (PlayException e) {
+        } catch (YalpException e) {
             throw e;
         } catch (Exception e) {
             // We have to do a clean refresh
@@ -653,19 +653,19 @@ public class Play {
 
     @SuppressWarnings("unchecked")
     public static <T> T plugin(Class<T> clazz) {
-        return (T)pluginCollection.getPluginInstance((Class<? extends PlayPlugin>)clazz);
+        return (T)pluginCollection.getPluginInstance((Class<? extends YalpPlugin>)clazz);
     }
 
 
 
     /**
-     * Allow some code to run very early in Play - Use with caution !
+     * Allow some code to run very early in Yalp - Use with caution !
      */
     public static void initStaticStuff() {
-        // Play! plugings
+        // Yalp plugings
         Enumeration<URL> urls = null;
         try {
-            urls = Play.class.getClassLoader().getResources("play.static");
+            urls = Yalp.class.getClassLoader().getResources("yalp.static");
         } catch (Exception e) {
         }
         while (urls != null && urls.hasMoreElements()) {
@@ -712,11 +712,11 @@ public class Play {
         // Load modules from modules/ directory, but get the order from the dependencies.yml file
 		// .listFiles() returns items in an OS dependant sequence, which is bad
 		// See #781
-		// the yaml parser wants play.version as an environment variable
-		System.setProperty("play.version", Play.version);
+		// the yaml parser wants yalp.version as an environment variable
+		System.setProperty("yalp.version", Yalp.version);
 		DependenciesManager dm = new DependenciesManager(applicationPath, frameworkPath, null);
 
-		File localModules = Play.getFile("modules");
+		File localModules = Yalp.getFile("modules");
 		List<String> modules = new ArrayList<String>();
 		if (localModules.exists() && localModules.isDirectory()) {
 			try {
@@ -748,16 +748,16 @@ public class Play {
 		}
 
         // Auto add special modules
-        if (Play.runingInTestMode()) {
-            addModule("_testrunner", new File(Play.frameworkPath, "modules/testrunner"));
+        if (Yalp.runingInTestMode()) {
+            addModule("_testrunner", new File(Yalp.frameworkPath, "modules/testrunner"));
         }
-        if (Play.mode == Mode.DEV) {
-            addModule("_docviewer", new File(Play.frameworkPath, "modules/docviewer"));
+        if (Yalp.mode == Mode.DEV) {
+            addModule("_docviewer", new File(Yalp.frameworkPath, "modules/docviewer"));
         }
     }
 
     /**
-     * Add a play application (as plugin)
+     * Add a yalp application (as plugin)
      *
      * @param path The application path
      */
@@ -803,7 +803,7 @@ public class Play {
      * Returns true if application is runing in test-mode.
      * Test-mode is resolved from the framework id.
      *
-     * Your app is running in test-mode if the framwork id (Play.id)
+     * Your app is running in test-mode if the framwork id (Yalp.id)
      * is 'test' or 'test-?.*'
      * @return true if testmode
      */
@@ -813,10 +813,10 @@ public class Play {
     
 
     /**
-     * Call this method when there has been a fatal error that Play cannot recover from
+     * Call this method when there has been a fatal error that Yalp cannot recover from
      */
     public static void fatalServerErrorOccurred() {
-        if (standalonePlayServer) {
+        if (standaloneYalpServer) {
             // Just quit the process
             System.exit(-1);
         } else {

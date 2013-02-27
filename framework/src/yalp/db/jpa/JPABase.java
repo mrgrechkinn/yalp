@@ -1,4 +1,4 @@
-package play.db.jpa;
+package yalp.db.jpa;
 
 import org.hibernate.Session;
 import org.hibernate.collection.spi.PersistentCollection;
@@ -8,8 +8,8 @@ import org.hibernate.engine.spi.PersistenceContext;
 import org.hibernate.exception.GenericJDBCException;
 import org.hibernate.internal.SessionImpl;
 import org.hibernate.proxy.HibernateProxy;
-import play.PlayPlugin;
-import play.exceptions.UnexpectedException;
+import yalp.YalpPlugin;
+import yalp.exceptions.UnexpectedException;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,12 +22,12 @@ import java.util.*;
  * A super class for JPA entities
  */
 @MappedSuperclass
-public class JPABase implements Serializable, play.db.Model {
+public class JPABase implements Serializable, yalp.db.Model {
 
     public void _save() {
         if (!em().contains(this)) {
             em().persist(this);
-            PlayPlugin.postEvent("JPASupport.objectPersisted", this);
+            YalpPlugin.postEvent("JPASupport.objectPersisted", this);
         }
         avoidCascadeSaveLoops.set(new HashSet<JPABase>());
         try {
@@ -76,7 +76,7 @@ public class JPABase implements Serializable, play.db.Model {
             } finally {
                 avoidCascadeSaveLoops.get().clear();
             }
-            PlayPlugin.postEvent("JPASupport.objectDeleted", this);
+            YalpPlugin.postEvent("JPASupport.objectDeleted", this);
         } catch (PersistenceException e) {
             throw e;
         } catch (Throwable e) {
@@ -99,7 +99,7 @@ public class JPABase implements Serializable, play.db.Model {
         } else {
             avoidCascadeSaveLoops.get().add(this);
             if (willBeSaved) {
-                PlayPlugin.postEvent("JPASupport.objectUpdated", this);
+                YalpPlugin.postEvent("JPASupport.objectUpdated", this);
             }
         }
         // Cascade save
@@ -234,8 +234,8 @@ public class JPABase implements Serializable, play.db.Model {
         if (key == null) {
             return false;
         }
-        if (play.db.Model.class.isAssignableFrom(other.getClass()) && key.getClass().isArray()) {
-            Object otherKey = ((play.db.Model) other)._key();
+        if (yalp.db.Model.class.isAssignableFrom(other.getClass()) && key.getClass().isArray()) {
+            Object otherKey = ((yalp.db.Model) other)._key();
             if (otherKey.getClass().isArray()) {
                 return Arrays.deepEquals((Object[]) key, (Object[]) otherKey);
             }
@@ -247,7 +247,7 @@ public class JPABase implements Serializable, play.db.Model {
             return false;
         }
 
-        return key.equals(((play.db.Model) other)._key());
+        return key.equals(((yalp.db.Model) other)._key());
     }
 
     @Override

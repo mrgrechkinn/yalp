@@ -1,4 +1,4 @@
-package play.data.validation;
+package yalp.data.validation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -14,17 +14,17 @@ import java.util.regex.Pattern;
 import net.sf.oval.ConstraintViolation;
 import net.sf.oval.context.MethodParameterContext;
 import net.sf.oval.guard.Guard;
-import play.PlayPlugin;
-import play.exceptions.ActionNotFoundException;
-import play.exceptions.UnexpectedException;
-import play.utils.Java;
-import play.mvc.ActionInvoker;
-import play.mvc.Http;
-import play.mvc.Http.Cookie;
-import play.mvc.Scope;
-import play.mvc.results.Result;
+import yalp.YalpPlugin;
+import yalp.exceptions.ActionNotFoundException;
+import yalp.exceptions.UnexpectedException;
+import yalp.utils.Java;
+import yalp.mvc.ActionInvoker;
+import yalp.mvc.Http;
+import yalp.mvc.Http.Cookie;
+import yalp.mvc.Scope;
+import yalp.mvc.results.Result;
 
-public class ValidationPlugin extends PlayPlugin {
+public class ValidationPlugin extends YalpPlugin {
 
     public static ThreadLocal<Map<Object, String>> keys = new ThreadLocal<Map<Object, String>>();
 

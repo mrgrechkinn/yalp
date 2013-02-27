@@ -2,9 +2,9 @@ import org.junit.*;
 
 import java.util.*;
 
-import play.test.*;
-import play.jobs.*;
-import play.libs.*;
+import yalp.test.*;
+import yalp.jobs.*;
+import yalp.libs.*;
 
 public class Functions extends UnitTest {
 

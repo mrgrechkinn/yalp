@@ -1,4 +1,4 @@
-package play.db.helper;
+package yalp.db.helper;
 
 import java.util.List;
 

@@ -1,15 +1,15 @@
-package play.data.binding.types;
+package yalp.data.binding.types;
 
-import play.data.binding.Binder;
-import play.data.binding.TypeBinder;
+import yalp.data.binding.Binder;
+import yalp.data.binding.TypeBinder;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.List;
-import play.data.Upload;
-import play.db.Model;
-import play.exceptions.UnexpectedException;
-import play.mvc.Http.Request;
-import play.mvc.Scope.Params;
+import yalp.data.Upload;
+import yalp.db.Model;
+import yalp.exceptions.UnexpectedException;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Scope.Params;
 
 public class BinaryBinder implements TypeBinder<Model.BinaryField> {
 

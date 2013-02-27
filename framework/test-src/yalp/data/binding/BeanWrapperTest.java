@@ -1,8 +1,8 @@
-package play.data.binding;
+package yalp.data.binding;
 
 import org.junit.Test;
-import play.PlayBuilder;
-import play.data.validation.ValidationBuilder;
+import yalp.YalpBuilder;
+import yalp.data.validation.ValidationBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class BeanWrapperTest {
     @Test
     public void testBind() throws Exception {
 
-        new PlayBuilder().build();
+        new YalpBuilder().build();
         ValidationBuilder.build();
         Map<String, String[]> m = new HashMap<String, String[]>();
         m.put("b.a", new String[]{"a1"});

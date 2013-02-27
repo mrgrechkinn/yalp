@@ -1,4 +1,4 @@
-package play.classloading.enhancers;
+package yalp.classloading.enhancers;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -15,9 +15,9 @@ import javassist.bytecode.annotation.Annotation;
 import javassist.expr.ExprEditor;
 import javassist.expr.FieldAccess;
 import javassist.expr.Handler;
-import play.Logger;
-import play.classloading.ApplicationClasses.ApplicationClass;
-import play.exceptions.UnexpectedException;
+import yalp.Logger;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
+import yalp.exceptions.UnexpectedException;
 
 /**
  * Enhance controllers classes. 
@@ -48,7 +48,7 @@ public class ControllersEnhancer extends Enhancer {
                     try {
                         if (isThreadedFieldAccess(fieldAccess.getField())) {
                             if (fieldAccess.isReader()) {
-                                fieldAccess.replace("$_ = ($r)play.utils.Java.invokeStatic($type, \"current\");");
+                                fieldAccess.replace("$_ = ($r)yalp.utils.Java.invokeStatic($type, \"current\");");
                             }
                         }
                     } catch (Exception e) {
@@ -61,7 +61,7 @@ public class ControllersEnhancer extends Enhancer {
             // Auto-redirect
             boolean isHandler = false;
             for (Annotation a : getAnnotations(ctMethod).getAnnotations()) {
-                if (a.getTypeName().startsWith("play.mvc.")) {
+                if (a.getTypeName().startsWith("yalp.mvc.")) {
                     isHandler = true;
                     break;
                 }
@@ -91,16 +91,16 @@ public class ControllersEnhancer extends Enhancer {
                 if (Modifier.isPublic(ctMethod.getModifiers()) && ((ctClass.getName().endsWith("$") && !ctMethod.getName().contains("$default$"))) && !isHandler) {
                     try {
                         ctMethod.insertBefore(
-                                "if(play.mvc.Controller._currentReverse.get() != null) {"
-                                + "play.mvc.Controller.redirect(\"" + ctClass.getName().replace("$", "") + "." + ctMethod.getName() + "\", $args);"
+                                "if(yalp.mvc.Controller._currentReverse.get() != null) {"
+                                + "yalp.mvc.Controller.redirect(\"" + ctClass.getName().replace("$", "") + "." + ctMethod.getName() + "\", $args);"
                                 + generateValidReturnStatement(ctMethod.getReturnType())
                                 + "}");
 
                         ctMethod.insertBefore(
-                                "((java.util.Stack)play.classloading.enhancers.ControllersEnhancer.currentAction.get()).push(\"" + ctClass.getName().replace("$", "") + "." + ctMethod.getName() + "\");");
+                                "((java.util.Stack)yalp.classloading.enhancers.ControllersEnhancer.currentAction.get()).push(\"" + ctClass.getName().replace("$", "") + "." + ctMethod.getName() + "\");");
 
                         ctMethod.insertAfter(
-                                "((java.util.Stack)play.classloading.enhancers.ControllersEnhancer.currentAction.get()).pop();", true);
+                                "((java.util.Stack)yalp.classloading.enhancers.ControllersEnhancer.currentAction.get()).pop();", true);
 
                     } catch (Exception e) {
                         Logger.error(e, "Error in ControllersEnhancer. %s.%s has not been properly enhanced (auto-reverse).", applicationClass.name, ctMethod.getName());
@@ -114,10 +114,10 @@ public class ControllersEnhancer extends Enhancer {
                 if (Modifier.isPublic(ctMethod.getModifiers()) && Modifier.isStatic(ctMethod.getModifiers()) && ctMethod.getReturnType().equals(CtClass.voidType) && !isHandler) {
                     try {
                         ctMethod.insertBefore(
-                                "if(!play.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.isActionCallAllowed()) {"
-                                + "play.mvc.Controller.redirect(\"" + ctClass.getName().replace("$", "") + "." + ctMethod.getName() + "\", $args);"
+                                "if(!yalp.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.isActionCallAllowed()) {"
+                                + "yalp.mvc.Controller.redirect(\"" + ctClass.getName().replace("$", "") + "." + ctMethod.getName() + "\", $args);"
                                 + generateValidReturnStatement(ctMethod.getReturnType()) + "}"
-                                + "play.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.stopActionCall();");
+                                + "yalp.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.stopActionCall();");
 
                     } catch (Exception e) {
                         Logger.error(e, "Error in ControllersEnhancer. %s.%s has not been properly enhanced (auto-redirect).", applicationClass.name, ctMethod.getName());
@@ -127,14 +127,14 @@ public class ControllersEnhancer extends Enhancer {
 
             }
 
-            // Enhance global catch to avoid potential unwanted catching of play.mvc.results.Result
+            // Enhance global catch to avoid potential unwanted catching of yalp.mvc.results.Result
             ctMethod.instrument(new ExprEditor() {
 
                 @Override
                 public void edit(Handler handler) throws CannotCompileException {
                     StringBuilder code = new StringBuilder();
                     try {
-                        code.append("if($1 instanceof play.mvc.results.Result || $1 instanceof play.Invoker.Suspend) throw $1;");
+                        code.append("if($1 instanceof yalp.mvc.results.Result || $1 instanceof yalp.Invoker.Suspend) throw $1;");
                         handler.insertBefore(code.toString());
                     } catch (NullPointerException e) {
                         // TODO: finally clause ?
@@ -162,7 +162,7 @@ public class ControllersEnhancer extends Enhancer {
      * Check if a field must be translated to a 'thread safe field'
      */
     static boolean isThreadedFieldAccess(CtField field) {
-        if (field.getDeclaringClass().getName().equals("play.mvc.Controller") || field.getDeclaringClass().getName().equals("play.mvc.WebSocketController")) {
+        if (field.getDeclaringClass().getName().equals("yalp.mvc.Controller") || field.getDeclaringClass().getName().equals("yalp.mvc.WebSocketController")) {
             return field.getName().equals("params")
                     || field.getName().equals("request")
                     || field.getName().equals("response")

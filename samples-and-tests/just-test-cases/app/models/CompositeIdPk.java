@@ -1,6 +1,6 @@
 package models;
 
-import play.Logger;
+import yalp.Logger;
 
 import java.io.Serializable;
 

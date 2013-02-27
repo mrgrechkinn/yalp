@@ -1,4 +1,4 @@
-package play.templates;
+package yalp.templates;
 
 /**
  * Supported type for formatting. This interface is used to implement custom formatters for templates.

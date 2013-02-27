@@ -1,13 +1,13 @@
-package play.exceptions;
+package yalp.exceptions;
 
 import java.util.Arrays;
 import java.util.List;
-import play.templates.Template;
+import yalp.templates.Template;
 
 /**
  * An exception during template execution
  */
-public abstract class TemplateException extends PlayException implements SourceAttachment {
+public abstract class TemplateException extends YalpException implements SourceAttachment {
 
     private Template template;
     private Integer lineNumber;

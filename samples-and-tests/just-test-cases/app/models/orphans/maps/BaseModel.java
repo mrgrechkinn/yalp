@@ -1,6 +1,6 @@
 package models.orphans.maps;
 
-import play.db.jpa.Model;
+import yalp.db.jpa.Model;
 
 import javax.persistence.*;
 import java.util.HashMap;

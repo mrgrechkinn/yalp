@@ -6,8 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import play.data.validation.Unique;
-import play.db.jpa.GenericModel;
+import yalp.data.validation.Unique;
+import yalp.db.jpa.GenericModel;
 
 @Entity
 public class Book extends GenericModel {

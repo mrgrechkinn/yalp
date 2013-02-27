@@ -3,9 +3,9 @@ package models;
 import javax.persistence.*;
 import java.util.*;
 
-import play.data.binding.*;
+import yalp.data.binding.*;
 
-import play.db.jpa.*;
+import yalp.db.jpa.*;
 
 @Entity
 public class Post extends Model {

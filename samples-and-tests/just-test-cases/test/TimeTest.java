@@ -3,9 +3,9 @@ import java.util.GregorianCalendar;
 
 import org.junit.Test;
 
-import play.Logger;
-import play.libs.Time;
-import play.test.UnitTest;
+import yalp.Logger;
+import yalp.libs.Time;
+import yalp.test.UnitTest;
 
 
 public class TimeTest extends UnitTest {

@@ -1,15 +1,15 @@
-package play.exceptions;
+package yalp.exceptions;
 
 import java.util.Map;
 import java.util.List;
-import play.classloading.ApplicationClasses.ApplicationClass;
-import play.templates.Template;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
+import yalp.templates.Template;
 import java.util.Arrays;
 
 /**
  * No route found (during reverse routing)
  */
-public class NoRouteFoundException extends PlayException implements SourceAttachment {
+public class NoRouteFoundException extends YalpException implements SourceAttachment {
 
     String file;
     String action;

@@ -1,4 +1,4 @@
-package play.server;
+package yalp.server;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -13,27 +13,27 @@ import org.jboss.netty.handler.stream.ChunkedFile;
 import org.jboss.netty.handler.stream.ChunkedInput;
 import org.jboss.netty.handler.stream.ChunkedStream;
 import org.jboss.netty.handler.stream.ChunkedWriteHandler;
-import play.Invoker;
-import play.Invoker.InvocationContext;
-import play.Logger;
-import play.Play;
-import play.data.validation.Validation;
-import play.exceptions.PlayException;
-import play.exceptions.UnexpectedException;
-import play.i18n.Messages;
-import play.libs.F.Action;
-import play.libs.F.Promise;
-import play.libs.MimeTypes;
-import play.mvc.*;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
-import play.mvc.results.NotFound;
-import play.mvc.results.RenderStatic;
-import play.templates.JavaExtensions;
-import play.templates.TemplateLoader;
-import play.utils.HTTP;
-import play.utils.Utils;
-import play.vfs.VirtualFile;
+import yalp.Invoker;
+import yalp.Invoker.InvocationContext;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.data.validation.Validation;
+import yalp.exceptions.YalpException;
+import yalp.exceptions.UnexpectedException;
+import yalp.i18n.Messages;
+import yalp.libs.F.Action;
+import yalp.libs.F.Promise;
+import yalp.libs.MimeTypes;
+import yalp.mvc.*;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
+import yalp.mvc.results.NotFound;
+import yalp.mvc.results.RenderStatic;
+import yalp.templates.JavaExtensions;
+import yalp.templates.TemplateLoader;
+import yalp.utils.HTTP;
+import yalp.utils.Utils;
+import yalp.vfs.VirtualFile;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -49,15 +49,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import static org.jboss.netty.buffer.ChannelBuffers.wrappedBuffer;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.*;
 
-public class PlayHandler extends SimpleChannelUpstreamHandler {
+public class YalpHandler extends SimpleChannelUpstreamHandler {
 
     /**
-     * If true (the default), Play will send the HTTP header "Server: Play! Framework; ....".
+     * If true (the default), Yalp will send the HTTP header "Server: Yalp Framework; ....".
      * This could be a security problem (old versions having publicly known security bugs), so you can
-     * disable the header in application.conf: <code>http.exposePlayServer = false</code>
+     * disable the header in application.conf: <code>http.exposeYalpServer = false</code>
      */
-    private final static String signature = "Play! Framework;" + Play.version + ";" + Play.mode.name().toLowerCase();
-    private final static boolean exposePlayServer;
+    private final static String signature = "Yalp Framework;" + Yalp.version + ";" + Yalp.mode.name().toLowerCase();
+    private final static boolean exposeYalpServer;
 
     private static final String ACCEPT_GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
     private static final Charset ASCII = Charset.forName("ASCII");
@@ -74,7 +74,7 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
     } 
     
     static {
-        exposePlayServer = !"false".equals(Play.configuration.getProperty("http.exposePlayServer"));
+        exposeYalpServer = !"false".equals(Yalp.configuration.getProperty("http.exposeYalpServer"));
     }
 
     @Override
@@ -118,12 +118,12 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
                 });
 
                 // Raw invocation
-                boolean raw = Play.pluginCollection.rawInvocation(request, response);
+                boolean raw = Yalp.pluginCollection.rawInvocation(request, response);
                 if (raw) {
                     copyResponse(ctx, request, response, nettyRequest);
                 } else {
 
-                    // Deleguate to Play framework
+                    // Deleguate to Yalp framework
                     Invoker.invoke(new NettyInvocation(request, response, ctx, nettyRequest, messageEvent));
 
                 }
@@ -164,7 +164,7 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
 
         @Override
         public boolean init() {
-            Thread.currentThread().setContextClassLoader(Play.classloader);
+            Thread.currentThread().setContextClassLoader(Yalp.classloader);
             if (Logger.isTraceEnabled()) {
                 Logger.trace("init: begin");
             }
@@ -172,10 +172,10 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
             Request.current.set(request);
             Response.current.set(response);
             try {
-                if (Play.mode == Play.Mode.DEV) {
-                    Router.detectChanges(Play.ctxPath);
+                if (Yalp.mode == Yalp.Mode.DEV) {
+                    Router.detectChanges(Yalp.ctxPath);
                 }
-                if (Play.mode == Play.Mode.PROD && staticPathsCache.containsKey(request.domain + " " + request.method + " " + request.path)) {
+                if (Yalp.mode == Yalp.Mode.PROD && staticPathsCache.containsKey(request.domain + " " + request.method + " " + request.path)) {
                     RenderStatic rs = null;
                     synchronized (staticPathsCache) {
                         rs = staticPathsCache.get(request.domain + " " + request.method + " " + request.path);
@@ -195,7 +195,7 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
                 }
                 return false;
             } catch (RenderStatic rs) {
-                if (Play.mode == Play.Mode.PROD) {
+                if (Yalp.mode == Yalp.Mode.PROD) {
                     synchronized (staticPathsCache) {
                         staticPathsCache.put(request.domain + " " + request.method + " " + request.path, rs);
                     }
@@ -278,9 +278,9 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
             try {
                 StringBuilder error = new StringBuilder();
                 error.append("\u0000");
-                // Cannot put warning which is play.netty.content.length.exceeded
+                // Cannot put warning which is yalp.netty.content.length.exceeded
                 // as Key as it will result error when printing error
-                error.append("play.netty.maxContentLength");
+                error.append("yalp.netty.maxContentLength");
                 error.append(":");
                 String size = null;
                 try {
@@ -387,7 +387,7 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
         // Decide whether to close the connection or not.
 
         HttpResponse nettyResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.valueOf(response.status));
-        if (exposePlayServer) {
+        if (exposeYalpServer) {
             nettyResponse.setHeader(SERVER, signature);
         }
 
@@ -525,7 +525,7 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
         String contentType = nettyRequest.getHeader(CONTENT_TYPE);
 
         // need to get the encoding now - before the Http.Request is created
-        String encoding = Play.defaultWebEncoding;
+        String encoding = Yalp.defaultWebEncoding;
         if (contentType != null) {
             HTTP.ContentTypeWithEncoding contentTypeEncoding = HTTP.parseContentType(contentType);
             if (contentTypeEncoding.encoding != null) {
@@ -553,7 +553,7 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
         if (b instanceof FileChannelBuffer) {
             FileChannelBuffer buffer = (FileChannelBuffer) b;
             // An error occurred
-            Integer max = Integer.valueOf(Play.configuration.getProperty("play.netty.maxContentLength", "-1"));
+            Integer max = Integer.valueOf(Yalp.configuration.getProperty("yalp.netty.maxContentLength", "-1"));
 
             body = buffer.getInputStream();
             if (!(max == -1 || body.available() < max)) {
@@ -640,14 +640,14 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
             Set<Cookie> cookieSet = new CookieDecoder().decode(value);
             if (cookieSet != null) {
                 for (Cookie cookie : cookieSet) {
-                    Http.Cookie playCookie = new Http.Cookie();
-                    playCookie.name = cookie.getName();
-                    playCookie.path = cookie.getPath();
-                    playCookie.domain = cookie.getDomain();
-                    playCookie.secure = cookie.isSecure();
-                    playCookie.value = cookie.getValue();
-                    playCookie.httpOnly = cookie.isHttpOnly();
-                    cookies.put(playCookie.name, playCookie);
+                    Http.Cookie yalpCookie = new Http.Cookie();
+                    yalpCookie.name = cookie.getName();
+                    yalpCookie.path = cookie.getPath();
+                    yalpCookie.domain = cookie.getDomain();
+                    yalpCookie.secure = cookie.isSecure();
+                    yalpCookie.value = cookie.getValue();
+                    yalpCookie.httpOnly = cookie.isHttpOnly();
+                    cookies.put(yalpCookie.name, yalpCookie);
                 }
             }
         }
@@ -674,7 +674,7 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
             Logger.trace("serve404: begin");
         }
         HttpResponse nettyResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND);
-        if (exposePlayServer) {
+        if (exposeYalpServer) {
             nettyResponse.setHeader(SERVER, signature);
         }
 
@@ -716,7 +716,7 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
         binding.put("request", Http.Request.current());
         binding.put("flash", Scope.Flash.current());
         binding.put("params", Scope.Params.current());
-        binding.put("play", new Play());
+        binding.put("yalp", new Yalp());
         try {
             binding.put("errors", Validation.errors());
         } catch (Exception ex) {
@@ -733,7 +733,7 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
         }
 
         HttpResponse nettyResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.INTERNAL_SERVER_ERROR);
-        if (exposePlayServer) {
+        if (exposeYalpServer) {
             nettyResponse.setHeader(SERVER, signature);
         }
 
@@ -743,8 +743,8 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
         String encoding = response.encoding;
 
         try {
-            if (!(e instanceof PlayException)) {
-                e = new play.exceptions.UnexpectedException(e);
+            if (!(e instanceof YalpException)) {
+                e = new yalp.exceptions.UnexpectedException(e);
             }
 
             // Flush some cookies
@@ -833,11 +833,11 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
         }
 
         HttpResponse nettyResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.valueOf(response.status));
-        if (exposePlayServer) {
+        if (exposeYalpServer) {
             nettyResponse.setHeader(SERVER, signature);
         }
         try {
-            VirtualFile file = Play.getVirtualFile(renderStatic.file);
+            VirtualFile file = Yalp.getVirtualFile(renderStatic.file);
             if (file != null && file.exists() && file.isDirectory()) {
                 file = file.child("index.html");
                 if (file != null) {
@@ -847,7 +847,7 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
             if ((file == null || !file.exists())) {
                 serve404(new NotFound("The file " + renderStatic.file + " does not exist"), ctx, request, nettyRequest);
             } else {
-                boolean raw = Play.pluginCollection.serveStatic(file, Request.current(), Response.current());
+                boolean raw = Yalp.pluginCollection.serveStatic(file, Request.current(), Response.current());
                 if (raw) {
                     copyResponse(ctx, request, response, nettyRequest);
                 } else {
@@ -963,12 +963,12 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
     }
 
     private static HttpResponse addEtag(HttpRequest nettyRequest, HttpResponse httpResponse, File file) {
-        if (Play.mode == Play.Mode.DEV) {
+        if (Yalp.mode == Yalp.Mode.DEV) {
             httpResponse.setHeader(CACHE_CONTROL, "no-cache");
         } else {
 			// Check if Cache-Control header is not set
 			if (httpResponse.getHeader(CACHE_CONTROL) == null) {
-            	String maxAge = Play.configuration.getProperty("http.cacheControl", "3600");
+            	String maxAge = Yalp.configuration.getProperty("http.cacheControl", "3600");
             	if (maxAge.equals("0")) {
                		httpResponse.setHeader(CACHE_CONTROL, "no-cache");
             	} else {
@@ -976,7 +976,7 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
             	}
 			}
         }
-        boolean useEtag = Play.configuration.getProperty("http.useETag", "true").equals("true");
+        boolean useEtag = Yalp.configuration.getProperty("http.useETag", "true").equals("true");
         long last = file.lastModified();
         final String etag = "\"" + last + "-" + file.hashCode() + "\"";
         if (!isModified(etag, last, nettyRequest)) {
@@ -1055,14 +1055,14 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
         }
     }
 
-    public void writeChunk(Request playRequest, Response playResponse, ChannelHandlerContext ctx, HttpRequest nettyRequest, Object chunk) {
+    public void writeChunk(Request yalpRequest, Response yalpResponse, ChannelHandlerContext ctx, HttpRequest nettyRequest, Object chunk) {
         try {
-            if (playResponse.direct == null) {
-                playResponse.setHeader("Transfer-Encoding", "chunked");
-                playResponse.direct = new LazyChunkedInput();
-                copyResponse(ctx, playRequest, playResponse, nettyRequest);
+            if (yalpResponse.direct == null) {
+                yalpResponse.setHeader("Transfer-Encoding", "chunked");
+                yalpResponse.direct = new LazyChunkedInput();
+                copyResponse(ctx, yalpRequest, yalpResponse, nettyRequest);
             }
-            ((LazyChunkedInput) playResponse.direct).writeChunk(chunk);
+            ((LazyChunkedInput) yalpResponse.direct).writeChunk(chunk);
             if (Server.pipelines.get("ChunkedWriteHandler") != null) {
                 ((ChunkedWriteHandler)Server.pipelines.get("ChunkedWriteHandler")).resumeTransfer();
             }
@@ -1074,9 +1074,9 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
         }
     }
 
-    public void closeChunked(Request playRequest, Response playResponse, ChannelHandlerContext ctx, HttpRequest nettyRequest) {
+    public void closeChunked(Request yalpRequest, Response yalpResponse, ChannelHandlerContext ctx, HttpRequest nettyRequest) {
         try {
-            ((LazyChunkedInput) playResponse.direct).close();
+            ((LazyChunkedInput) yalpResponse.direct).close();
             if (Server.pipelines.get("ChunkedWriteHandler") != null) {
                 ((ChunkedWriteHandler)Server.pipelines.get("ChunkedWriteHandler")).resumeTransfer();
             }
@@ -1112,7 +1112,7 @@ public class PlayHandler extends SimpleChannelUpstreamHandler {
     private void websocketHandshake(final ChannelHandlerContext ctx, HttpRequest req, MessageEvent messageEvent) throws Exception {
 
 
-        Integer max = Integer.valueOf(Play.configuration.getProperty("play.netty.maxContentLength", "65345"));
+        Integer max = Integer.valueOf(Yalp.configuration.getProperty("yalp.netty.maxContentLength", "65345"));
 
         // Upgrade the pipeline as the handshaker needs the HttpStream Aggregator
         ctx.getPipeline().addLast("fake-aggregator", new HttpChunkAggregator(max));

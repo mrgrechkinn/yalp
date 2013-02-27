@@ -1,9 +1,9 @@
-package play.exceptions;
+package yalp.exceptions;
 
 /**
  * An unexpected exception
  */
-public class UnexpectedException extends PlayException {
+public class UnexpectedException extends YalpException {
     
     public UnexpectedException(String message) {
         super(message);

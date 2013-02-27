@@ -1,6 +1,6 @@
-package play.exceptions;
+package yalp.exceptions;
 
-import play.templates.Template;
+import yalp.templates.Template;
 
 /**
  * A exception during template compilation

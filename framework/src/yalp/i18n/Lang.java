@@ -1,15 +1,15 @@
-package play.i18n;
+package yalp.i18n;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
 
-import play.Logger;
-import play.Play;
-import play.mvc.Http;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.mvc.Http;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
 
 /**
  * Language support
@@ -48,7 +48,7 @@ public class Lang {
      * @return false if the language is not supported by the application
      */
     public static boolean set(String locale) {
-        if (locale.equals("") || Play.langs.contains(locale)) {
+        if (locale.equals("") || Yalp.langs.contains(locale)) {
             current.set(locale);
             return true;
         } else {
@@ -80,14 +80,14 @@ public class Lang {
             Response response = Response.current();
             if ( response != null ) {
                 // We have a current response in scope - set the language-cookie to store the selected language for the next requests
-                response.setCookie(Play.configuration.getProperty("application.lang.cookie", "PLAY_LANG"), locale);
+                response.setCookie(Yalp.configuration.getProperty("application.lang.cookie", "YALP_LANG"), locale);
             }
         }
 
     }
 
     /**
-     * Given a set of desired locales, searches the set of locales supported by this Play! application and returns the closest match.
+     * Given a set of desired locales, searches the set of locales supported by this Yalp application and returns the closest match.
      *
      * @param desiredLocales a collection of desired locales. If the collection is ordered, earlier locales are preferred over later ones.
      *                       Locales should be of the form "[language]_[country" or "[language]", e.g. "en_CA" or "en".
@@ -102,7 +102,7 @@ public class Lang {
         for (String a: desiredLocales) {
             a = a.replace("-", "_");
             cleanLocales.add(a);
-            for (String locale: Play.langs) {
+            for (String locale: Yalp.langs) {
                 if (locale.equalsIgnoreCase(a)) {
                     return locale;
                 }
@@ -114,7 +114,7 @@ public class Lang {
             if (splitPos > 0) {
                 a = a.substring(0, splitPos);
             }
-            for (String locale: Play.langs) {
+            for (String locale: Yalp.langs) {
                 String langOnlyLocale;
                 int localeSplitPos = locale.indexOf("_");
                 if (localeSplitPos > 0) {
@@ -135,15 +135,15 @@ public class Lang {
     /**
      * Guess the language for current request in the following order:
      * <ol>
-     * <li>if a <b>PLAY_LANG</b> cookie is set, use this value</li>
-     * <li>if <b>Accept-Language</b> header is set, use it only if the Play! application allows it.<br/>supported language may be defined in application configuration, eg : <em>play.langs=fr,en,de)</em></li>
+     * <li>if a <b>YALP_LANG</b> cookie is set, use this value</li>
+     * <li>if <b>Accept-Language</b> header is set, use it only if the Yalp application allows it.<br/>supported language may be defined in application configuration, eg : <em>yalp.langs=fr,en,de)</em></li>
      * <li>otherwise, server's locale language is assumed
      * </ol>
      * @param request
      */
     private static void resolvefrom(Request request) {
         // Check a cookie
-        String cn = Play.configuration.getProperty("application.lang.cookie", "PLAY_LANG");
+        String cn = Yalp.configuration.getProperty("application.lang.cookie", "YALP_LANG");
         if (request.cookies.containsKey(cn)) {
             String localeFromCookie = request.cookies.get(cn).value;
             if (localeFromCookie != null && localeFromCookie.trim().length()>0) {
@@ -168,10 +168,10 @@ public class Lang {
     }
 
     public static void setDefaultLocale() {
-        if (Play.langs.isEmpty()) {
+        if (Yalp.langs.isEmpty()) {
             set("");
         } else {
-            set(Play.langs.get(0));
+            set(Yalp.langs.get(0));
         }
     }
 

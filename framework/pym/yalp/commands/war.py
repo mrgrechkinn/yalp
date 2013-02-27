@@ -3,8 +3,8 @@ import os
 import getopt
 import shutil
 
-import play.commands.precompile
-from play.utils import *
+import yalp.commands.precompile
+from yalp.utils import *
 
 COMMANDS = ["war"]
 
@@ -61,7 +61,7 @@ def execute(**kargs):
         sys.exit(-1)
 
     # Precompile first
-    precompilation_result = play.commands.precompile.execute(command=command, app=app, args=args, env=env)
+    precompilation_result = yalp.commands.precompile.execute(command=command, app=app, args=args, env=env)
 
     if precompilation_result != 0:
         print "~ Please fix compilation errors before packaging WAR"
@@ -74,7 +74,7 @@ def execute(**kargs):
     print "~ Done !"
     print "~"
     print "~ You can now load %s as a standard WAR into your servlet container" % (os.path.normpath(war_path))
-    print "~ You can't use play standard commands to run/stop/debug the WAR application..."
+    print "~ You can't use yalp standard commands to run/stop/debug the WAR application..."
     print "~ ... just use your servlet container commands instead"
     print "~"
     print "~ Have fun!"

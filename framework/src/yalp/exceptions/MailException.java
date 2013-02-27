@@ -1,15 +1,15 @@
 
-package play.exceptions;
+package yalp.exceptions;
 
 import java.util.Arrays;
 import java.util.List;
-import play.Play;
-import play.classloading.ApplicationClasses.ApplicationClass;
+import yalp.Yalp;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
 
 /**
  * Error while sending an email
  */
-public class MailException extends PlayException implements SourceAttachment {
+public class MailException extends YalpException implements SourceAttachment {
     
     String sourceFile;
     List<String> source;
@@ -23,7 +23,7 @@ public class MailException extends PlayException implements SourceAttachment {
         super(message, cause);
         StackTraceElement element = getInterestingStrackTraceElement(cause);
         if(element != null) {
-            ApplicationClass applicationClass = Play.classes.getApplicationClass(element.getClassName());
+            ApplicationClass applicationClass = Yalp.classes.getApplicationClass(element.getClassName());
             sourceFile = applicationClass.javaFile.relativePath();
             source = Arrays.asList(applicationClass.javaSource.split("\n"));
             line = element.getLineNumber();

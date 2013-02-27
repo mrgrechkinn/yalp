@@ -1,4 +1,4 @@
-package play.utils;
+package yalp.utils;
 
 import java.io.InputStream;
 import java.util.Collections;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
-import play.libs.IO;
+import yalp.libs.IO;
 
 public class HTTP {
 
@@ -52,7 +52,7 @@ public class HTTP {
     private static Map<String, String> initLower2UppercaseHttpHeaders() {
         Map<String, String> map = new HashMap<String, String>();
 
-        String path = "/play/utils/http_headers.properties";
+        String path = "/yalp/utils/http_headers.properties";
         InputStream in = HTTP.class.getResourceAsStream(path);
         if (in == null) {
             throw new RuntimeException("Error reading " + path);

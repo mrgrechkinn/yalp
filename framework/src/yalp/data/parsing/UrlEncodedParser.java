@@ -1,4 +1,4 @@
-package play.data.parsing;
+package yalp.data.parsing;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,12 +7,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import play.Logger;
-import play.Play;
-import play.exceptions.UnexpectedException;
-import play.mvc.Http;
-import play.mvc.results.Status;
-import play.utils.Utils;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.exceptions.UnexpectedException;
+import yalp.mvc.Http;
+import yalp.mvc.results.Status;
+import yalp.utils.Utils;
 
 import org.apache.commons.codec.net.URLCodec;
 
@@ -22,7 +22,7 @@ import org.apache.commons.codec.net.URLCodec;
 public class UrlEncodedParser extends DataParser {
 
     // Sets the maximum count of accepted POST params - protection against Hash collision DOS attacks
-    private static final int maxParams = Integer.parseInt(Play.configuration.getProperty("http.maxParams", "1000")); // 0 == no limit
+    private static final int maxParams = Integer.parseInt(Yalp.configuration.getProperty("http.maxParams", "1000")); // 0 == no limit
     
     boolean forQueryString = false;
     
@@ -75,7 +75,7 @@ public class UrlEncodedParser extends DataParser {
             String[] keyValues = data.split("&");
 
 
-            // to prevent the Play-server from being vulnerable to POST hash collision DOS-attack (Denial of Service through hash table multi-collisions),
+            // to prevent the Yalp-server from being vulnerable to POST hash collision DOS-attack (Denial of Service through hash table multi-collisions),
             // we should by default not parse the params into HashMap if the count exceeds a maximum limit
             if(maxParams != 0 && keyValues.length > maxParams) {
                 Logger.warn("Number of request parameters %d is higher than maximum of %d, aborting. Can be configured using 'http.maxParams'", keyValues.length, maxParams);

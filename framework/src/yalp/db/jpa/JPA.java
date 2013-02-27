@@ -1,10 +1,10 @@
-package play.db.jpa;
+package yalp.db.jpa;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
-import play.exceptions.JPAException;
+import yalp.exceptions.JPAException;
 
 /**
  * JPA Support

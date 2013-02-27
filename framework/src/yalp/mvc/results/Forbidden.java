@@ -1,15 +1,15 @@
-package play.mvc.results;
+package yalp.mvc.results;
 
 import java.util.Map;
 
-import play.Play;
-import play.exceptions.UnexpectedException;
-import play.libs.MimeTypes;
-import play.mvc.Http;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
-import play.mvc.Scope;
-import play.templates.TemplateLoader;
+import yalp.Yalp;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.MimeTypes;
+import yalp.mvc.Http;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
+import yalp.mvc.Scope;
+import yalp.templates.TemplateLoader;
 
 /**
  * 403 Forbidden
@@ -33,7 +33,7 @@ public class Forbidden extends Result {
         binding.put("request", Http.Request.current());
         binding.put("flash", Scope.Flash.current());
         binding.put("params", Scope.Params.current());
-        binding.put("play", new Play());
+        binding.put("yalp", new Yalp());
         String errorHtml = getMessage();
         try {
             errorHtml = TemplateLoader.load("errors/403."+(format == null ? "html" : format)).render(binding);

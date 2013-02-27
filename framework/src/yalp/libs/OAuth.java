@@ -1,4 +1,4 @@
-package play.libs;
+package yalp.libs;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -9,11 +9,11 @@ import oauth.signpost.exception.OAuthException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
-import play.mvc.Http.Request;
-import play.mvc.Scope.Params;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Scope.Params;
 
 /**
- * Library to access ressources protected by OAuth 1.0a. For OAuth 2.0, see play.libs.OAuth2.
+ * Library to access ressources protected by OAuth 1.0a. For OAuth 2.0, see yalp.libs.OAuth2.
  *
  */
 public class OAuth {

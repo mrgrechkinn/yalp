@@ -1,22 +1,22 @@
-package play.db;
+package yalp.db;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 
 import org.apache.commons.lang.StringUtils;
-import play.Logger;
-import play.Play;
-import play.PlayPlugin;
-import play.classloading.ApplicationClasses;
-import play.classloading.ApplicationClassloader;
-import play.exceptions.PlayException;
-import play.exceptions.UnexpectedException;
-import play.libs.Codec;
-import play.libs.IO;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
-import play.mvc.results.Redirect;
-import play.vfs.VirtualFile;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.YalpPlugin;
+import yalp.classloading.ApplicationClasses;
+import yalp.classloading.ApplicationClassloader;
+import yalp.exceptions.YalpException;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.Codec;
+import yalp.libs.IO;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
+import yalp.mvc.results.Redirect;
+import yalp.vfs.VirtualFile;
 
 import java.io.File;
 import java.sql.Connection;
@@ -39,7 +39,7 @@ import javax.sql.DataSource;
  *
  * Does only support the default DBConfig
  */
-public class Evolutions extends PlayPlugin {
+public class Evolutions extends YalpPlugin {
 
     private static Map<String, VirtualFile> modulesWithEvolutions = new LinkedHashMap<String, VirtualFile>();
     /**
@@ -52,17 +52,17 @@ public class Evolutions extends PlayPlugin {
 
 
         /** Start the DB plugin **/
-        Play.id = System.getProperty("play.id");
-        Play.applicationPath = new File(System.getProperty("application.path"));
-        Play.guessFrameworkPath();
-        Play.readConfiguration();
-        Play.javaPath = new ArrayList<VirtualFile>();
-        Play.classes = new ApplicationClasses();
-        Play.classloader = new ApplicationClassloader();
+        Yalp.id = System.getProperty("yalp.id");
+        Yalp.applicationPath = new File(System.getProperty("application.path"));
+        Yalp.guessFrameworkPath();
+        Yalp.readConfiguration();
+        Yalp.javaPath = new ArrayList<VirtualFile>();
+        Yalp.classes = new ApplicationClasses();
+        Yalp.classloader = new ApplicationClassloader();
 
-        Play.templatesPath = new ArrayList<VirtualFile>();
-        Play.modulesRoutes = new HashMap<String, VirtualFile>();
-        Play.loadModules();
+        Yalp.templatesPath = new ArrayList<VirtualFile>();
+        Yalp.modulesRoutes = new HashMap<String, VirtualFile>();
+        Yalp.loadModules();
 
 
         if (System.getProperty("modules") != null) {
@@ -121,7 +121,7 @@ public class Evolutions extends PlayPlugin {
                 System.out.println("");
                 System.out.println(e.error);
                 System.out.println("");
-                System.out.println("~ Please correct it manually, and mark it resolved by running `play evolutions:resolve`");
+                System.out.println("~ Please correct it manually, and mark it resolved by running `yalp evolutions:resolve`");
                 System.out.println("~");
                 return;
             } catch (InvalidDatabaseRevision e) {
@@ -180,8 +180,8 @@ public class Evolutions extends PlayPlugin {
                     System.out.println("");
                     System.out.println("# ------------------------------------------------------------------------------");
                     System.out.println("");
-                    System.out.println("~ Run `play evolutions:apply` to automatically apply this script to the database");
-                    System.out.println("~ or apply it yourself and mark it done using `play evolutions:markApplied`");
+                    System.out.println("~ Run `yalp evolutions:apply` to automatically apply this script to the database");
+                    System.out.println("~ or apply it yourself and mark it done using `yalp evolutions:markApplied`");
                     System.out.println("~");
                     System.exit(-1);
                 }
@@ -201,8 +201,8 @@ public class Evolutions extends PlayPlugin {
         boolean weShouldAddTheMainProject = false;
 
         for (String specificModule : specificModules) {
-            if (Play.modules.containsKey(specificModule)) {
-                VirtualFile moduleRoot = Play.modules.get(specificModule);
+            if (Yalp.modules.containsKey(specificModule)) {
+                VirtualFile moduleRoot = Yalp.modules.get(specificModule);
                 
                 if(moduleRoot.child("db/evolutions").exists()) {
                     modulesWithEvolutions.put(specificModule, moduleRoot.child("db/evolutions"));
@@ -211,7 +211,7 @@ public class Evolutions extends PlayPlugin {
 	            System.out.println("~");
                     System.exit(-1);
                 }
-            } else if (Play.configuration.getProperty("application.name").equals(specificModule))  {
+            } else if (Yalp.configuration.getProperty("application.name").equals(specificModule))  {
                 weShouldAddTheMainProject = true;
             } else {
                 System.out.println("~ Couldn't find a module with the name '" + specificModule + "'. ");
@@ -226,7 +226,7 @@ public class Evolutions extends PlayPlugin {
     private static void populateModulesWithEvolutions() {
         /** Check that evolutions are enabled **/
 
-        for(Entry<String, VirtualFile> moduleRoot : Play.modules.entrySet()) {            
+        for(Entry<String, VirtualFile> moduleRoot : Yalp.modules.entrySet()) {            
             if(moduleRoot.getValue().child("db/evolutions").exists()) {
                 modulesWithEvolutions.put(moduleRoot.getKey(), moduleRoot.getValue().child("db/evolutions"));
             }
@@ -237,17 +237,17 @@ public class Evolutions extends PlayPlugin {
 
     private static void addMainProjectToModuleList() {
         if (evolutionsDirectory.exists()) {
-            modulesWithEvolutions.put(Play.configuration.getProperty("application.name"), VirtualFile.open(evolutionsDirectory));
+            modulesWithEvolutions.put(Yalp.configuration.getProperty("application.name"), VirtualFile.open(evolutionsDirectory));
         }
     }
 
-    static File evolutionsDirectory = Play.getFile("db/evolutions");
+    static File evolutionsDirectory = Yalp.getFile("db/evolutions");
 
     @Override
     public boolean rawInvocation(Request request, Response response) throws Exception {
 
         // Mark an evolution as resolved
-        if (Play.mode.isDev() && request.method.equals("POST") && request.url.matches("^/@evolutions/force/[0-9]+$")) {
+        if (Yalp.mode.isDev() && request.method.equals("POST") && request.url.matches("^/@evolutions/force/[0-9]+$")) {
             int revision = Integer.parseInt(request.url.substring(request.url.lastIndexOf("/") + 1));
             resolve(revision);
             new Redirect("/").apply(request, response);
@@ -255,7 +255,7 @@ public class Evolutions extends PlayPlugin {
         }
 
         // Apply the current evolution script
-        if (Play.mode.isDev() && request.method.equals("POST") && request.url.equals("/@evolutions/apply")) {
+        if (Yalp.mode.isDev() && request.method.equals("POST") && request.url.equals("/@evolutions/apply")) {
             
              for(Entry<String, VirtualFile> moduleRoot : modulesWithEvolutions.entrySet()) {            
                  applyScript(true, moduleRoot.getKey(), moduleRoot.getValue());
@@ -268,7 +268,7 @@ public class Evolutions extends PlayPlugin {
 
     @Override
     public void beforeInvocation() {
-        if(isDisabled() || Play.mode.isProd()) {
+        if(isDisabled() || Yalp.mode.isProd()) {
             return;
         }
         try {
@@ -276,7 +276,7 @@ public class Evolutions extends PlayPlugin {
         } catch (InvalidDatabaseRevision e) {
         	Logger.info("Automatically applying evolutions in in-memory database");
             for(Entry<String, VirtualFile> moduleRoot : modulesWithEvolutions.entrySet()) {            
-                if ("mem".equals(Play.configuration.getProperty("db")) && listDatabaseEvolutions(moduleRoot.getKey()).peek().revision == 0) {
+                if ("mem".equals(Yalp.configuration.getProperty("db")) && listDatabaseEvolutions(moduleRoot.getKey()).peek().revision == 0) {
                 	Logger.info("Applying evolutions for '" + moduleRoot.getKey() + "'");
                     applyScript(true, moduleRoot.getKey(), moduleRoot.getValue());
                 } else {
@@ -290,13 +290,13 @@ public class Evolutions extends PlayPlugin {
     public void onApplicationStart() {
         if (!isDisabled()) {
             populateModulesWithEvolutions();
-            if ( Play.mode.isProd()) {
+            if ( Yalp.mode.isProd()) {
                 try {
                     checkEvolutionsState();
                 } catch (InvalidDatabaseRevision e) {
                     Logger.warn("");
                     Logger.warn("Your database is not up to date.");
-                    Logger.warn("Use `play evolutions` command to manage database evolutions.");
+                    Logger.warn("Use `yalp evolutions` command to manage database evolutions.");
                     throw e;
                 }
             }
@@ -307,13 +307,13 @@ public class Evolutions extends PlayPlugin {
      * Checks if evolutions is disabled in application.conf (property "evolutions.enabled")
      */
     private boolean isDisabled() {
-        return "false".equals(Play.configuration.getProperty("evolutions.enabled", "true"));
+        return "false".equals(Yalp.configuration.getProperty("evolutions.enabled", "true"));
     }
     
     public static synchronized void resolve(int revision) {
         try {
-            execute("update play_evolutions set state = 'applied' where state = 'applying_up' and id = " + revision);
-            execute("delete from play_evolutions where state = 'applying_down' and id = " + revision);
+            execute("update yalp_evolutions set state = 'applied' where state = 'applying_up' and id = " + revision);
+            execute("delete from yalp_evolutions where state = 'applying_down' and id = " + revision);
         } catch (Exception e) {
             throw new UnexpectedException(e);
         }
@@ -329,7 +329,7 @@ public class Evolutions extends PlayPlugin {
 
                     // Insert into logs
                     if (evolution.applyUp) {
-                        PreparedStatement ps = connection.prepareStatement("insert into play_evolutions values(?, ?, ?, ?, ?, ?, ?, ?)");
+                        PreparedStatement ps = connection.prepareStatement("insert into yalp_evolutions values(?, ?, ?, ?, ?, ?, ?, ?)");
                         ps.setInt(1, evolution.revision);
                         ps.setString(2, evolution.hash);
                         ps.setDate(3, new Date(System.currentTimeMillis()));
@@ -340,7 +340,7 @@ public class Evolutions extends PlayPlugin {
                         ps.setString(8, moduleKey);
                         ps.execute();
                     } else {
-                        execute("update play_evolutions set state = 'applying_down' where id = " + evolution.revision);
+                        execute("update yalp_evolutions set state = 'applying_down' where id = " + evolution.revision);
                     }
                     // Execute script
                     if (runScript) {
@@ -354,9 +354,9 @@ public class Evolutions extends PlayPlugin {
                     }
                     // Insert into logs
                     if (evolution.applyUp) {
-                        execute("update play_evolutions set state = 'applied' where id = " + evolution.revision);
+                        execute("update yalp_evolutions set state = 'applied' where id = " + evolution.revision);
                     } else {
-                        execute("delete from play_evolutions where id = " + evolution.revision);
+                        execute("delete from yalp_evolutions where id = " + evolution.revision);
                     }
                 }
                 return true;
@@ -366,7 +366,7 @@ public class Evolutions extends PlayPlugin {
                     SQLException ex = (SQLException) e;
                     message += " [ERROR:" + ex.getErrorCode() + ", SQLSTATE:" + ex.getSQLState() + "]";
                 }
-                PreparedStatement ps = connection.prepareStatement("update play_evolutions set last_problem = ? where id = ?");
+                PreparedStatement ps = connection.prepareStatement("update yalp_evolutions set last_problem = ? where id = ?");
                 ps.setString(1, message);
                 ps.setInt(2, applying);
                 ps.execute();
@@ -410,7 +410,7 @@ public class Evolutions extends PlayPlugin {
                 Connection connection = null;
                 try {
                     connection = getNewConnection();
-                    PreparedStatement statement = connection.prepareStatement("select id, hash, apply_script, revert_script, state, last_problem from play_evolutions where module_key = ? and state like 'applying_%'"); 
+                    PreparedStatement statement = connection.prepareStatement("select id, hash, apply_script, revert_script, state, last_problem from yalp_evolutions where module_key = ? and state like 'applying_%'"); 
                     statement.setString(1, moduleRoot.getKey());
                     ResultSet rs = statement.executeQuery();
                     if (rs.next()) {
@@ -511,7 +511,7 @@ public class Evolutions extends PlayPlugin {
         Connection connection = null;
         try {
             connection = getNewConnection();
-            String tableName = "play_evolutions";
+            String tableName = "yalp_evolutions";
             boolean tableExists = true;
             ResultSet rs = connection.getMetaData().getTables(null, null, tableName, null);
 
@@ -535,7 +535,7 @@ public class Evolutions extends PlayPlugin {
                 
                 checkAndUpdateEvolutionsForMultiModuleSupport(connection);                    
 
-                PreparedStatement statement = connection.prepareStatement("select id, hash, apply_script, revert_script from play_evolutions where module_key = ?");
+                PreparedStatement statement = connection.prepareStatement("select id, hash, apply_script, revert_script from yalp_evolutions where module_key = ?");
                 statement.setString(1, moduleKey);
                 ResultSet databaseEvolutions = statement.executeQuery();
                 
@@ -546,8 +546,8 @@ public class Evolutions extends PlayPlugin {
             
             } else {
                 // If you are having problems with the default datatype text (clob for Oracle), you can
-                // specify your own datatype using the 'evolution.PLAY_EVOLUTIONS.textType'-property
-                String textDataType = Play.configuration.getProperty("evolution.PLAY_EVOLUTIONS.textType");
+                // specify your own datatype using the 'evolution.YALP_EVOLUTIONS.textType'-property
+                String textDataType = Yalp.configuration.getProperty("evolution.YALP_EVOLUTIONS.textType");
                 if (textDataType == null) {
                     if (isOracleDialectInUse()) {
                         textDataType = "clob";
@@ -556,10 +556,10 @@ public class Evolutions extends PlayPlugin {
                     }
                 }
 
-                execute("create table play_evolutions (id int not null, hash varchar(255) not null, applied_at timestamp not null, apply_script text, revert_script text, state varchar(255), last_problem text, module_key varchar(255), constraint pk_id_module_key primary key (id, module_key))");
+                execute("create table yalp_evolutions (id int not null, hash varchar(255) not null, applied_at timestamp not null, apply_script text, revert_script text, state varchar(255), last_problem text, module_key varchar(255), constraint pk_id_module_key primary key (id, module_key))");
             }
         } catch (SQLException e) {
-            Logger.error(e, "SQL error while checking play evolutions");
+            Logger.error(e, "SQL error while checking yalp evolutions");
         } finally {
             closeConnection(connection);
         }
@@ -570,10 +570,10 @@ public class Evolutions extends PlayPlugin {
     private synchronized static boolean isOracleDialectInUse() {
         boolean isOracle = false;
 
-        String jpaDialect = Play.configuration.getProperty("jpa.dialect");
+        String jpaDialect = Yalp.configuration.getProperty("jpa.dialect");
         if (jpaDialect != null) {
             try {
-                Class<?> dialectClass = Play.classloader.loadClass(jpaDialect);
+                Class<?> dialectClass = Yalp.classloader.loadClass(jpaDialect);
 			
                 // Oracle 8i dialect is the base class for oracle dialects (at least for now)
                 isOracle = org.hibernate.dialect.Oracle8iDialect.class.isAssignableFrom(dialectClass);
@@ -586,18 +586,18 @@ public class Evolutions extends PlayPlugin {
     }
     
     private static void checkAndUpdateEvolutionsForMultiModuleSupport(Connection connection) throws SQLException {
-        ResultSet rs = connection.getMetaData().getColumns(null, null, "play_evolutions", "module_key");
+        ResultSet rs = connection.getMetaData().getColumns(null, null, "yalp_evolutions", "module_key");
 
         if(!rs.next()) {
             
-            System.out.println("!!! - Updating the play_evolutions table to cope with multiple modules - !!!");
-            execute("alter table play_evolutions add module_key varchar(255);");
-            execute("alter table play_evolutions drop primary key;");
-            execute("alter table play_evolutions add constraint pk_id_module_key primary key (id,module_key);");
+            System.out.println("!!! - Updating the yalp_evolutions table to cope with multiple modules - !!!");
+            execute("alter table yalp_evolutions add module_key varchar(255);");
+            execute("alter table yalp_evolutions drop primary key;");
+            execute("alter table yalp_evolutions add constraint pk_id_module_key primary key (id,module_key);");
 
             System.out.println("!!! - Assigning any existing evolutions to the parent project - !!!");
-            PreparedStatement statement = connection.prepareStatement("update play_evolutions set module_key = ? where module_key is null");
-            statement.setString(1, Play.configuration.getProperty("application.name"));
+            PreparedStatement statement = connection.prepareStatement("update yalp_evolutions set module_key = ? where module_key is null");
+            statement.setString(1, Yalp.configuration.getProperty("application.name"));
             statement.execute();
         }
     }
@@ -663,7 +663,7 @@ public class Evolutions extends PlayPlugin {
     }
 
     // Exceptions
-    public static class InvalidDatabaseRevision extends PlayException {
+    public static class InvalidDatabaseRevision extends YalpException {
 
         String evolutionScript;
 
@@ -687,7 +687,7 @@ public class Evolutions extends PlayPlugin {
         }
     }
 
-    public static class InconsistentDatabase extends PlayException {
+    public static class InconsistentDatabase extends YalpException {
 
         String evolutionScript;
         String error;

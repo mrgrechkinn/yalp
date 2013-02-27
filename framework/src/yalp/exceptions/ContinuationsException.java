@@ -1,6 +1,6 @@
-package play.exceptions;
+package yalp.exceptions;
 
-public class ContinuationsException extends PlayException {
+public class ContinuationsException extends YalpException {
 
     public ContinuationsException(String message) {
         super(message);

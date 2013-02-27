@@ -1,11 +1,11 @@
-package play.data.validation;
+package yalp.data.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import net.sf.oval.configuration.annotation.Constraint;
-import play.db.jpa.GenericModel;
+import yalp.db.jpa.GenericModel;
 
 /**
  * Check that a field or or field in a context is unique.

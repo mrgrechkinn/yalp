@@ -1,4 +1,4 @@
-package play.ant;
+package yalp.ant;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,21 +16,21 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.selectors.FilenameSelector;
 import org.apache.tools.ant.util.FileUtils;
 
-import play.libs.IO;
+import yalp.libs.IO;
 
 /**
  * Ant task which loads settings needed by the ant from the ant configuration file.
  *
  * These include:
- * - Resolving the settings for the given play id and setting them to the ant project properties
+ * - Resolving the settings for the given yalp id and setting them to the ant project properties
  * - Creating classpath element for the module libraries
  *
  */
-public class PlayConfigurationLoadTask {
+public class YalpConfigurationLoadTask {
 
     private Project project;
-    /** Play id */
-    private String playId = "";
+    /** Yalp id */
+    private String yalpId = "";
     /** Prefix to use for the properties loaded from the configuration file */
     private String prefix = "application.conf.";
     /** Id for the classpath element */
@@ -44,8 +44,8 @@ public class PlayConfigurationLoadTask {
         this.project = project;
     }
 
-    public void setPlayId(String playId) {
-        this.playId = playId;
+    public void setYalpId(String yalpId) {
+        this.yalpId = yalpId;
     }
 
     public void setPrefix(String prefix) {
@@ -93,7 +93,7 @@ public class PlayConfigurationLoadTask {
     /**
      * Load all properties from the given conf file, resolving the id
      * @param srcFile the conf file
-     * @param playId the current id
+     * @param yalpId the current id
      * @return a Map of key, values corresponding to the entries in the conf file
      */
     private Map<String, String> properties() {
@@ -113,8 +113,8 @@ public class PlayConfigurationLoadTask {
                     continue;
                 }
                 if (line.startsWith("%")) {
-                    if (playId.length() > 0 && line.startsWith(playId + ".")) {
-                        line = line.substring((playId + ".").length());
+                    if (yalpId.length() > 0 && line.startsWith(yalpId + ".")) {
+                        line = line.substring((yalpId + ".").length());
                         String[] sa = splitLine(line);
                         if (sa != null) {
                             idSpecific.put(sa[0], sa[1]);

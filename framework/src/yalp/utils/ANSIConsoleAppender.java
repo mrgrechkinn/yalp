@@ -1,4 +1,4 @@
-package play.utils;
+package yalp.utils;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Priority;

@@ -1,11 +1,11 @@
-package play.data.validation;
+package yalp.data.validation;
 
 import java.util.Collection;
 import net.sf.oval.Validator;
 import net.sf.oval.configuration.annotation.AbstractAnnotationCheck;
 import net.sf.oval.context.OValContext;
-import play.db.Model.BinaryField;
-import play.exceptions.UnexpectedException;
+import yalp.db.Model.BinaryField;
+import yalp.exceptions.UnexpectedException;
 
 @SuppressWarnings("serial")
 public class RequiredCheck extends AbstractAnnotationCheck<Required> {

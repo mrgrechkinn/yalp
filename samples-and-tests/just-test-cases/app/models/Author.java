@@ -6,7 +6,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
-import play.db.jpa.Model;
+import yalp.db.jpa.Model;
 
 @Entity
 public class Author extends Model {

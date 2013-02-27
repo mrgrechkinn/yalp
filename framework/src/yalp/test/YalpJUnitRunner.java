@@ -1,4 +1,4 @@
-package play.test;
+package yalp.test;
 
 import java.io.File;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -13,11 +13,11 @@ import org.junit.runners.JUnit4;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
-import play.Invoker;
-import play.Invoker.DirectInvocation;
-import play.Play;
+import yalp.Invoker;
+import yalp.Invoker.DirectInvocation;
+import yalp.Yalp;
 
-public class PlayJUnitRunner extends Runner implements Filterable {
+public class YalpJUnitRunner extends Runner implements Filterable {
 
     public static final String invocationType = "JUnitTest";
 
@@ -26,26 +26,26 @@ public class PlayJUnitRunner extends Runner implements Filterable {
     // *******************
     JUnit4 jUnit4;
 
-    public PlayJUnitRunner(Class testClass) throws ClassNotFoundException, InitializationError {
-        synchronized (Play.class) {
-            if (!Play.started) {
-                Play.init(new File("."), PlayJUnitRunner.getPlayId());
-                Play.javaPath.add(Play.getVirtualFile("test"));
-                Play.start();
+    public YalpJUnitRunner(Class testClass) throws ClassNotFoundException, InitializationError {
+        synchronized (Yalp.class) {
+            if (!Yalp.started) {
+                Yalp.init(new File("."), YalpJUnitRunner.getYalpId());
+                Yalp.javaPath.add(Yalp.getVirtualFile("test"));
+                Yalp.start();
                 useCustomRunner = true;
-                Class classToRun = Play.classloader.loadApplicationClass(testClass.getName());
+                Class classToRun = Yalp.classloader.loadApplicationClass(testClass.getName());
             }
-            Class classToRun = Play.classloader.loadApplicationClass(testClass.getName());
+            Class classToRun = Yalp.classloader.loadApplicationClass(testClass.getName());
             jUnit4 = new JUnit4(classToRun);
         }
     }
 
-    private static String getPlayId() {
-        String playId = System.getProperty("play.id", "test");
-        if(! (playId.startsWith("test-") && playId.length() >= 6)) {
-            playId = "test";
+    private static String getYalpId() {
+        String yalpId = System.getProperty("yalp.id", "test");
+        if(! (yalpId.startsWith("test-") && yalpId.length() >= 6)) {
+            yalpId = "test";
         }
-        return playId;
+        return yalpId;
     }
 
     @Override
@@ -65,9 +65,9 @@ public class PlayJUnitRunner extends Runner implements Filterable {
     }
 
     // *********************
-    public enum StartPlay implements MethodRule {
+    public enum StartYalp implements MethodRule {
 
-        INVOKE_THE_TEST_IN_PLAY_CONTEXT {
+        INVOKE_THE_TEST_IN_YALP_CONTEXT {
 
             public Statement apply(final Statement base, FrameworkMethod method, Object target) {
 
@@ -75,9 +75,9 @@ public class PlayJUnitRunner extends Runner implements Filterable {
 
                     @Override
                     public void evaluate() throws Throwable {
-                        if (!Play.started) {
-                            Play.forceProd = true;
-                            Play.init(new File("."), PlayJUnitRunner.getPlayId());
+                        if (!Yalp.started) {
+                            Yalp.forceProd = true;
+                            Yalp.init(new File("."), YalpJUnitRunner.getYalpId());
                         }
 
                         try {
@@ -117,8 +117,8 @@ public class PlayJUnitRunner extends Runner implements Filterable {
             }
         };
 
-        public static StartPlay rule() {
-            return PlayJUnitRunner.useCustomRunner ? INVOKE_THE_TEST_IN_PLAY_CONTEXT : JUST_RUN_THE_TEST;
+        public static StartYalp rule() {
+            return YalpJUnitRunner.useCustomRunner ? INVOKE_THE_TEST_IN_YALP_CONTEXT : JUST_RUN_THE_TEST;
         }
     }
 }

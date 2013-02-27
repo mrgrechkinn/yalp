@@ -1,7 +1,7 @@
 package models;
 
-import play.data.validation.Required;
-import play.db.jpa.Model;
+import yalp.data.validation.Required;
+import yalp.db.jpa.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

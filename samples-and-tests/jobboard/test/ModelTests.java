@@ -1,6 +1,6 @@
 
 import org.junit.*;
-import play.test.*;
+import yalp.test.*;
 
 import models.*;
 

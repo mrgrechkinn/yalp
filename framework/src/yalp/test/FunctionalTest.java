@@ -1,4 +1,4 @@
-package play.test;
+package yalp.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,14 +16,14 @@ import java.util.regex.Pattern;
 import java.net.MalformedURLException;
 
 import org.junit.Before;
-import play.Invoker.InvocationContext;
+import yalp.Invoker.InvocationContext;
 
-import play.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation;
-import play.mvc.ActionInvoker;
-import play.mvc.Http;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
-import play.mvc.Scope.RenderArgs;
+import yalp.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation;
+import yalp.mvc.ActionInvoker;
+import yalp.mvc.Http;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
+import yalp.mvc.Scope.RenderArgs;
 
 import com.ning.http.multipart.FilePart;
 import com.ning.http.multipart.MultipartRequestEntity;
@@ -32,9 +32,9 @@ import com.ning.http.multipart.StringPart;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.TimeUnit;
-import play.Invoker;
-import play.mvc.Controller;
-import play.mvc.Router.ActionDefinition;
+import yalp.Invoker;
+import yalp.mvc.Controller;
+import yalp.mvc.Router.ActionDefinition;
 
 /**
  * Application tests support
@@ -328,7 +328,7 @@ public abstract class FunctionalTest extends BaseTest {
                     savedCookies.put(e.getKey(), e.getValue());
                 } else {
                     // cookies with maxAge zero still remove a previously existing cookie,
-                    // like PLAY_FLASH.
+                    // like YALP_FLASH.
                     savedCookies.remove(e.getKey());
                 }
             }

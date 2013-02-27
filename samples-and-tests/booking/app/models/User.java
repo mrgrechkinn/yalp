@@ -1,7 +1,7 @@
 package models;
 
-import play.db.jpa.*;
-import play.data.validation.*;
+import yalp.db.jpa.*;
+import yalp.data.validation.*;
 import javax.persistence.*;
 
 @Entity

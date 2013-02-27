@@ -1,6 +1,6 @@
 import org.junit.Test;
-import play.mvc.Http;
-import play.test.FunctionalTest;
+import yalp.mvc.Http;
+import yalp.test.FunctionalTest;
 
 public class OrphanTest extends FunctionalTest {
 

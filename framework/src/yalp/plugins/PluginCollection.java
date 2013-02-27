@@ -1,21 +1,21 @@
-package play.plugins;
+package yalp.plugins;
 
-import play.Logger;
-import play.Play;
-import play.PlayPlugin;
-import play.classloading.ApplicationClasses;
-import play.classloading.ApplicationClassloader;
-import play.data.binding.RootParamNode;
-import play.db.Model;
-import play.exceptions.UnexpectedException;
-import play.mvc.Http;
-import play.mvc.Router;
-import play.mvc.results.Result;
-import play.templates.BaseTemplate;
-import play.templates.Template;
-import play.test.BaseTest;
-import play.test.TestEngine;
-import play.vfs.VirtualFile;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.YalpPlugin;
+import yalp.classloading.ApplicationClasses;
+import yalp.classloading.ApplicationClassloader;
+import yalp.data.binding.RootParamNode;
+import yalp.db.Model;
+import yalp.exceptions.UnexpectedException;
+import yalp.mvc.Http;
+import yalp.mvc.Router;
+import yalp.mvc.results.Result;
+import yalp.templates.BaseTemplate;
+import yalp.templates.Template;
+import yalp.test.BaseTest;
+import yalp.test.TestEngine;
+import yalp.vfs.VirtualFile;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -37,11 +37,11 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Class handling all plugins used by Play.
+ * Class handling all plugins used by Yalp.
  *
  * Loading/reloading/enabling/disabling is handled here.
  *
- * This class also exposes many PlayPlugin-methods which
+ * This class also exposes many YalpPlugin-methods which
  * when called, the method is executed on all enabled plugins.
  *
  * Since all the enabled-plugins-iteration is done here,
@@ -50,33 +50,33 @@ import java.util.Set;
 public class PluginCollection {
 
     /**
-     * Property holding the name of the play.plugins-resource-name.
+     * Property holding the name of the yalp.plugins-resource-name.
      * Can be modified in unittest to supply modifies plugin-list
      */
-    protected String play_plugins_resourceName = "play.plugins";
+    protected String yalp_plugins_resourceName = "yalp.plugins";
 
     protected Object lock = new Object();
     /**
      * List that holds all loaded plugins, enabled or disabled
      */
-    protected List<PlayPlugin> allPlugins = new ArrayList<PlayPlugin>();
+    protected List<YalpPlugin> allPlugins = new ArrayList<YalpPlugin>();
 
     /**
      * Readonly copy of allPlugins - updated each time allPlugins is updated.
      * Using this cached copy so we don't have to create it all the time..
      */
-    protected List<PlayPlugin> allPlugins_readOnlyCopy = createReadonlyCopy(allPlugins);
+    protected List<YalpPlugin> allPlugins_readOnlyCopy = createReadonlyCopy(allPlugins);
 
     /**
      * List of all enabled plugins
      */
-    protected List<PlayPlugin> enabledPlugins = new ArrayList<PlayPlugin>();
+    protected List<YalpPlugin> enabledPlugins = new ArrayList<YalpPlugin>();
 
     /**
      * Readonly copy of enabledPlugins - updated each time enabledPlugins is updated.
      * Using this cached copy so we don't have to create it all the time
      */
-    protected List<PlayPlugin> enabledPlugins_readOnlyCopy = createReadonlyCopy(enabledPlugins);
+    protected List<YalpPlugin> enabledPlugins_readOnlyCopy = createReadonlyCopy(enabledPlugins);
 
 
     /**
@@ -84,8 +84,8 @@ public class PluginCollection {
      * @param list
      * @return
      */
-    protected List<PlayPlugin> createReadonlyCopy( List<PlayPlugin> list ){
-        return Collections.unmodifiableList( new ArrayList<PlayPlugin>( list ));
+    protected List<YalpPlugin> createReadonlyCopy( List<YalpPlugin> list ){
+        return Collections.unmodifiableList( new ArrayList<YalpPlugin>( list ));
     }
 
 
@@ -125,12 +125,12 @@ public class PluginCollection {
      */
     public void loadPlugins() {
         Logger.trace("Loading plugins");
-        // Play! plugins
+        // Yalp plugins
         Enumeration<URL> urls = null;
         try {
-            urls = Play.classloader.getResources( play_plugins_resourceName);
+            urls = Yalp.classloader.getResources( yalp_plugins_resourceName);
         } catch (Exception e) {
-            Logger.error("Error loading play.plugins", e);
+            Logger.error("Error loading yalp.plugins", e);
             return ;
         }
 
@@ -165,7 +165,7 @@ public class PluginCollection {
         for ( LoadingPluginInfo info : pluginsToLoad) {
             Logger.trace("Loading plugin %s", info.name);
             try {
-                PlayPlugin plugin = (PlayPlugin) Play.classloader.loadClass(info.name).newInstance();
+                YalpPlugin plugin = (YalpPlugin) Yalp.classloader.loadClass(info.name).newInstance();
                 plugin.index = info.index;
                 if( addPlugin(plugin) ){
                     Logger.trace("Loaded plugin %s", plugin);
@@ -177,8 +177,8 @@ public class PluginCollection {
             }
         }
         //now we must call onLoad for all plugins - and we must detect if a plugin
-        //disables another plugin the old way, by removing it from Play.plugins.
-        for( PlayPlugin plugin : getEnabledPlugins()){
+        //disables another plugin the old way, by removing it from Yalp.plugins.
+        for( YalpPlugin plugin : getEnabledPlugins()){
 
             //is this plugin still enabled?
             if( isEnabled(plugin)){
@@ -186,8 +186,8 @@ public class PluginCollection {
             }
         }
 
-        //must update Play.plugins-list one last time
-        updatePlayPluginsList();
+        //must update Yalp.plugins-list one last time
+        updateYalpPluginsList();
 
     }
 
@@ -195,15 +195,15 @@ public class PluginCollection {
      * Reloads all loaded plugins that is application-supplied.
      */
     public void reloadApplicationPlugins() throws Exception{
-        Set<PlayPlugin> reloadedPlugins = new HashSet<PlayPlugin>();
+        Set<YalpPlugin> reloadedPlugins = new HashSet<YalpPlugin>();
 
-        for (PlayPlugin plugin : getAllPlugins()) {
+        for (YalpPlugin plugin : getAllPlugins()) {
 
             //Is this plugin an application-supplied-plugin?
             if (isLoadedByApplicationClassloader(plugin)) {
                 //This plugin is application-supplied - Must reload it
                 String pluginClassName = plugin.getClass().getName();
-                Class pluginClazz = Play.classloader.loadClass( pluginClassName);
+                Class pluginClazz = Yalp.classloader.loadClass( pluginClassName);
 
                 //first looking for constructors the old way
                 Constructor<?>[] constructors = pluginClazz.getConstructors();
@@ -214,7 +214,7 @@ public class PluginCollection {
                     constructors = pluginClazz.getDeclaredConstructors();
                 }
 
-                PlayPlugin newPlugin = (PlayPlugin) constructors[0].newInstance();
+                YalpPlugin newPlugin = (YalpPlugin) constructors[0].newInstance();
                 newPlugin.index = plugin.index;
                 //replace this plugin
                 replacePlugin(plugin, newPlugin);
@@ -223,36 +223,36 @@ public class PluginCollection {
         }
 
         //now we must call onLoad for all reloaded plugins
-        for( PlayPlugin plugin : reloadedPlugins ){
+        for( YalpPlugin plugin : reloadedPlugins ){
             initializePlugin( plugin );
         }
 
-        updatePlayPluginsList();
+        updateYalpPluginsList();
 
     }
 
-    protected boolean isLoadedByApplicationClassloader(PlayPlugin plugin) {
+    protected boolean isLoadedByApplicationClassloader(YalpPlugin plugin) {
         return plugin.getClass().getClassLoader().getClass().equals(ApplicationClassloader.class);
     }
 
 
     /**
-     * Calls plugin.onLoad but detects if plugin removes other plugins from Play.plugins-list to detect
+     * Calls plugin.onLoad but detects if plugin removes other plugins from Yalp.plugins-list to detect
      * if plugins disables a plugin the old hacked way..
      * @param plugin
      */
     @SuppressWarnings({"deprecation"})
-    protected void initializePlugin(PlayPlugin plugin) {
+    protected void initializePlugin(YalpPlugin plugin) {
         Logger.trace("Initializing plugin " + plugin);
         //we're ready to call onLoad for this plugin.
-        //must create a unique Play.plugins-list for this onLoad-method-call so
+        //must create a unique Yalp.plugins-list for this onLoad-method-call so
         //we can detect if some plugins are removed/disabled
-        Play.plugins = new ArrayList<PlayPlugin>( getEnabledPlugins() );
+        Yalp.plugins = new ArrayList<YalpPlugin>( getEnabledPlugins() );
         plugin.onLoad();
         //check for missing/removed plugins
-        for( PlayPlugin enabledPlugin : getEnabledPlugins()){
-            if( !Play.plugins.contains( enabledPlugin)) {
-                Logger.info("Detected that plugin '" + plugin + "' disabled the plugin '" + enabledPlugin + "' the old way - should use Play.disablePlugin()");
+        for( YalpPlugin enabledPlugin : getEnabledPlugins()){
+            if( !Yalp.plugins.contains( enabledPlugin)) {
+                Logger.info("Detected that plugin '" + plugin + "' disabled the plugin '" + enabledPlugin + "' the old way - should use Yalp.disablePlugin()");
                 //this enabled plugin was disabled.
                 //must disable it in pluginCollection
                 disablePlugin( enabledPlugin);
@@ -266,7 +266,7 @@ public class PluginCollection {
      * @param plugin
      * @return true if plugin was new and was added
      */
-    protected boolean addPlugin( PlayPlugin plugin ){
+    protected boolean addPlugin( YalpPlugin plugin ){
         synchronized( lock ){
             if( !allPlugins.contains(plugin) ){
                 allPlugins.add( plugin );
@@ -279,7 +279,7 @@ public class PluginCollection {
         return false;
     }
 
-    protected void replacePlugin( PlayPlugin oldPlugin, PlayPlugin newPlugin){
+    protected void replacePlugin( YalpPlugin oldPlugin, YalpPlugin newPlugin){
         synchronized( lock ){
             if( allPlugins.remove( oldPlugin )){
                 allPlugins.add( newPlugin);
@@ -302,7 +302,7 @@ public class PluginCollection {
      * @param plugin
      * @return true if plugin exists and was enabled now
      */
-    public boolean enablePlugin( PlayPlugin plugin ){
+    public boolean enablePlugin( YalpPlugin plugin ){
         synchronized( lock ){
             if( allPlugins.contains( plugin )){
                 //the plugin exists
@@ -311,7 +311,7 @@ public class PluginCollection {
                     enabledPlugins.add( plugin );
                     Collections.sort( enabledPlugins);
                     enabledPlugins_readOnlyCopy = createReadonlyCopy( enabledPlugins);
-                    updatePlayPluginsList();
+                    updateYalpPluginsList();
                     Logger.trace("Plugin " + plugin + " enabled");
                     return true;
                 }
@@ -324,7 +324,7 @@ public class PluginCollection {
      * enable plugin of specified type
      * @return true if plugin was enabled
      */
-    public boolean enablePlugin( Class<? extends PlayPlugin> pluginClazz ){
+    public boolean enablePlugin( Class<? extends YalpPlugin> pluginClazz ){
         return enablePlugin(getPluginInstance(pluginClazz));
     }
 
@@ -334,9 +334,9 @@ public class PluginCollection {
      * @param pluginClazz
      * @return
      */
-    public PlayPlugin getPluginInstance( Class<? extends PlayPlugin> pluginClazz){
+    public YalpPlugin getPluginInstance( Class<? extends YalpPlugin> pluginClazz){
         synchronized( lock ){
-            for( PlayPlugin p : getAllPlugins()){
+            for( YalpPlugin p : getAllPlugins()){
                 if (pluginClazz.isInstance(p)) {
                     return p;
                 }
@@ -351,13 +351,13 @@ public class PluginCollection {
      * @param plugin
      * @return true if plugin was enabled and now is disabled
      */
-    public boolean disablePlugin( PlayPlugin plugin ){
+    public boolean disablePlugin( YalpPlugin plugin ){
         synchronized( lock ){
             //try to disable it?
             if( enabledPlugins.remove( plugin ) ){
                 //plugin was removed
                 enabledPlugins_readOnlyCopy = createReadonlyCopy( enabledPlugins);
-                updatePlayPluginsList();
+                updateYalpPluginsList();
                 Logger.trace("Plugin " + plugin + " disabled");
                 return true;
             }
@@ -369,25 +369,25 @@ public class PluginCollection {
      * disable plugin of specified type
      * @return true if plugin was enabled and now is disabled
      */
-    public boolean disablePlugin( Class<? extends PlayPlugin> pluginClazz ){
+    public boolean disablePlugin( Class<? extends YalpPlugin> pluginClazz ){
         return disablePlugin( getPluginInstance( pluginClazz));
     }
 
 
 
     /**
-     * Must update Play.plugins-list to be backward compatible
+     * Must update Yalp.plugins-list to be backward compatible
      */
     @SuppressWarnings({"deprecation"})
-    public void updatePlayPluginsList(){
-        Play.plugins = Collections.unmodifiableList( getEnabledPlugins() );
+    public void updateYalpPluginsList(){
+        Yalp.plugins = Collections.unmodifiableList( getEnabledPlugins() );
     }
 
     /**
      * Returns new readonly list of all enabled plugins
      * @return
      */
-    public List<PlayPlugin> getEnabledPlugins(){
+    public List<YalpPlugin> getEnabledPlugins(){
         return enabledPlugins_readOnlyCopy;
     }
     
@@ -395,12 +395,12 @@ public class PluginCollection {
      * Returns readonly view of all enabled plugins in reversed order
      * @return
      */
-    public Collection<PlayPlugin> getReversedEnabledPlugins() {
-        return new AbstractCollection<PlayPlugin>() {
+    public Collection<YalpPlugin> getReversedEnabledPlugins() {
+        return new AbstractCollection<YalpPlugin>() {
 			
-		    @Override public Iterator<PlayPlugin> iterator() {
-		    	final ListIterator<PlayPlugin> enabledPluginsListIt = enabledPlugins.listIterator(size() - 1);
-		        return new Iterator<PlayPlugin>() {
+		    @Override public Iterator<YalpPlugin> iterator() {
+		    	final ListIterator<YalpPlugin> enabledPluginsListIt = enabledPlugins.listIterator(size() - 1);
+		        return new Iterator<YalpPlugin>() {
 
 					@Override
 					public boolean hasNext() {
@@ -408,7 +408,7 @@ public class PluginCollection {
 					}
 
 					@Override
-					public PlayPlugin next() {
+					public YalpPlugin next() {
 						return enabledPluginsListIt.previous();
 					}
 
@@ -430,7 +430,7 @@ public class PluginCollection {
      * Returns new readonly list of all plugins
      * @return
      */
-    public List<PlayPlugin> getAllPlugins(){
+    public List<YalpPlugin> getAllPlugins(){
         return allPlugins_readOnlyCopy;
     }
 
@@ -440,12 +440,12 @@ public class PluginCollection {
      * @param plugin
      * @return true if plugin is enabled
      */
-    public boolean isEnabled( PlayPlugin plugin){
+    public boolean isEnabled( YalpPlugin plugin){
         return getEnabledPlugins().contains( plugin );
     }
 
     public boolean compileSources() {
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             if(plugin.compileSources()) {
                 return true;
             }
@@ -454,7 +454,7 @@ public class PluginCollection {
     }
 
     public boolean detectClassesChange() {
-        for(PlayPlugin plugin : getEnabledPlugins()){
+        for(YalpPlugin plugin : getEnabledPlugins()){
             if(plugin.detectClassesChange()) {
                 return true;
             }
@@ -463,31 +463,31 @@ public class PluginCollection {
     }
 
     public void invocationFinally(){
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             plugin.invocationFinally();
         }
     }
 
     public void beforeInvocation(){
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             plugin.beforeInvocation();
         }
     }
 
     public void afterInvocation(){
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             plugin.afterInvocation();
         }
     }
 
     public void onInvocationSuccess(){
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             plugin.onInvocationSuccess();
         }
     }
 
     public void onInvocationException(Throwable e) {
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             try {
                 plugin.onInvocationException(e);
             } catch (Throwable ex) {
@@ -497,55 +497,55 @@ public class PluginCollection {
     }
 
     public void beforeDetectingChanges(){
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             plugin.beforeDetectingChanges();
         }
     }
 
     public void detectChange(){
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             plugin.detectChange();
         }
     }
 
     public void onApplicationReady(){
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             plugin.onApplicationReady();
         }
     }
 
     public void onConfigurationRead(){
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             plugin.onConfigurationRead();
         }
     }
 
     public void onApplicationStart(){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             plugin.onApplicationStart();
         }
     }
 
     public void afterApplicationStart(){
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             plugin.afterApplicationStart();
         }
     }
 
     public void onApplicationStop(){
-        for( PlayPlugin plugin : getReversedEnabledPlugins() ){
+        for( YalpPlugin plugin : getReversedEnabledPlugins() ){
             plugin.onApplicationStop();
         }
     }
 
     public void onEvent(String message, Object context){
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             plugin.onEvent(message, context);
         }
     }
 
     public void enhance(ApplicationClasses.ApplicationClass applicationClass){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             try {
                 long start = System.currentTimeMillis();
                 plugin.enhance(applicationClass);
@@ -561,7 +561,7 @@ public class PluginCollection {
     @Deprecated
     public List<ApplicationClasses.ApplicationClass> onClassesChange(List<ApplicationClasses.ApplicationClass> modified){
         List<ApplicationClasses.ApplicationClass> modifiedWithDependencies = new ArrayList<ApplicationClasses.ApplicationClass>();
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             modifiedWithDependencies.addAll( plugin.onClassesChange(modified) );
         }
         return modifiedWithDependencies;
@@ -569,13 +569,13 @@ public class PluginCollection {
 
     @Deprecated
     public void compileAll(List<ApplicationClasses.ApplicationClass> classes){
-        for( PlayPlugin plugin : getEnabledPlugins() ){
+        for( YalpPlugin plugin : getEnabledPlugins() ){
             plugin.compileAll(classes);
         }
     }
 
     public Object bind(RootParamNode rootParamNode, String name, Class<?> clazz, Type type, Annotation[] annotations){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             Object result = plugin.bind(rootParamNode, name, clazz, type, annotations);
             if (result != null) {
                 return result;
@@ -585,7 +585,7 @@ public class PluginCollection {
     }
 
     public Object bindBean(RootParamNode rootParamNode, String name, Object bean){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             Object result = plugin.bindBean(rootParamNode, name, bean);
             if (result != null) {
                 return result;
@@ -595,7 +595,7 @@ public class PluginCollection {
     }
 
     public Map<String, Object> unBind(Object src, String name){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             Map<String, Object> r = plugin.unBind(src, name);
             if (r != null) {
                 return r;
@@ -605,7 +605,7 @@ public class PluginCollection {
     }
 
     public Object willBeValidated(Object value){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             Object newValue = plugin.willBeValidated(value);
             if (newValue != null) {
                 return newValue;
@@ -615,7 +615,7 @@ public class PluginCollection {
     }
 
     public Model.Factory modelFactory(Class<? extends Model> modelClass){
-        for(PlayPlugin plugin : getEnabledPlugins()) {
+        for(YalpPlugin plugin : getEnabledPlugins()) {
             Model.Factory factory = plugin.modelFactory(modelClass);
             if(factory != null) {
                 return factory;
@@ -625,7 +625,7 @@ public class PluginCollection {
     }
 
     public String getMessage(String locale, Object key, Object... args){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             String message = plugin.getMessage(locale, key, args);
             if(message != null) {
                 return message;
@@ -635,43 +635,43 @@ public class PluginCollection {
     }
 
     public void beforeActionInvocation(Method actionMethod){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             plugin.beforeActionInvocation(actionMethod);
         }
     }
 
     public void onActionInvocationResult(Result result){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             plugin.onActionInvocationResult(result);
         }
     }
 
     public void afterActionInvocation(){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             plugin.afterActionInvocation();
         }
     }
 
     public void routeRequest(Http.Request request){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             plugin.routeRequest(request);
         }
     }
 
     public void onRequestRouting(Router.Route route){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             plugin.onRequestRouting(route);
         }
     }
 
     public void onRoutesLoaded(){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             plugin.onRoutesLoaded();
         }
     }
 
     public boolean rawInvocation(Http.Request request, Http.Response response)throws Exception{
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             if (plugin.rawInvocation(request, response)) {
                 //raw = true;
                 return true;
@@ -682,7 +682,7 @@ public class PluginCollection {
 
 
     public boolean serveStatic(VirtualFile file, Http.Request request, Http.Response response){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             if (plugin.serveStatic(file, request, response)) {
                 //raw = true;
                 return true;
@@ -693,14 +693,14 @@ public class PluginCollection {
 
     public List<String> addTemplateExtensions(){
         List<String> list = new ArrayList<String>();
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             list.addAll(plugin.addTemplateExtensions());
         }
         return list;
     }
 
     public String overrideTemplateSource(BaseTemplate template, String source){
-        for(PlayPlugin plugin : getEnabledPlugins()) {
+        for(YalpPlugin plugin : getEnabledPlugins()) {
             String newSource = plugin.overrideTemplateSource(template, source);
             if(newSource != null) {
                 source = newSource;
@@ -710,7 +710,7 @@ public class PluginCollection {
     }
 
     public Template loadTemplate(VirtualFile file){
-        for(PlayPlugin plugin : getEnabledPlugins() ) {
+        for(YalpPlugin plugin : getEnabledPlugins() ) {
             Template pluginProvided = plugin.loadTemplate(file);
             if(pluginProvided != null) {
                 return pluginProvided;
@@ -720,13 +720,13 @@ public class PluginCollection {
     }
 
     public void afterFixtureLoad(){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             plugin.afterFixtureLoad();
         }
     }
 
     public TestEngine.TestResults runTest(Class<BaseTest> clazz){
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             TestEngine.TestResults pluginTestResults = plugin.runTest(clazz);
             if (pluginTestResults != null) {
                 return pluginTestResults;
@@ -737,7 +737,7 @@ public class PluginCollection {
 
     public Collection<Class> getUnitTests() {
         Set<Class> allPluginTests = new HashSet<Class>();
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             Collection<Class> unitTests = plugin.getUnitTests();
             if(unitTests != null) {
                 allPluginTests.addAll(unitTests);
@@ -749,7 +749,7 @@ public class PluginCollection {
     
     public Collection<Class> getFunctionalTests() {
         Set<Class> allPluginTests = new HashSet<Class>();
-        for (PlayPlugin plugin : getEnabledPlugins()) {
+        for (YalpPlugin plugin : getEnabledPlugins()) {
             Collection<Class> funcTests = plugin.getFunctionalTests();
             if(funcTests != null) {
                 allPluginTests.addAll(funcTests);

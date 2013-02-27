@@ -1,10 +1,10 @@
-package play.cache;
+package yalp.cache;
 
 import java.util.HashMap;
 import java.util.Map;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-import play.Logger;
+import yalp.Logger;
 
 /**
  * EhCache implementation.
@@ -25,7 +25,7 @@ public class EhCacheImpl implements CacheImpl {
 
     net.sf.ehcache.Cache cache;
 
-    private static final String cacheName = "play";
+    private static final String cacheName = "yalp";
 
     private EhCacheImpl() {
         this.cacheManager = CacheManager.create();

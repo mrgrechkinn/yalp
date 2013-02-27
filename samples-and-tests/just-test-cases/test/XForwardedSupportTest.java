@@ -4,12 +4,12 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import play.Play;
-import play.Logger;
-import play.mvc.Http.Header;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
-import play.test.FunctionalTest;
+import yalp.Yalp;
+import yalp.Logger;
+import yalp.mvc.Http.Header;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
+import yalp.test.FunctionalTest;
 
 
 public class XForwardedSupportTest extends FunctionalTest {
@@ -48,8 +48,8 @@ public class XForwardedSupportTest extends FunctionalTest {
 	// modify play configuration, to test ALL
 	String prev = null;
 	try{
-	    prev = Play.configuration.getProperty(CONFIG_XFORWARD_SUPPORT);
-	    Play.configuration.setProperty(CONFIG_XFORWARD_SUPPORT, "ALL");
+	    prev = Yalp.configuration.getProperty(CONFIG_XFORWARD_SUPPORT);
+	    Yalp.configuration.setProperty(CONFIG_XFORWARD_SUPPORT, "ALL");
 
 	    // These are valid if you set XFowardedSupport to ALL 
 	    String remoteAddress = "1.2.3.5";
@@ -63,7 +63,7 @@ public class XForwardedSupportTest extends FunctionalTest {
 
 	}finally{
 	    //restore
-	    Play.configuration.setProperty(CONFIG_XFORWARD_SUPPORT, prev);
+	    Yalp.configuration.setProperty(CONFIG_XFORWARD_SUPPORT, prev);
 	}
     }
 

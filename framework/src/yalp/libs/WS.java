@@ -1,4 +1,4 @@
-package play.libs;
+package yalp.libs;
 
 import java.io.File;
 import java.io.InputStream;
@@ -20,17 +20,17 @@ import org.apache.commons.lang.NotImplementedException;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import play.Logger;
-import play.Play;
-import play.PlayPlugin;
-import play.libs.F.Promise;
-import play.libs.OAuth.ServiceInfo;
-import play.libs.ws.WSAsync;
-import play.libs.ws.WSUrlFetch;
-import play.mvc.Http;
-import play.mvc.Http.Header;
-import play.utils.HTTP;
-import play.utils.NoOpEntityResolver;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.YalpPlugin;
+import yalp.libs.F.Promise;
+import yalp.libs.OAuth.ServiceInfo;
+import yalp.libs.ws.WSAsync;
+import yalp.libs.ws.WSUrlFetch;
+import yalp.mvc.Http;
+import yalp.mvc.Http.Header;
+import yalp.utils.HTTP;
+import yalp.utils.NoOpEntityResolver;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -55,7 +55,7 @@ import com.google.gson.JsonParser;
  *    }
  * </pre>
  */
-public class WS extends PlayPlugin {
+public class WS extends YalpPlugin {
 
     private static WSImpl wsImpl = null;
 
@@ -154,13 +154,13 @@ public class WS extends PlayPlugin {
     @Override
     public void onApplicationStart() {
 
-        wsWithDefaultEncoding = new WSWithEncoding(Play.defaultWebEncoding);
+        wsWithDefaultEncoding = new WSWithEncoding(Yalp.defaultWebEncoding);
 
     }
 
     private synchronized static void init() {
         if (wsImpl != null) return;
-        String implementation = Play.configuration.getProperty("webservice", "async");
+        String implementation = Yalp.configuration.getProperty("webservice", "async");
         if (implementation.equals("urlfetch")) {
             wsImpl = new WSUrlFetch();
             if (Logger.isTraceEnabled()) {
@@ -173,7 +173,7 @@ public class WS extends PlayPlugin {
             wsImpl = new WSAsync();
         } else {
             try {
-                wsImpl = (WSImpl)Play.classloader.loadClass(implementation).newInstance();
+                wsImpl = (WSImpl)Yalp.classloader.loadClass(implementation).newInstance();
                 if (Logger.isTraceEnabled()) {
                     Logger.trace("Using the class:" + implementation + " for web service");
                 }
@@ -242,7 +242,7 @@ public class WS extends PlayPlugin {
         public String oauthSecret = null;
 
         public WSRequest() {
-            this.encoding = Play.defaultWebEncoding;
+            this.encoding = Yalp.defaultWebEncoding;
         }
 
         public WSRequest(String url, String encoding) {
@@ -573,11 +573,11 @@ public class WS extends PlayPlugin {
             // no! must parse it and remember
             String contentType = getContentType();
             if( contentType == null ) {
-                _encoding = Play.defaultWebEncoding;
+                _encoding = Yalp.defaultWebEncoding;
             } else {
                 HTTP.ContentTypeWithEncoding contentTypeEncoding = HTTP.parseContentType( contentType );
                 if( contentTypeEncoding.encoding == null ) {
-                    _encoding = Play.defaultWebEncoding;
+                    _encoding = Yalp.defaultWebEncoding;
                 } else {
                     _encoding = contentTypeEncoding.encoding;
                 }

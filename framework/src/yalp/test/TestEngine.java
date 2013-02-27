@@ -1,4 +1,4 @@
-package play.test;
+package yalp.test;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
@@ -16,9 +16,9 @@ import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
-import play.Logger;
-import play.Play;
-import play.vfs.VirtualFile;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.vfs.VirtualFile;
 
 /**
  * Run application tests
@@ -36,8 +36,8 @@ public class TestEngine {
     public static ExecutorService functionalTestsExecutor = Executors.newSingleThreadExecutor();
 
     public static List<Class> allUnitTests() {
-        List<Class> classes = Play.classloader.getAssignableClasses(Assert.class);
-        Collection<Class> pluginClasses = Play.pluginCollection.getUnitTests();
+        List<Class> classes = Yalp.classloader.getAssignableClasses(Assert.class);
+        Collection<Class> pluginClasses = Yalp.pluginCollection.getUnitTests();
         classes.addAll(pluginClasses);
         for (ListIterator<Class> it = classes.listIterator(); it.hasNext();) {
             Class c = it.next();
@@ -54,8 +54,8 @@ public class TestEngine {
     }
 
     public static List<Class> allFunctionalTests() {
-        List<Class> classes = Play.classloader.getAssignableClasses(FunctionalTest.class);
-        Collection<Class> pluginClasses = Play.pluginCollection.getFunctionalTests();
+        List<Class> classes = Yalp.classloader.getAssignableClasses(FunctionalTest.class);
+        Collection<Class> pluginClasses = Yalp.pluginCollection.getFunctionalTests();
         classes.addAll(pluginClasses);
         for (ListIterator<Class> it = classes.listIterator(); it.hasNext();) {
             if (Modifier.isAbstract(it.next().getModifiers())) {
@@ -67,7 +67,7 @@ public class TestEngine {
     }
 
     public static List<String> seleniumTests(String testPath, List<String> results) {
-        File testDir = Play.getFile(testPath);
+        File testDir = Yalp.getFile(testPath);
         if (testDir.exists()) {
             scanForSeleniumTests(testDir, results);
         }
@@ -77,7 +77,7 @@ public class TestEngine {
     public static List<String> allSeleniumTests() {
         List<String> results = new ArrayList<String>();
         seleniumTests("test", results);
-        for (VirtualFile root : Play.roots) {
+        for (VirtualFile root : Yalp.roots) {
             seleniumTests(root.relativePath() + "/test", results);
         }
         Collections.sort(results);
@@ -105,9 +105,9 @@ public class TestEngine {
 
         try {
             // Load test class
-            final Class testClass = Play.classloader.loadClass(name);
+            final Class testClass = Yalp.classloader.loadClass(name);
 
-            TestResults pluginTestResults = Play.pluginCollection.runTest(testClass);
+            TestResults pluginTestResults = Yalp.pluginCollection.runTest(testClass);
             if (pluginTestResults != null) {
                 return pluginTestResults;
             }
@@ -161,9 +161,9 @@ public class TestEngine {
             current.trace = failure.getTrace();
             for (StackTraceElement stackTraceElement : failure.getException().getStackTrace()) {
                 if (stackTraceElement.getClassName().equals(className)) {
-                    current.sourceInfos = "In " + Play.classes.getApplicationClass(className).javaFile.relativePath() + ", line " + stackTraceElement.getLineNumber();
-                    current.sourceCode = Play.classes.getApplicationClass(className).javaSource.split("\n")[stackTraceElement.getLineNumber() - 1];
-                    current.sourceFile = Play.classes.getApplicationClass(className).javaFile.relativePath();
+                    current.sourceInfos = "In " + Yalp.classes.getApplicationClass(className).javaFile.relativePath() + ", line " + stackTraceElement.getLineNumber();
+                    current.sourceCode = Yalp.classes.getApplicationClass(className).javaSource.split("\n")[stackTraceElement.getLineNumber() - 1];
+                    current.sourceFile = Yalp.classes.getApplicationClass(className).javaFile.relativePath();
                     current.sourceLine = stackTraceElement.getLineNumber();
                 }
             }

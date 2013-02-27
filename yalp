@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Play command line script www.playframework.org/
+# Yalp command line script www.yalpframework.com/
 
 import sys
 import os
@@ -9,9 +9,9 @@ import re
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), 'framework', 'pym'))
 
-from play.cmdloader import CommandLoader
-from play.application import PlayApplication
-from play.utils import *
+from yalp.cmdloader import CommandLoader
+from yalp.application import YalpApplication
+from yalp.utils import *
 
 
 # ~~~~~~~~~
@@ -31,42 +31,38 @@ def get_opt(args, arg, env):
 
 try:
 
-    play_env = dict()
+    yalp_env = dict()
 
     # ~~~~~~~~~~~~~~~~~~~~~~ Where is the framework?
-    play_env["basedir"] = os.path.normpath(os.path.dirname(os.path.realpath(sys.argv[0])))
+    yalp_env["basedir"] = os.path.normpath(os.path.dirname(os.path.realpath(sys.argv[0])))
 
     # ~~~~~~~~~~~~~~~~~~~~~~ What is the framework id?
-    play_env["id_file"] = os.path.join(play_env['basedir'], 'id')
-    if os.path.exists(play_env["id_file"]):
-        play_env["id"] = open(play_env["id_file"]).readline().strip()
+    yalp_env["id_file"] = os.path.join(yalp_env['basedir'], 'id')
+    if os.path.exists(yalp_env["id_file"]):
+        yalp_env["id"] = open(yalp_env["id_file"]).readline().strip()
     else:
-        play_env["id"] = ''
+        yalp_env["id"] = ''
 
     showLogo = sys.argv.count("--silent") == 0
 
     if showLogo:
         # ~~~~~~~~~~~~~~~~~~~~~~ Display logo
-        print r"~        _            _ "
-        print r"~  _ __ | | __ _ _  _| |"
-        print r"~ | '_ \| |/ _' | || |_|"
-        print r"~ |  __/|_|\____|\__ (_)"
-        print r"~ |_|            |__/   "
+        print r"~ Yalp framework   "
         print r"~"
     else:
         sys.argv.remove("--silent")
 
-    play_version_file = os.path.join(play_env["basedir"], 'framework', 'src', 'play', 'version')
-    if not os.path.exists(play_version_file):
-        print "~ Oops. %s file not found" % os.path.normpath(os.path.join(play_env["basedir"], 'framework', 'src', 'play', 'version'))
+    yalp_version_file = os.path.join(yalp_env["basedir"], 'framework', 'src', 'yalp', 'version')
+    if not os.path.exists(yalp_version_file):
+        print "~ Oops. %s file not found" % os.path.normpath(os.path.join(yalp_env["basedir"], 'framework', 'src', 'yalp', 'version'))
         print "~ Is the framework compiled? "
         print "~"
         sys.exit(-1)
 
-    play_env["version"] = open(play_version_file).readline().strip()
+    yalp_env["version"] = open(yalp_version_file).readline().strip()
 
     if showLogo:
-        print "~ play! %s, http://www.playframework.org" % (play_env["version"])
+        print "~ yalp! %s, http://www.yalpframework.com" % (yalp_env["version"])
 
     # ~~~~~~~~~~~~~~~~~~~~~~ Where is the application?
     application_path = None
@@ -91,32 +87,32 @@ try:
 
     # ~~~~~~~~~~~~~~~~~~~~~~ What is the command?
     if len(sys.argv) > 1:
-        play_command = sys.argv[1]
+        yalp_command = sys.argv[1]
     else:
-        play_command = 'none'
+        yalp_command = 'none'
 
     # ~~~~~~~~~~~~~~~~~ Override pid_file
-    get_opt(remaining_args, "pid_file", play_env)
+    get_opt(remaining_args, "pid_file", yalp_env)
 
     # ~~~~~~~~~~~~~~~~~ Override port
-    get_opt(remaining_args, "http.port", play_env)
-    get_opt(remaining_args, "https.port", play_env)
+    get_opt(remaining_args, "http.port", yalp_env)
+    get_opt(remaining_args, "https.port", yalp_env)
 
     # ~~~~~~~~~~~~~~~~~ Override id
     for a in remaining_args:
         if a.find('--%') == 0:
-            play_env["id"] = a[3:]
-    if remaining_args.count('--%%%s' % play_env["id"]) == 1:
-        remaining_args.remove('--%%%s' % play_env["id"])
+            yalp_env["id"] = a[3:]
+    if remaining_args.count('--%%%s' % yalp_env["id"]) == 1:
+        remaining_args.remove('--%%%s' % yalp_env["id"])
 
-    if play_command in ['test', 'auto-test', 'autotest'] :
+    if yalp_command in ['test', 'auto-test', 'autotest'] :
         # If framework-id is not a valid test-id, force it to 'test'
-        if not isTestFrameworkId( play_env["id"] ): 
-            play_env["id"] = 'test'
+        if not isTestFrameworkId( yalp_env["id"] ): 
+            yalp_env["id"] = 'test'
 
     if showLogo:
-        if play_env["id"] is not '':
-            print "~ framework ID is %s" % play_env["id"]
+        if yalp_env["id"] is not '':
+            print "~ framework ID is %s" % yalp_env["id"]
         print "~"
 
     # ~~~~~~~~~~~~~~~~~ Checking for disable_check_jpda
@@ -124,47 +120,47 @@ try:
     if remaining_args.count('-f') == 1:
         disable_check_jpda = True
         remaining_args.remove('-f')
-    play_env["disable_check_jpda"] = disable_check_jpda 
+    yalp_env["disable_check_jpda"] = disable_check_jpda 
 
-    play_app = PlayApplication(application_path, play_env, ignoreMissing)
+    yalp_app = YalpApplication(application_path, yalp_env, ignoreMissing)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # ~~~~~~~~~~~~~~~~~~~~~~ The commands ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    cmdloader = CommandLoader(play_env["basedir"])
+    cmdloader = CommandLoader(yalp_env["basedir"])
 
     # ~~~~~~~~~~~~~~~~~ Resolve dependencies if needed
     if remaining_args.count('--deps') == 1:
-        cmdloader.commands['dependencies'].execute(command='dependencies', app=play_app, args=['--sync'], env=play_env, cmdloader=cmdloader)
+        cmdloader.commands['dependencies'].execute(command='dependencies', app=yalp_app, args=['--sync'], env=yalp_env, cmdloader=cmdloader)
         remaining_args.remove('--deps')
 
     # Load module commands
-    if play_app:
-        for module in play_app.modules():
-            cmdloader.load_play_module(module)
+    if yalp_app:
+        for module in yalp_app.modules():
+            cmdloader.load_yalp_module(module)
 
-    for module in getWithModules(remaining_args, play_env):
-        cmdloader.load_play_module(module)
+    for module in getWithModules(remaining_args, yalp_env):
+        cmdloader.load_yalp_module(module)
 
-    if play_command in cmdloader.commands:
+    if yalp_command in cmdloader.commands:
         for name in cmdloader.modules:
             module = cmdloader.modules[name]
             if 'before' in dir(module):
-                module.before(command=play_command, app=play_app, args=remaining_args, env=play_env)
-        status = cmdloader.commands[play_command].execute(command=play_command, app=play_app, args=remaining_args, env=play_env, cmdloader=cmdloader)
+                module.before(command=yalp_command, app=yalp_app, args=remaining_args, env=yalp_env)
+        status = cmdloader.commands[yalp_command].execute(command=yalp_command, app=yalp_app, args=remaining_args, env=yalp_env, cmdloader=cmdloader)
         for name in cmdloader.modules:
             module = cmdloader.modules[name]
             if 'after' in dir(module):
-                module.after(command=play_command, app=play_app, args=remaining_args, env=play_env)
+                module.after(command=yalp_command, app=yalp_app, args=remaining_args, env=yalp_env)
         sys.exit(status)
 
     # ~~~~~~~~~~~~~~~~~~~~~~ Invalid command
-    print "~ Usage: play cmd [app_path] [--options]"
+    print "~ Usage: yalp cmd [app_path] [--options]"
     print "~ "
     print "~ with,  new      Create a new application"
     print "~        run      Run the application in the current shell"
-    print "~        help     Show play help"
+    print "~        help     Show yalp help"
     print "~"
     if len(sys.argv) > 1:
         print "~ Invalid command: %s" % sys.argv[1]

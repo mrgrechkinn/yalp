@@ -1,7 +1,7 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
+import yalp.*;
+import yalp.mvc.*;
 
 @Check("admin")
 @With(Secure.class)

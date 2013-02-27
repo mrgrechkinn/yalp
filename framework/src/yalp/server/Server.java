@@ -1,4 +1,4 @@
-package play.server;
+package yalp.server;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -12,12 +12,12 @@ import org.jboss.netty.channel.ChannelException;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.jboss.netty.channel.ChannelHandler;
 
-import play.Logger;
-import play.Play;
-import play.Play.Mode;
-import play.libs.IO;
-import play.server.ssl.SslHttpServerPipelineFactory;
-import play.vfs.VirtualFile;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.Yalp.Mode;
+import yalp.libs.IO;
+import yalp.server.ssl.SslHttpServerPipelineFactory;
+import yalp.vfs.VirtualFile;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -32,7 +32,7 @@ public class Server {
     public Server(String[] args) {
 
         System.setProperty("file.encoding", "utf-8");
-        final Properties p = Play.configuration;
+        final Properties p = Yalp.configuration;
 
         httpPort = Integer.parseInt(getOpt(args, "http.port", p.getProperty("http.port", "-1")));
         httpsPort = Integer.parseInt(getOpt(args, "https.port", p.getProperty("https.port", "-1")));
@@ -43,7 +43,7 @@ public class Server {
 
         if (httpPort == httpsPort) {
             Logger.error("Could not bind on https and http on the same port " + httpPort);
-            Play.fatalServerErrorOccurred();
+            Yalp.fatalServerErrorOccurred();
         }
 
         InetAddress address = null;
@@ -57,7 +57,7 @@ public class Server {
 
         } catch (Exception e) {
             Logger.error(e, "Could not understand http.address");
-            Play.fatalServerErrorOccurred();
+            Yalp.fatalServerErrorOccurred();
         }
         try {
             if (p.getProperty("https.address") != null) {
@@ -67,7 +67,7 @@ public class Server {
             }
         } catch (Exception e) {
             Logger.error(e, "Could not understand https.address");
-            Play.fatalServerErrorOccurred();
+            Yalp.fatalServerErrorOccurred();
         }
         ServerBootstrap bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(
                 Executors.newCachedThreadPool(), Executors.newCachedThreadPool())
@@ -79,7 +79,7 @@ public class Server {
                 bootstrap.bind(new InetSocketAddress(address, httpPort));
                 bootstrap.setOption("child.tcpNoDelay", true);
 
-                if (Play.mode == Mode.DEV) {
+                if (Yalp.mode == Mode.DEV) {
                     if (address == null) {
                         Logger.info("Listening for HTTP on port %s (Waiting a first request to start) ...", httpPort);
                     } else {
@@ -97,7 +97,7 @@ public class Server {
 
         } catch (ChannelException e) {
             Logger.error("Could not bind on port " + httpPort, e);
-            Play.fatalServerErrorOccurred();
+            Yalp.fatalServerErrorOccurred();
         }
 
         bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(
@@ -110,7 +110,7 @@ public class Server {
                 bootstrap.bind(new InetSocketAddress(secureAddress, httpsPort));
                 bootstrap.setOption("child.tcpNoDelay", true);
 
-                if (Play.mode == Mode.DEV) {
+                if (Yalp.mode == Mode.DEV) {
                     if (secureAddress == null) {
                         Logger.info("Listening for HTTPS on port %s (Waiting a first request to start) ...", httpsPort);
                     } else {
@@ -128,7 +128,7 @@ public class Server {
 
         } catch (ChannelException e) {
             Logger.error("Could not bind on port " + httpsPort, e);
-            Play.fatalServerErrorOccurred();
+            Yalp.fatalServerErrorOccurred();
         }
 
     }
@@ -155,12 +155,12 @@ public class Server {
     public static void main(String[] args) throws Exception {
         File root = new File(System.getProperty("application.path"));
         if (System.getProperty("precompiled", "false").equals("true")) {
-            Play.usePrecompiled = true;
+            Yalp.usePrecompiled = true;
         }
         if (System.getProperty("writepid", "false").equals("true")) {
             writePID(root);
         }
-        Play.init(root, System.getProperty("play.id", ""));
+        Yalp.init(root, System.getProperty("yalp.id", ""));
         if (System.getProperty("precompile") == null) {
             new Server(args);
         } else {

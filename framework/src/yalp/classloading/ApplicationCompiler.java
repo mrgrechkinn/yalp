@@ -1,4 +1,4 @@
-package play.classloading;
+package yalp.classloading;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -22,11 +22,11 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.Compiler;
 
-import play.Logger;
-import play.Play;
-import play.classloading.ApplicationClasses.ApplicationClass;
-import play.exceptions.CompilationException;
-import play.exceptions.UnexpectedException;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
+import yalp.exceptions.CompilationException;
+import yalp.exceptions.UnexpectedException;
 
 /**
  * Java compiler (uses eclipse JDT)
@@ -56,11 +56,11 @@ public class ApplicationCompiler {
         } else if (System.getProperty("java.version").startsWith("1.7")) {
             javaVersion = CompilerOptions.VERSION_1_7;
         }
-        if("1.5".equals(Play.configuration.get("java.source"))) {
+        if("1.5".equals(Yalp.configuration.get("java.source"))) {
             javaVersion = CompilerOptions.VERSION_1_5;
-        } else if("1.6".equals(Play.configuration.get("java.source"))) {
+        } else if("1.6".equals(Yalp.configuration.get("java.source"))) {
             javaVersion = CompilerOptions.VERSION_1_6;
-        } else if("1.7".equals(Play.configuration.get("java.source"))) {
+        } else if("1.7".equals(Yalp.configuration.get("java.source"))) {
             javaVersion = CompilerOptions.VERSION_1_7;
         }
         this.settings.put(CompilerOptions.OPTION_Source, javaVersion);
@@ -157,8 +157,8 @@ public class ApplicationCompiler {
             private NameEnvironmentAnswer findType(final String name) {
                 try {
 
-                    if (name.startsWith("play.") || name.startsWith("java.") || name.startsWith("javax.")) {
-                        byte[] bytes = Play.classloader.getClassDefinition(name);
+                    if (name.startsWith("yalp.") || name.startsWith("java.") || name.startsWith("javax.")) {
+                        byte[] bytes = Yalp.classloader.getClassDefinition(name);
                         if (bytes != null) {
                             ClassFileReader classFileReader = new ClassFileReader(bytes, name.toCharArray(), true);
                             return new NameEnvironmentAnswer(classFileReader, null);
@@ -182,7 +182,7 @@ public class ApplicationCompiler {
                     }
 
                     // So it's a standard class
-                    byte[] bytes = Play.classloader.getClassDefinition(name);
+                    byte[] bytes = Yalp.classloader.getClassDefinition(name);
                     if (bytes != null) {
                         ClassFileReader classFileReader = new ClassFileReader(bytes, fileName, true);
                         return new NameEnvironmentAnswer(classFileReader, null);
@@ -211,7 +211,7 @@ public class ApplicationCompiler {
                     return packagesCache.get(name).booleanValue();
                 }
                 // Check if thera a .java or .class for this ressource
-                if (Play.classloader.getClassDefinition(name) != null) {
+                if (Yalp.classloader.getClassDefinition(name) != null) {
                     packagesCache.put(name, false);
                     return false;
                 }
@@ -243,7 +243,7 @@ public class ApplicationCompiler {
                             // Non sense !
                             message = problem.getArguments()[0] + " cannot be resolved";
                         }
-                        throw new CompilationException(Play.classes.getApplicationClass(className).javaFile, message, problem.getSourceLineNumber(), problem.getSourceStart(), problem.getSourceEnd());
+                        throw new CompilationException(Yalp.classes.getApplicationClass(className).javaFile, message, problem.getSourceLineNumber(), problem.getSourceStart(), problem.getSourceEnd());
                     }
                 }
                 // Something has been compiled

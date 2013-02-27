@@ -1,4 +1,4 @@
-package play.db.jpa;
+package yalp.db.jpa;
 
 import org.hibernate.dialect.MySQLInnoDBDialect;
 

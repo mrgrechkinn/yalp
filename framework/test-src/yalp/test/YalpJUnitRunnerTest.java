@@ -1,4 +1,4 @@
-package play.test;
+package yalp.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -11,12 +11,12 @@ import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runners.JUnit4;
 
-public class PlayJUnitRunnerTest {
+public class YalpJUnitRunnerTest {
 
 	@Test
 	public void testFilter() throws Exception {		
-		PlayJUnitRunner runner = mock(PlayJUnitRunner.class);
-		runner.jUnit4 = new JUnit4(PlayJUnitRunnerTest.class);
+		YalpJUnitRunner runner = mock(YalpJUnitRunner.class);
+		runner.jUnit4 = new JUnit4(YalpJUnitRunnerTest.class);
 		doCallRealMethod().when(runner).filter((Filter) any());
 
 		runner.filter(new Filter() {

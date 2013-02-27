@@ -1,4 +1,4 @@
-package play.data.validation;
+package yalp.data.validation;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,8 +8,8 @@ import java.util.Map;
 import net.sf.oval.Validator;
 import net.sf.oval.configuration.annotation.AbstractAnnotationCheck;
 import net.sf.oval.context.OValContext;
-import play.utils.Utils.AlternativeDateFormat;
-import play.exceptions.UnexpectedException;
+import yalp.utils.Utils.AlternativeDateFormat;
+import yalp.exceptions.UnexpectedException;
 
 @SuppressWarnings("serial")
 public class InPastCheck extends AbstractAnnotationCheck<InPast> {

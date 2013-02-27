@@ -1,23 +1,23 @@
-package play.plugins;
+package yalp.plugins;
 
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.Test;
-import play.CorePlugin;
-import play.Play;
-import play.PlayBuilder;
-import play.PlayPlugin;
-import play.classloading.ApplicationClasses;
-import play.data.parsing.TempFilePlugin;
-import play.data.validation.ValidationPlugin;
-import play.db.DBPlugin;
-import play.db.Evolutions;
-import play.db.jpa.JPAPlugin;
-import play.i18n.MessagesPlugin;
-import play.jobs.JobsPlugin;
-import play.libs.WS;
-import play.test.TestEngine;
-import play.test.UnitTest;
+import yalp.CorePlugin;
+import yalp.Yalp;
+import yalp.YalpBuilder;
+import yalp.YalpPlugin;
+import yalp.classloading.ApplicationClasses;
+import yalp.data.parsing.TempFilePlugin;
+import yalp.data.validation.ValidationPlugin;
+import yalp.db.DBPlugin;
+import yalp.db.Evolutions;
+import yalp.db.jpa.JPAPlugin;
+import yalp.i18n.MessagesPlugin;
+import yalp.jobs.JobsPlugin;
+import yalp.libs.WS;
+import yalp.test.TestEngine;
+import yalp.test.UnitTest;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -32,11 +32,11 @@ public class PluginCollectionTest {
 
     @Test
     public void verifyLoading() {
-        new PlayBuilder().build();
+        new YalpBuilder().build();
         PluginCollection pc = new PluginCollection();
         pc.loadPlugins();
 
-        //the following plugin-list should match the list in the file 'play.plugins'
+        //the following plugin-list should match the list in the file 'yalp.plugins'
         assertThat(pc.getEnabledPlugins()).containsExactly(
                 pc.getPluginInstance(CorePlugin.class),
                 pc.getPluginInstance(TempFilePlugin.class),
@@ -53,23 +53,23 @@ public class PluginCollectionTest {
     @Test
     public void verifyLoadingFromFilesWithBlankLines() throws Exception {
         //verify that only application specific plugins gets reloaded
-        new PlayBuilder().build();
+        new YalpBuilder().build();
 
         //create custom PluginCollection that fakes that TestPlugin is application plugin
         PluginCollection pc = new PluginCollection(){
             @Override
-            protected boolean isLoadedByApplicationClassloader(PlayPlugin plugin) {
+            protected boolean isLoadedByApplicationClassloader(YalpPlugin plugin) {
                 //return true only if This is our TestPlugin
                 return plugin.getClass().equals( TestPlugin.class);
             }
         };
-        //make sure we load custom play.plugins-file
-        pc.play_plugins_resourceName = "play/plugins/custom-play-with-blank-lines.plugins";
+        //make sure we load custom yalp.plugins-file
+        pc.yalp_plugins_resourceName = "yalp/plugins/custom-yalp-with-blank-lines.plugins";
 
         pc.loadPlugins();
 
-        PlayPlugin corePlugin_first_instance = pc.getPluginInstance(CorePlugin.class);
-        PlayPlugin testPlugin_first_instance = pc.getPluginInstance(TestPlugin.class);
+        YalpPlugin corePlugin_first_instance = pc.getPluginInstance(CorePlugin.class);
+        YalpPlugin testPlugin_first_instance = pc.getPluginInstance(TestPlugin.class);
 
         assertThat(pc.getAllPlugins()).containsExactly(
                 corePlugin_first_instance,
@@ -80,26 +80,26 @@ public class PluginCollectionTest {
     @Test
     public void verifyReloading() throws Exception{
         //verify that only application specific plugins gets reloaded
-        new PlayBuilder().build();
+        new YalpBuilder().build();
 
 
         //create custom PluginCollection that fakes that TestPlugin is application plugin
         PluginCollection pc = new PluginCollection(){
             @Override
-            protected boolean isLoadedByApplicationClassloader(PlayPlugin plugin) {
+            protected boolean isLoadedByApplicationClassloader(YalpPlugin plugin) {
                 //return true only if This is our TestPlugin
                 return plugin.getClass().equals( TestPlugin.class);
             }
         };
-        //make sure we load custom play.plugins-file
-        pc.play_plugins_resourceName = "play/plugins/custom-play.plugins";
+        //make sure we load custom yalp.plugins-file
+        pc.yalp_plugins_resourceName = "yalp/plugins/custom-yalp.plugins";
 
         pc.loadPlugins();
 
-        PlayPlugin corePlugin_first_instance = pc.getPluginInstance(CorePlugin.class);
-        PlayPlugin testPlugin_first_instance = pc.getPluginInstance(TestPlugin.class);
+        YalpPlugin corePlugin_first_instance = pc.getPluginInstance(CorePlugin.class);
+        YalpPlugin testPlugin_first_instance = pc.getPluginInstance(TestPlugin.class);
 
-        //the following plugin-list should match the list in the file 'play.plugins'
+        //the following plugin-list should match the list in the file 'yalp.plugins'
         assertThat(pc.getEnabledPlugins()).containsExactly(
                 corePlugin_first_instance,
                 testPlugin_first_instance);
@@ -109,7 +109,7 @@ public class PluginCollectionTest {
 
         pc.reloadApplicationPlugins();
 
-        PlayPlugin testPlugin_second_instance = pc.getPluginInstance(TestPlugin.class);
+        YalpPlugin testPlugin_second_instance = pc.getPluginInstance(TestPlugin.class);
 
         assertThat(pc.getPluginInstance(CorePlugin.class)).isEqualTo( corePlugin_first_instance);
         assertThat(testPlugin_second_instance).isNotEqualTo( testPlugin_first_instance);
@@ -118,15 +118,15 @@ public class PluginCollectionTest {
 
     @SuppressWarnings({"deprecation"})
     @Test
-    public void verifyUpdatePlayPluginsList(){
-        new PlayBuilder().build();
+    public void verifyUpdateYalpPluginsList(){
+        new YalpBuilder().build();
 
-        assertThat(Play.plugins).isEmpty();
+        assertThat(Yalp.plugins).isEmpty();
 
         PluginCollection pc = new PluginCollection();
         pc.loadPlugins();
 
-        assertThat(Play.plugins).containsExactly( pc.getEnabledPlugins().toArray());
+        assertThat(Yalp.plugins).containsExactly( pc.getEnabledPlugins().toArray());
 
 
     }
@@ -137,7 +137,7 @@ public class PluginCollectionTest {
         PluginCollection pc = new PluginCollection();
 
 
-        PlayPlugin legacyPlugin = new LegacyPlugin();
+        YalpPlugin legacyPlugin = new LegacyPlugin();
 
         pc.addPlugin( legacyPlugin );
         pc.addPlugin( new TestPlugin() );
@@ -146,15 +146,15 @@ public class PluginCollectionTest {
 
         assertThat( pc.getEnabledPlugins() ).containsExactly(legacyPlugin);
 
-        //make sure Play.plugins-list is still correct
-        assertThat(Play.plugins).isEqualTo( pc.getEnabledPlugins() );
+        //make sure Yalp.plugins-list is still correct
+        assertThat(Yalp.plugins).isEqualTo( pc.getEnabledPlugins() );
 
     }
 
     @Test
     public void verifyThatPluginsCanAddUnitTests() {
         PluginCollection pc = new PluginCollection();
-        Play.pluginCollection = pc;
+        Yalp.pluginCollection = pc;
 
         assertThat(TestEngine.allUnitTests()).isEmpty();
         assertThat(TestEngine.allFunctionalTests()).isEmpty();
@@ -173,25 +173,25 @@ public class PluginCollectionTest {
 }
 
 
-class LegacyPlugin extends PlayPlugin {
+class LegacyPlugin extends YalpPlugin {
 
     @SuppressWarnings({"deprecation"})
     @Override
     public void onLoad() {
-        //find TestPlugin in Play.plugins-list and remove it to disable it
-        PlayPlugin pluginToRemove = null;
-        for( PlayPlugin pp : Play.plugins){
+        //find TestPlugin in Yalp.plugins-list and remove it to disable it
+        YalpPlugin pluginToRemove = null;
+        for( YalpPlugin pp : Yalp.plugins){
             if( pp.getClass().equals( TestPlugin.class)){
                 pluginToRemove = pp;
                 break;
             }
         }
-        Play.plugins.remove( pluginToRemove);
+        Yalp.plugins.remove( pluginToRemove);
     }
 
 }
 
-class PluginWithTests extends PlayPlugin {
+class PluginWithTests extends YalpPlugin {
 
     @Override
     public Collection<Class> getUnitTests() {
@@ -204,7 +204,7 @@ class PluginWithTests extends PlayPlugin {
     }
 }
 
-class PluginWithTests2 extends PlayPlugin {
+class PluginWithTests2 extends YalpPlugin {
 
     @Override
     public Collection<Class> getUnitTests() {

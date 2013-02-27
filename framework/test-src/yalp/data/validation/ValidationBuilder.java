@@ -1,6 +1,6 @@
-package play.data.validation;
+package yalp.data.validation;
 
-import play.i18n.MessagesBuilder;
+import yalp.i18n.MessagesBuilder;
 
 public class ValidationBuilder {
 

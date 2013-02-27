@@ -1,4 +1,4 @@
-package play.i18n;
+package yalp.i18n;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -7,17 +7,17 @@ import java.util.Locale;
 
 import org.junit.Test;
 
-import play.Play;
-import play.PlayBuilder;
-import play.mvc.Http;
-import play.test.FunctionalTest;
+import yalp.Yalp;
+import yalp.YalpBuilder;
+import yalp.mvc.Http;
+import yalp.test.FunctionalTest;
 
 public class LangTest {
 
     @Test
     public void testChange() {
-        new PlayBuilder().build();
-        Play.langs = Arrays.asList("no", "en", "fr");
+        new YalpBuilder().build();
+        Yalp.langs = Arrays.asList("no", "en", "fr");
         Lang.current.set(null);
         assertThat(Lang.current.get()).isNull();
 
@@ -36,7 +36,7 @@ public class LangTest {
         Lang.change("en_uk");
         assertThat(Lang.current.get()).isEqualTo("en");
 
-        Play.langs = Arrays.asList("no", "en", "en_uk", "fr");
+        Yalp.langs = Arrays.asList("no", "en", "en_uk", "fr");
         Lang.current.set(null);
         Lang.change("en_uk");
         assertThat(Lang.current.get()).isEqualTo("en_uk");
@@ -48,8 +48,8 @@ public class LangTest {
 
     @Test
     public void testGet() {
-        new PlayBuilder().build();
-        Play.langs = Arrays.asList("no", "en", "en_GB", "fr");
+        new YalpBuilder().build();
+        Yalp.langs = Arrays.asList("no", "en", "en_GB", "fr");
         Lang.current.set(null);
 
         Http.Response.current.set( new Http.Response());
@@ -120,7 +120,7 @@ public class LangTest {
         req = FunctionalTest.newRequest();
 
         Http.Cookie cookie = new Http.Cookie();
-        cookie.name = "PLAY_LANG";
+        cookie.name = "YALP_LANG";
         cookie.value = "x";//not found in cookie
         req.cookies.put(cookie.name, cookie);
         req.headers.put("accept-language", new Http.Header("accept-language", "en"));
@@ -129,7 +129,7 @@ public class LangTest {
         assertLocale(new Locale("en"));
 
         cookie = new Http.Cookie();
-        cookie.name = "PLAY_LANG";
+        cookie.name = "YALP_LANG";
         cookie.value = "en";
         req.cookies.put(cookie.name, cookie);
         Http.Request.current.set(req);
@@ -137,7 +137,7 @@ public class LangTest {
         assertLocale(new Locale("en"));
 
         cookie = new Http.Cookie();
-        cookie.name = "PLAY_LANG";
+        cookie.name = "YALP_LANG";
         cookie.value = "en_q";
         req.cookies.put(cookie.name, cookie);
         Http.Request.current.set(req);
@@ -145,7 +145,7 @@ public class LangTest {
         assertLocale(new Locale("en"));
 
         cookie = new Http.Cookie();
-        cookie.name = "PLAY_LANG";
+        cookie.name = "YALP_LANG";
         cookie.value = "en_GB";
         req.cookies.put(cookie.name, cookie);
         Http.Request.current.set(req);

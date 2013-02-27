@@ -1,4 +1,4 @@
-from play.utils import *
+from yalp.utils import *
 
 COMMANDS = ['secret']
 

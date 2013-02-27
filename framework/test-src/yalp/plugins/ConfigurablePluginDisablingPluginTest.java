@@ -1,13 +1,13 @@
-package play.plugins;
+package yalp.plugins;
 
 import org.junit.Before;
 import org.junit.Test;
-import play.Play;
-import play.PlayBuilder;
-import play.PlayPlugin;
-import play.classloading.ApplicationClasses;
-import play.classloading.ApplicationClassloader;
-import play.vfs.VirtualFile;
+import yalp.Yalp;
+import yalp.YalpBuilder;
+import yalp.YalpPlugin;
+import yalp.classloading.ApplicationClasses;
+import yalp.classloading.ApplicationClassloader;
+import yalp.vfs.VirtualFile;
 
 import java.io.File;
 import java.net.URL;
@@ -48,9 +48,9 @@ public class ConfigurablePluginDisablingPluginTest {
         
     }
 
-    private void internalTest(Properties config, PluginCollection pc, List<? extends PlayPlugin> correctPluginListAfter) {
-        Play.configuration = config;
-        Play.pluginCollection = pc;
+    private void internalTest(Properties config, PluginCollection pc, List<? extends YalpPlugin> correctPluginListAfter) {
+        Yalp.configuration = config;
+        Yalp.pluginCollection = pc;
         ConfigurablePluginDisablingPlugin plugin = new ConfigurablePluginDisablingPlugin();
         plugin.onConfigurationRead();
 
@@ -70,7 +70,7 @@ public class ConfigurablePluginDisablingPluginTest {
 
         Properties config = new Properties();
         config.put("some.setting", "some value");
-        config.put("plugins.disable", "play.plugins.TestPlugin");
+        config.put("plugins.disable", "yalp.plugins.TestPlugin");
 
         internalTest(config, pc, Arrays.asList(p2));
 
@@ -89,10 +89,10 @@ public class ConfigurablePluginDisablingPluginTest {
 
         Properties config = new Properties();
         config.put("some.setting", "some value");
-        config.put("plugins.disable", "play.plugins.TestPlugin");
-        config.put("plugins.disable.2", "play.plugins.TestPlugin2");
+        config.put("plugins.disable", "yalp.plugins.TestPlugin");
+        config.put("plugins.disable.2", "yalp.plugins.TestPlugin2");
 
-        internalTest(config, pc, new ArrayList<PlayPlugin>());
+        internalTest(config, pc, new ArrayList<YalpPlugin>());
 
     }
 
@@ -109,7 +109,7 @@ public class ConfigurablePluginDisablingPluginTest {
 
         Properties config = new Properties();
         config.put("some.setting", "some value");
-        config.put("plugins.disable", "play.plugins.TestPlugin_XX");
+        config.put("plugins.disable", "yalp.plugins.TestPlugin_XX");
 
         internalTest(config, pc, Arrays.asList(p,p2));
 
@@ -128,7 +128,7 @@ public class ConfigurablePluginDisablingPluginTest {
 
         Properties config = new Properties();
         config.put("some.setting", "some value");
-        config.put("plugins.disable", "play.plugins.TestPlugin");
+        config.put("plugins.disable", "yalp.plugins.TestPlugin");
 
         internalTest(config, pc, Arrays.asList(p2));
 
@@ -144,9 +144,9 @@ public class ConfigurablePluginDisablingPluginTest {
     public void verify_that_the_plugin_gets_loaded(){
         PluginCollection pc = new PluginCollection();
 
-        new PlayBuilder().build();
+        new YalpBuilder().build();
         pc.loadPlugins();
-        PlayPlugin pi = pc.getPluginInstance(ConfigurablePluginDisablingPlugin.class);
+        YalpPlugin pi = pc.getPluginInstance(ConfigurablePluginDisablingPlugin.class);
         assertThat(pi).isInstanceOf(ConfigurablePluginDisablingPlugin.class);
         assertThat(pc.getEnabledPlugins()).contains( pi );
     }
@@ -154,13 +154,13 @@ public class ConfigurablePluginDisablingPluginTest {
 
 }
 
-class TestPlugin extends PlayPlugin {
+class TestPlugin extends YalpPlugin {
 
     //missing constructor on purpose
 
 }
 
-class TestPlugin2 extends PlayPlugin {
+class TestPlugin2 extends YalpPlugin {
 
     //included constructor on purpose
     public TestPlugin2() {

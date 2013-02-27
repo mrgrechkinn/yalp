@@ -4,7 +4,7 @@ import urllib, urllib2
 import subprocess
 import simplejson as json
 
-from play.utils import *
+from yalp.utils import *
 
 COMMANDS = ['dependencies','deps']
 
@@ -14,12 +14,12 @@ HELP = {
 
 def execute(**kargs):
     args = kargs.get("args")
-    play_env = kargs.get("env")
+    yalp_env = kargs.get("env")
 
     command = kargs.get("command")
     app = kargs.get("app")
     args = kargs.get("args")
-    play_env = kargs.get("env")
+    yalp_env = kargs.get("env")
 
     force = "false"
     trim = "false"
@@ -34,7 +34,7 @@ def execute(**kargs):
 
     classpath = app.getClasspath()
 
-    add_options = ['-Dapplication.path=%s' % (app.path), '-Dframework.path=%s' % (play_env['basedir']), '-Dplay.id=%s' % play_env['id'], '-Dplay.version=%s' % play_env['version'], '-Dplay.forcedeps=%s' % (force), '-Dplay.trimdeps=%s' % (trim)]
+    add_options = ['-Dapplication.path=%s' % (app.path), '-Dframework.path=%s' % (yalp_env['basedir']), '-Dyalp.id=%s' % yalp_env['id'], '-Dyalp.version=%s' % yalp_env['version'], '-Dyalp.forcedeps=%s' % (force), '-Dyalp.trimdeps=%s' % (trim)]
     if args.count('--verbose'):
         add_options.append('-Dverbose')
     if args.count('--sync'):
@@ -50,7 +50,7 @@ def execute(**kargs):
         if arg.startswith("-D"):
             add_options.append(arg)
 
-    java_cmd = [app.java_path()] + add_options + ['-classpath', app.fw_cp_args(), 'play.deps.DependenciesManager']
+    java_cmd = [app.java_path()] + add_options + ['-classpath', app.fw_cp_args(), 'yalp.deps.DependenciesManager']
 
     return_code = subprocess.call(java_cmd, env=os.environ)
     if 0 != return_code:

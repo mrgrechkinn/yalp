@@ -1,11 +1,11 @@
 <html>
     <head>
-        <title>Play manual - Cheat Sheet</title>
-        <link rel="stylesheet" href="@{'/public/playmanual/manual.css'}" type="text/css" media="screen" charset="${_response_encoding}">
-        <link rel="stylesheet" href="@{'/public/playmanual/wiki.css'}" type="text/css" media="screen" charset="${_response_encoding}">
-        <script type="text/javascript" src="@{'/public/playmanual/jquery-1.6.min.js'}"></script>
-        <link rel="stylesheet" href="@{'/public/playmanual/cheat-sheet.css'}" type="text/css" media="screen" charset="${_response_encoding}">
-        <link rel="stylesheet" href="@{'/public/playmanual/cheat-sheet-print.css'}" type="text/css" media="print" charset="${_response_encoding}">
+        <title>Yalp manual - Cheat Sheet</title>
+        <link rel="stylesheet" href="@{'/public/yalpmanual/manual.css'}" type="text/css" media="screen" charset="${_response_encoding}">
+        <link rel="stylesheet" href="@{'/public/yalpmanual/wiki.css'}" type="text/css" media="screen" charset="${_response_encoding}">
+        <script type="text/javascript" src="@{'/public/yalpmanual/jquery-1.6.min.js'}"></script>
+        <link rel="stylesheet" href="@{'/public/yalpmanual/cheat-sheet.css'}" type="text/css" media="screen" charset="${_response_encoding}">
+        <link rel="stylesheet" href="@{'/public/yalpmanual/cheat-sheet-print.css'}" type="text/css" media="print" charset="${_response_encoding}">
     </head>
     <body>
         <div class="cs-wrapper">
@@ -23,7 +23,7 @@
                 <div class="titlebar links">
                     #{list items: otherCategories, as: 'category'}
                         #{if category.value != title}
-                            #{a @PlayDocumentation.cheatSheet(category.key, docLang)}${category.value}#{/a}
+                            #{a @YalpDocumentation.cheatSheet(category.key, docLang)}${category.value}#{/a}
                         #{/if} #{else}
                             ${category.value}
                         #{/else}
@@ -31,8 +31,8 @@
                     #{/list}
                 </div>
                 <div id="logobar">
-                    <img src="@{'/public/playmanual/logo.png'}">
-                    <h2 id="version">Play ${play.version}</h2>
+                    <img src="@{'/public/yalpmanual/logo.png'}">
+                    <h2 id="version">Yalp ${yalp.version}</h2>
                 </div>
             </div>
             <div id="content" class="wikistyle">

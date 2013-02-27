@@ -1,4 +1,4 @@
-package play.classloading;
+package yalp.classloading;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Each unique instance of this class represent a State of the ApplicationClassloader.
  * When some classes is reloaded, them the ApplicationClassloader get a new state.
  *
- * This makes it easy for other parts of Play to cache stuff based on the
+ * This makes it easy for other parts of Yalp to cache stuff based on the
  * the current State of the ApplicationClassloader..
  *
  * They can store the reference to the current state, then later, before reading from cache,

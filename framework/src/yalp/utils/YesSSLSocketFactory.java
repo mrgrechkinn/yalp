@@ -1,4 +1,4 @@
-package play.utils;
+package yalp.utils;
 
 import java.io.IOException;
 import java.net.InetAddress;

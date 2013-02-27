@@ -1,6 +1,6 @@
 import os, os.path
 import subprocess
-from play.utils import *
+from yalp.utils import *
 import time
 if os.name == 'nt':
     import win32pdh, string, win32api
@@ -19,7 +19,7 @@ def execute(**kargs):
     command = kargs.get("command")
     app = kargs.get("app")
     args = kargs.get("args")
-    play_env = kargs.get("env")
+    yalp_env = kargs.get("env")
 
     if command == 'start':
         start(app, args)
@@ -150,7 +150,7 @@ def kill(pid):
         try:
             os.kill(int(pid), 15)
         except OSError:
-            print "~ Play was not running (Process id %s not found)" % pid
+            print "~ Yalp was not running (Process id %s not found)" % pid
             print "~"
             sys.exit(-1)
 

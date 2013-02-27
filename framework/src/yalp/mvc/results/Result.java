@@ -1,7 +1,7 @@
-package play.mvc.results;
+package yalp.mvc.results;
 
-import play.mvc.Http;
-import play.utils.FastRuntimeException;
+import yalp.mvc.Http;
+import yalp.utils.FastRuntimeException;
 
 /**
  * Result support

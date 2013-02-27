@@ -1,4 +1,4 @@
-package play.data.validation;
+package yalp.data.validation;
 
 public abstract class Check {
 

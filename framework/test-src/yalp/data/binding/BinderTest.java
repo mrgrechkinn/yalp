@@ -1,10 +1,10 @@
-package play.data.binding;
+package yalp.data.binding;
 
 import org.junit.Before;
 import org.junit.Test;
-import play.PlayBuilder;
-import play.data.validation.Validation;
-import play.data.validation.ValidationPlugin;
+import yalp.YalpBuilder;
+import yalp.data.validation.Validation;
+import yalp.data.validation.ValidationPlugin;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -23,7 +23,7 @@ public class BinderTest {
 
     @Before
     public void setup() {
-        new PlayBuilder().build();
+        new YalpBuilder().build();
     }
 
     @Test

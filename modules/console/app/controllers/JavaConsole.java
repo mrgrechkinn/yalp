@@ -1,7 +1,7 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
+import yalp.*;
+import yalp.mvc.*;
 import bsh.Interpreter;
 import bsh.EvalError;
 

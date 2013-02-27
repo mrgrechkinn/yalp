@@ -1,6 +1,6 @@
 
 # Play
-self: play -> play $version
+self: yalp -> yalp $version
 
 # Don't follow transitive dependencies for this project
 transitiveDependencies: false
@@ -62,45 +62,45 @@ require:    &allDependencies
 # Default repositories, used for all projects
 repositories:
 
-    - playCore:
+    - yalpCore:
         type:       local
-        descriptor: "${play.path}/framework/dependencies.yml"
-        artifact:   "${play.path}/framework/play-[revision].jar"
+        descriptor: "${yalp.path}/framework/dependencies.yml"
+        artifact:   "${yalp.path}/framework/yalp-[revision].jar"
         contains:
-            - play -> play
+            - yalp -> yalp
 
-    - playCoreDependencies:
+    - yalpCoreDependencies:
         type:       local
-        artifact:   "${play.path}/framework/lib/[artifact]-[revision].jar"
+        artifact:   "${yalp.path}/framework/lib/[artifact]-[revision].jar"
         contains:   *allDependencies
         
-    - playCoreCrud:
+    - yalpCoreCrud:
         type:       local
-        artifact:   "${play.path}/modules/crud"
+        artifact:   "${yalp.path}/modules/crud"
         contains:
-            - play -> crud $version
+            - yalp -> crud $version
 
-    - playCoreSecure:
+    - yalpCoreSecure:
         type:       local
-        artifact:   "${play.path}/modules/secure"
+        artifact:   "${yalp.path}/modules/secure"
         contains:
-            - play -> secure $version
+            - yalp -> secure $version
 
-    - playModules:  
+    - yalpModules:  
         type:       chain
         using:            
-            - playLocalModules:
+            - yalpLocalModules:
                 type:       local
-                descriptor: "${play.path}/modules/[module]-[revision]/conf/dependencies.yml"
-                artifact:   "${play.path}/modules/[module]-[revision]"
+                descriptor: "${yalp.path}/modules/[module]-[revision]/conf/dependencies.yml"
+                artifact:   "${yalp.path}/modules/[module]-[revision]"
 
-            - playContributedModules:
+            - yalpContributedModules:
                 type:       http
                 descriptor: "http://www.playframework.org/modules/repo/[module]/[revision]/dependencies.yml"
                 artifact:   "http://www.playframework.org/modules/[module]-[revision].zip"
                 
         contains:
-            - play -> *
+            - yalp -> *
 
     - mavenCentral:
         type:           iBiblio

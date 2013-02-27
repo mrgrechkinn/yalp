@@ -1,13 +1,13 @@
-package play.exceptions;
+package yalp.exceptions;
 
 import java.util.Arrays;
 import java.util.List;
-import play.classloading.ApplicationClasses.ApplicationClass;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
 
 /**
  * A Java exception
  */
-public abstract class JavaException extends PlayException implements SourceAttachment {
+public abstract class JavaException extends YalpException implements SourceAttachment {
 
     private ApplicationClass applicationClass;
     private Integer lineNumber;

@@ -1,14 +1,14 @@
-package play.exceptions;
+package yalp.exceptions;
 
 import java.util.Arrays;
 import java.util.List;
-import play.classloading.ApplicationClasses.ApplicationClass;
-import play.Play;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
+import yalp.Yalp;
 
 /**
  * Cache related exception
  */
-public class CacheException extends PlayException {
+public class CacheException extends YalpException {
     
     String sourceFile;
     List<String> source;
@@ -18,7 +18,7 @@ public class CacheException extends PlayException {
         super(message, cause);
         StackTraceElement element = getInterestingStrackTraceElement(cause);
         if(element != null) {
-            ApplicationClass applicationClass = Play.classes.getApplicationClass(element.getClassName());
+            ApplicationClass applicationClass = Yalp.classes.getApplicationClass(element.getClassName());
             if (applicationClass.javaFile != null)
                 sourceFile = applicationClass.javaFile.relativePath();
             if (applicationClass.javaSource != null)

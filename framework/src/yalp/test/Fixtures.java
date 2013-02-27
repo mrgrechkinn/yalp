@@ -1,4 +1,4 @@
-package play.test;
+package yalp.test;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FileUtils;
@@ -6,24 +6,24 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 import org.yaml.snakeyaml.introspector.BeanAccess;
 import org.yaml.snakeyaml.scanner.ScannerException;
-import play.Logger;
-import play.Play;
-import play.classloading.ApplicationClasses;
-import play.data.binding.Binder;
-import play.data.binding.ParamNode;
-import play.data.binding.RootParamNode;
-import play.data.binding.types.DateBinder;
-import play.db.DB;
-import play.db.DBPlugin;
-import play.db.SQLSplitter;
-import play.db.Model;
-import play.db.jpa.JPAPlugin;
-import play.exceptions.DatabaseException;
-import play.exceptions.UnexpectedException;
-import play.exceptions.YAMLException;
-import play.libs.IO;
-import play.templates.TemplateLoader;
-import play.vfs.VirtualFile;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.classloading.ApplicationClasses;
+import yalp.data.binding.Binder;
+import yalp.data.binding.ParamNode;
+import yalp.data.binding.RootParamNode;
+import yalp.data.binding.types.DateBinder;
+import yalp.db.DB;
+import yalp.db.DBPlugin;
+import yalp.db.SQLSplitter;
+import yalp.db.Model;
+import yalp.db.jpa.JPAPlugin;
+import yalp.exceptions.DatabaseException;
+import yalp.exceptions.UnexpectedException;
+import yalp.exceptions.YAMLException;
+import yalp.libs.IO;
+import yalp.templates.TemplateLoader;
+import yalp.vfs.VirtualFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,7 +74,7 @@ public class Fixtures {
 
         }
         enableForeignKeyConstraints();
-        Play.pluginCollection.afterFixtureLoad();
+        Yalp.pluginCollection.afterFixtureLoad();
     }
 
     /**
@@ -96,7 +96,7 @@ public class Fixtures {
     @SuppressWarnings("unchecked")
     public static void deleteAllModels() {
         List<Class<? extends Model>> classes = new ArrayList<Class<? extends Model>>();
-        for (ApplicationClasses.ApplicationClass c : Play.classes.getAssignableClasses(Model.class)) {
+        for (ApplicationClasses.ApplicationClass c : Yalp.classes.getAssignableClasses(Model.class)) {
 		   if( c.javaClass.isAnnotationPresent(Entity.class) ) {
 		       classes.add((Class<? extends Model>)c.javaClass);
 		    }
@@ -114,7 +114,7 @@ public class Fixtures {
         deleteDatabase();
     }
 
-    static String[] dontDeleteTheseTables = new String[] {"play_evolutions"};
+    static String[] dontDeleteTheseTables = new String[] {"yalp_evolutions"};
 
     /**
      * Flush the entire JDBC database
@@ -138,7 +138,7 @@ public class Fixtures {
                 }
             }
             enableForeignKeyConstraints();
-            Play.pluginCollection.afterFixtureLoad();
+            Yalp.pluginCollection.afterFixtureLoad();
         } catch (Exception e) {
             throw new RuntimeException("Cannot delete all table data : " + e.getMessage(), e);
         }
@@ -161,7 +161,7 @@ public class Fixtures {
     public static void loadModels(String name) {
         VirtualFile yamlFile = null;
         try {
-            for (VirtualFile vf : Play.javaPath) {
+            for (VirtualFile vf : Yalp.javaPath) {
                 yamlFile = vf.child(name);
                 if (yamlFile != null && yamlFile.exists()) {
                     break;
@@ -202,7 +202,7 @@ public class Fixtures {
 
 
                         @SuppressWarnings("unchecked")
-                        Class<Model> cType = (Class<Model>)Play.classloader.loadClass(type);
+                        Class<Model> cType = (Class<Model>)Yalp.classloader.loadClass(type);
                         final Map<String, String[]> resolvedFields = resolveDependencies(cType, fields);
 
                         RootParamNode rootParamNode = ParamNode.convert(resolvedFields);
@@ -233,7 +233,7 @@ public class Fixtures {
                 }
             }
             // Most persistence engine will need to clear their state
-            Play.pluginCollection.afterFixtureLoad();
+            Yalp.pluginCollection.afterFixtureLoad();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Class " + e.getMessage() + " was not found", e);
         } catch (ScannerException e) {
@@ -319,7 +319,7 @@ public class Fixtures {
      */
     @SuppressWarnings("unchecked")
     public static <T> T loadYaml(String name, Class<T> clazz) {
-        Yaml yaml = new Yaml(new CustomClassLoaderConstructor(clazz, Play.classloader));
+        Yaml yaml = new Yaml(new CustomClassLoaderConstructor(clazz, Yalp.classloader));
         yaml.setBeanAccess(BeanAccess.FIELD);
         return (T)loadYaml(name, yaml);
     }
@@ -328,13 +328,13 @@ public class Fixtures {
     public static <T> T loadYaml(String name, Yaml yaml) {
         VirtualFile yamlFile = null;
         try {
-            for (VirtualFile vf : Play.javaPath) {
+            for (VirtualFile vf : Yalp.javaPath) {
                 yamlFile = vf.child(name);
                 if (yamlFile != null && yamlFile.exists()) {
                     break;
                 }
             }
-            InputStream is = Play.classloader.getResourceAsStream(name);
+            InputStream is = Yalp.classloader.getResourceAsStream(name);
             if (is == null) {
                 throw new RuntimeException("Cannot load fixture " + name + ", the file was not found");
             }
@@ -354,7 +354,7 @@ public class Fixtures {
      */
     public static void deleteDirectory(String path) {
         try {
-            FileUtils.deleteDirectory(Play.getFile(path));
+            FileUtils.deleteDirectory(Yalp.getFile(path));
         } catch (IOException ex) {
             throw new UnexpectedException(ex);
         }
@@ -401,7 +401,7 @@ public class Fixtures {
                 Matcher m = Pattern.compile("<<<\\s*\\{([^}]+)}\\s*").matcher(value.toString());
                 m.find();
                 String file = m.group(1);
-                VirtualFile f = Play.getVirtualFile(file);
+                VirtualFile f = Yalp.getVirtualFile(file);
                 if (f != null && f.exists()) {
                     serialized.put(prefix + "." + key.toString(), new String[]{f.contentAsString()});
                 }

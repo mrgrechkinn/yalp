@@ -12,16 +12,16 @@ import models.OptimisticLockingModel.OptimisticLockingCheck;
 
 import org.junit.Test;
 
-import play.data.validation.Error;
-import play.data.validation.Validation;
-import play.data.validation.Validation.ValidationResult;
-import play.test.UnitTest;
+import yalp.data.validation.Error;
+import yalp.data.validation.Validation;
+import yalp.data.validation.Validation.ValidationResult;
+import yalp.test.UnitTest;
 
 /**
  * @author niels
  *
  */
-public class OptimisticLockingModelPlayTest extends UnitTest {
+public class OptimisticLockingModelYalpTest extends UnitTest {
 
     @Test    
     public void testOptimisticLockingCheck() {

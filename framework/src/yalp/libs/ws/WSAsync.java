@@ -1,4 +1,4 @@
-package play.libs.ws;
+package yalp.libs.ws;
 
 import java.io.*;
 import java.net.URLDecoder;
@@ -18,15 +18,15 @@ import oauth.signpost.http.HttpRequest;
 
 import org.apache.commons.lang.NotImplementedException;
 
-import play.Logger;
-import play.Play;
-import play.libs.F.Promise;
-import play.libs.MimeTypes;
-import play.libs.OAuth.ServiceInfo;
-import play.libs.WS.HttpResponse;
-import play.libs.WS.WSImpl;
-import play.libs.WS.WSRequest;
-import play.mvc.Http.Header;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.libs.F.Promise;
+import yalp.libs.MimeTypes;
+import yalp.libs.OAuth.ServiceInfo;
+import yalp.libs.WS.HttpResponse;
+import yalp.libs.WS.WSImpl;
+import yalp.libs.WS.WSRequest;
+import yalp.mvc.Http.Header;
 
 import com.ning.http.client.AsyncHttpClient.BoundRequestBuilder;
 import com.ning.http.client.AsyncHttpClientConfig.Builder;
@@ -62,12 +62,12 @@ public class WSAsync implements WSImpl {
     private AsyncHttpClient httpClient;
 
     public WSAsync() {
-        String proxyHost = Play.configuration.getProperty("http.proxyHost", System.getProperty("http.proxyHost"));
-        String proxyPort = Play.configuration.getProperty("http.proxyPort", System.getProperty("http.proxyPort"));
-        String proxyUser = Play.configuration.getProperty("http.proxyUser", System.getProperty("http.proxyUser"));
-        String proxyPassword = Play.configuration.getProperty("http.proxyPassword", System.getProperty("http.proxyPassword"));
-        String nonProxyHosts = Play.configuration.getProperty("http.nonProxyHosts", System.getProperty("http.nonProxyHosts"));
-        String userAgent = Play.configuration.getProperty("http.userAgent");
+        String proxyHost = Yalp.configuration.getProperty("http.proxyHost", System.getProperty("http.proxyHost"));
+        String proxyPort = Yalp.configuration.getProperty("http.proxyPort", System.getProperty("http.proxyPort"));
+        String proxyUser = Yalp.configuration.getProperty("http.proxyUser", System.getProperty("http.proxyUser"));
+        String proxyPassword = Yalp.configuration.getProperty("http.proxyPassword", System.getProperty("http.proxyPassword"));
+        String nonProxyHosts = Yalp.configuration.getProperty("http.nonProxyHosts", System.getProperty("http.nonProxyHosts"));
+        String userAgent = Yalp.configuration.getProperty("http.userAgent");
 
         Builder confBuilder = new AsyncHttpClientConfig.Builder();
         if (proxyHost != null) {
@@ -75,7 +75,7 @@ public class WSAsync implements WSImpl {
             try {
                 proxyPortInt = Integer.parseInt(proxyPort);
             } catch (NumberFormatException e) {
-                Logger.error("Cannot parse the proxy port property '%s'. Check property http.proxyPort either in System configuration or in Play config file.", proxyPort);
+                Logger.error("Cannot parse the proxy port property '%s'. Check property http.proxyPort either in System configuration or in Yalp config file.", proxyPort);
                 throw new IllegalStateException("WS proxy is misconfigured -- check the logs for details");
             }
             ProxyServer proxy = new ProxyServer(proxyHost, proxyPortInt, proxyUser, proxyPassword);
@@ -625,7 +625,7 @@ public class WSAsync implements WSImpl {
         @Override
         protected HttpRequest wrap(Object request) {
             if (!(request instanceof WSRequest)) {
-                throw new IllegalArgumentException("WSOAuthConsumer expects requests of type play.libs.WS.WSRequest");
+                throw new IllegalArgumentException("WSOAuthConsumer expects requests of type yalp.libs.WS.WSRequest");
             }
             return new WSRequestAdapter((WSRequest)request);
         }

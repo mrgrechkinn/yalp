@@ -4,19 +4,19 @@ import helpers.CheatSheetHelper;
 
 import helpers.LangMenuHelper;
 import helpers.LangMenuHelper.*;
-import play.Logger;
-import play.Play;
-import play.libs.IO;
-import play.mvc.Controller;
-import play.mvc.Http;
-import play.vfs.VirtualFile;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.libs.IO;
+import yalp.mvc.Controller;
+import yalp.mvc.Http;
+import yalp.vfs.VirtualFile;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PlayDocumentation extends Controller {
+public class YalpDocumentation extends Controller {
     
     public static void index() throws Exception {
         Http.Header header = request.headers.get("accept-language");
@@ -29,13 +29,13 @@ public class PlayDocumentation extends Controller {
     public static void page(String id, String module, String docLang) throws Exception {
         String docLangDir = (docLang != null && (!"en".equalsIgnoreCase(docLang) && !docLang.matches("en-.*") ) ) ? "_" + docLang + "/" : "/";
 
-        File page = new File(Play.frameworkPath, "documentation/manual" + docLangDir + id + ".textile");
+        File page = new File(Yalp.frameworkPath, "documentation/manual" + docLangDir + id + ".textile");
         if(!page.exists()){
-            page = new File(Play.frameworkPath, "documentation/manual/" + id + ".textile");
+            page = new File(Yalp.frameworkPath, "documentation/manual/" + id + ".textile");
         }
 
         if (module != null) {
-            page = new File(Play.modules.get(module).getRealFile(), "documentation/manual/" + id + ".textile");
+            page = new File(Yalp.modules.get(module).getRealFile(), "documentation/manual/" + id + ".textile");
         }
 
         if (!page.exists()) {
@@ -48,8 +48,8 @@ public class PlayDocumentation extends Controller {
         List<String> modules = new ArrayList();
         List<String> apis = new ArrayList();
         if (id.equals("home") && module == null) {
-            for (String key : Play.modules.keySet()) {
-                VirtualFile mr = Play.modules.get(key);
+            for (String key : Yalp.modules.keySet()) {
+                VirtualFile mr = Yalp.modules.get(key);
                 VirtualFile home = mr.child("documentation/manual/" + "home.textile");
                 if (home.exists()) {
                     modules.add(key);
@@ -82,9 +82,9 @@ public class PlayDocumentation extends Controller {
     }
 
     public static void image(String name, String module, String lang) {
-        File image = new File(Play.frameworkPath, "documentation/images/" + name + ".png");
+        File image = new File(Yalp.frameworkPath, "documentation/images/" + name + ".png");
         if (module != null) {
-            image = new File(Play.modules.get(module).getRealFile(), "documentation/images/" + name + ".png");
+            image = new File(Yalp.modules.get(module).getRealFile(), "documentation/images/" + name + ".png");
         }
         if (!image.exists()) {
             notFound();
@@ -93,9 +93,9 @@ public class PlayDocumentation extends Controller {
     }
 
     public static void file(String name, String module, String lang) {
-        File file = new File(Play.frameworkPath, "documentation/files/" + name);
+        File file = new File(Yalp.frameworkPath, "documentation/files/" + name);
         if (module != null) {
-            file = new File(Play.modules.get(module).getRealFile(), "documentation/files/" + name);
+            file = new File(Yalp.modules.get(module).getRealFile(), "documentation/files/" + name);
         }
         if (!file.exists()) {
             notFound();

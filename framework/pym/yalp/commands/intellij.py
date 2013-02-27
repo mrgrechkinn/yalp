@@ -1,7 +1,7 @@
 import os, os.path
 import shutil
 
-from play.utils import *
+from yalp.utils import *
 
 COMMANDS = ['idealize', 'idea']
 
@@ -13,7 +13,7 @@ def execute(**kargs):
     command = kargs.get("command")
     app = kargs.get("app")
     args = kargs.get("args")
-    play_env = kargs.get("env")
+    yalp_env = kargs.get("env")
 
     app.check()
     modules = app.modules()
@@ -21,18 +21,18 @@ def execute(**kargs):
 
     application_name = app.readConf('application.name')
     imlFile = os.path.join(app.path, application_name + '.iml')
-    shutil.copyfile(os.path.join(play_env["basedir"], 'resources/idea/imlTemplate.xml'), imlFile)
+    shutil.copyfile(os.path.join(yalp_env["basedir"], 'resources/idea/imlTemplate.xml'), imlFile)
     cpXML = ""
 
-    playHome = play_env["basedir"].replace('\\', '/')
+    yalpHome = yalp_env["basedir"].replace('\\', '/')
 
     if os.name == 'nt':
         # On Windows, IntelliJ needs uppercase driveletter
-        if playHome[1:2] == ':':
-            playHome = playHome[0:1].upper() + playHome[1:]
+        if yalpHome[1:2] == ':':
+            yalpHome = yalpHome[0:1].upper() + yalpHome[1:]
 
-    replaceAll(imlFile, r'%PLAYHOME%', playHome)
-    replaceAll(imlFile, r'%PLAYVERSION%', play_env["version"].replace('\\', '/'))
+    replaceAll(imlFile, r'%YALPHOME%', Home)
+    replaceAll(imlFile, r'%YALPVERSION%', yalp_env["version"].replace('\\', '/'))
 
     lXML = ""
     mlXML = ""
@@ -58,7 +58,7 @@ def execute(**kargs):
     iprFile = os.path.join(app.path, application_name + '.ipr')
     # Only copy/create if missing to avoid overwriting customizations
     if not os.path.exists(iprFile):
-        shutil.copyfile(os.path.join(play_env["basedir"], 'resources/idea/iprTemplate.xml'), iprFile)
+        shutil.copyfile(os.path.join(yalp_env["basedir"], 'resources/idea/iprTemplate.xml'), iprFile)
         replaceAll(iprFile, r'%PROJECT_NAME%', application_name)
     
 

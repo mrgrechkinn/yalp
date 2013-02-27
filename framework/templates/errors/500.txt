@@ -1,8 +1,8 @@
-#{if exception instanceof play.exceptions.PlayException}
+#{if exception instanceof yalp.exceptions.YalpException}
 ${exception.errorTitle} 
 ${exception.errorDescription.replace('<strong>', '').replace('</strong>', '')}
  
-#{if exception.sourceAvailable && exception.lineNumber && play.Play.mode.name() == 'DEV'}
+#{if exception.sourceAvailable && exception.lineNumber && yalp.Yalp.mode.name() == 'DEV'}
 ----------
 In ${exception.sourceFile} (around line ${exception.lineNumber})
 

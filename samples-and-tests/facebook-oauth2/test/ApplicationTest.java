@@ -1,7 +1,7 @@
 import org.junit.*;
-import play.test.*;
-import play.mvc.*;
-import play.mvc.Http.*;
+import yalp.test.*;
+import yalp.mvc.*;
+import yalp.mvc.Http.*;
 import models.*;
 
 public class ApplicationTest extends FunctionalTest {
@@ -11,7 +11,7 @@ public class ApplicationTest extends FunctionalTest {
         Response response = GET("/");
         assertIsOk(response);
         assertContentType("text/html", response);
-        assertCharset(play.Play.defaultWebEncoding, response);
+        assertCharset(yalp.Yalp.defaultWebEncoding, response);
     }
     
 }

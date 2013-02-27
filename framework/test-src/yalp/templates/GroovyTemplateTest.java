@@ -1,7 +1,7 @@
-package play.templates;
+package yalp.templates;
 
 import org.junit.Test;
-import play.PlayBuilder;
+import yalp.YalpBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ public class GroovyTemplateTest {
     @Test
     public void verifyRenderingTwice() {
 
-        new PlayBuilder().build();
+        new YalpBuilder().build();
 
         String groovySrc = "hello world: ${name}";
 
@@ -33,7 +33,7 @@ public class GroovyTemplateTest {
     @Test
     public void verifyCompilingExtremelyLongLines() {
 
-        new PlayBuilder().build();
+        new YalpBuilder().build();
 
         StringBuilder longString = new StringBuilder();
         for (int i=0;i<1000;i++) {
@@ -57,7 +57,7 @@ public class GroovyTemplateTest {
     @Test
     public void verifyCompilingExtremelyLongLinesWithLinefeed() {
 
-        new PlayBuilder().build();
+        new YalpBuilder().build();
 
         // when printing text from template, newlines (0x0d) is transformed into the string '\n'.
         // when breaking lines it is a problem if the '\' is at the end on one line and 'n'

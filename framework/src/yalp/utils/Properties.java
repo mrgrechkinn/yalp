@@ -1,4 +1,4 @@
-package play.utils;
+package yalp.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

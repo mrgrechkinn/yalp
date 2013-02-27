@@ -1,4 +1,4 @@
-package play.server;
+package yalp.server;
 
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
@@ -6,8 +6,8 @@ import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.jboss.netty.channel.ChannelHandler;
-import play.Play;
-import play.Logger;
+import yalp.Yalp;
+import yalp.Logger;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -15,7 +15,7 @@ import static org.jboss.netty.channel.Channels.pipeline;
 
 public class HttpServerPipelineFactory implements ChannelPipelineFactory {
 
-    private String pipelineConfig = Play.configuration.getProperty("play.netty.pipeline", "play.server.FlashPolicyHandler,org.jboss.netty.handler.codec.http.HttpRequestDecoder,play.server.StreamChunkAggregator,org.jboss.netty.handler.codec.http.HttpResponseEncoder,org.jboss.netty.handler.stream.ChunkedWriteHandler,play.server.PlayHandler");
+    private String pipelineConfig = Yalp.configuration.getProperty("yalp.netty.pipeline", "yalp.server.FlashPolicyHandler,org.jboss.netty.handler.codec.http.HttpRequestDecoder,yalp.server.StreamChunkAggregator,org.jboss.netty.handler.codec.http.HttpResponseEncoder,org.jboss.netty.handler.stream.ChunkedWriteHandler,yalp.server.YalpHandler");
 
     protected static Map<String, Class> classes = new HashMap<String, Class>();
 
@@ -39,7 +39,7 @@ public class HttpServerPipelineFactory implements ChannelPipelineFactory {
 
         }
 
-        // The last one is always the play handler
+        // The last one is always the yalp handler
         String handler = handlers[handlers.length - 1];
         ChannelHandler instance = getInstance(handler);
         if (instance != null) {

@@ -1,6 +1,6 @@
-package play.data.binding;
+package yalp.data.binding;
 
-import play.utils.Utils;
+import yalp.utils.Utils;
 
 import java.util.Collection;
 import java.util.HashMap;

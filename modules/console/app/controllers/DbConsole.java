@@ -1,9 +1,9 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
+import yalp.*;
+import yalp.mvc.*;
 import utils.ResultSetMapper;
-import play.db.DB;
+import yalp.db.DB;
 import java.io.*;
 
 @Check("isAdmin")

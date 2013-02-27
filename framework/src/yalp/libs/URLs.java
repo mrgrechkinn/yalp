@@ -1,7 +1,7 @@
-package play.libs;
+package yalp.libs;
 
 import java.net.URLEncoder;
-import play.exceptions.UnexpectedException;
+import yalp.exceptions.UnexpectedException;
 
 public class URLs {
 

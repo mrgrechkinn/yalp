@@ -1,4 +1,4 @@
-package play.server.ssl;
+package yalp.server.ssl;
 
 import javax.net.ssl.SSLEngine;
 
@@ -9,25 +9,25 @@ import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.jboss.netty.handler.ssl.SslHandler;
 import org.jboss.netty.handler.stream.ChunkedWriteHandler;
 
-import play.Play;
-import play.server.FlashPolicyHandler;
-import play.server.StreamChunkAggregator;
-import play.server.HttpServerPipelineFactory;
+import yalp.Yalp;
+import yalp.server.FlashPolicyHandler;
+import yalp.server.StreamChunkAggregator;
+import yalp.server.HttpServerPipelineFactory;
 import org.jboss.netty.channel.ChannelHandler;
-import play.Logger;
-import play.server.Server;
+import yalp.Logger;
+import yalp.server.Server;
 
 import static org.jboss.netty.channel.Channels.pipeline;
 
 
 public class SslHttpServerPipelineFactory extends HttpServerPipelineFactory {
 
-    private String pipelineConfig = Play.configuration.getProperty("play.ssl.netty.pipeline", "play.server.FlashPolicyHandler,org.jboss.netty.handler.codec.http.HttpRequestDecoder,play.server.StreamChunkAggregator,org.jboss.netty.handler.codec.http.HttpResponseEncoder,org.jboss.netty.handler.stream.ChunkedWriteHandler,play.server.ssl.SslPlayHandler");
+    private String pipelineConfig = Yalp.configuration.getProperty("yalp.ssl.netty.pipeline", "yalp.server.FlashPolicyHandler,org.jboss.netty.handler.codec.http.HttpRequestDecoder,yalp.server.StreamChunkAggregator,org.jboss.netty.handler.codec.http.HttpResponseEncoder,org.jboss.netty.handler.stream.ChunkedWriteHandler,yalp.server.ssl.SslYalpHandler");
 
     public ChannelPipeline getPipeline() throws Exception {
 
-        String mode = Play.configuration.getProperty("play.netty.clientAuth", "none");
-        String enabledCiphers = Play.configuration.getProperty("play.ssl.enabledCiphers", "");
+        String mode = Yalp.configuration.getProperty("yalp.netty.clientAuth", "none");
+        String enabledCiphers = Yalp.configuration.getProperty("yalp.ssl.enabledCiphers", "");
 
         ChannelPipeline pipeline = pipeline();
 
@@ -66,7 +66,7 @@ public class SslHttpServerPipelineFactory extends HttpServerPipelineFactory {
 
         }
 
-        // The last one is always the play handler
+        // The last one is always the yalp handler
         String handler = handlers[handlers.length - 1];
         ChannelHandler instance = getInstance(handler);
         if (instance != null) {

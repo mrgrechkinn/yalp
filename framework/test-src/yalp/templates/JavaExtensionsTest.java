@@ -1,4 +1,4 @@
-package play.templates;
+package yalp.templates;
 
 import static org.junit.Assert.*;
 import static org.fest.assertions.Assertions.assertThat;

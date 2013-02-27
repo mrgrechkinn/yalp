@@ -1,7 +1,7 @@
 import org.junit.Test;
 
-import play.mvc.Http.Response;
-import play.test.FunctionalTest;
+import yalp.mvc.Http.Response;
+import yalp.test.FunctionalTest;
 
 public class TransactionalJPATest extends FunctionalTest {
     

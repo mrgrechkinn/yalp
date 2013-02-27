@@ -3,9 +3,9 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import play.templates.GroovyTemplate;
-import play.templates.GroovyTemplateCompiler;
-import play.test.UnitTest;
+import yalp.templates.GroovyTemplate;
+import yalp.templates.GroovyTemplateCompiler;
+import yalp.test.UnitTest;
 
 public class TemplateClassBindingTest extends UnitTest {
 

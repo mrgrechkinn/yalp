@@ -1,4 +1,4 @@
-package play.jobs;
+package yalp.jobs;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -13,18 +13,18 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import play.Logger;
-import play.Play;
-import play.PlayPlugin;
-import play.exceptions.PlayException;
-import play.exceptions.UnexpectedException;
-import play.libs.Expression;
-import play.libs.Time;
-import play.libs.Time.CronExpression;
-import play.utils.Java;
-import play.utils.PThreadFactory;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.YalpPlugin;
+import yalp.exceptions.YalpException;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.Expression;
+import yalp.libs.Time;
+import yalp.libs.Time.CronExpression;
+import yalp.utils.Java;
+import yalp.utils.PThreadFactory;
 
-public class JobsPlugin extends PlayPlugin {
+public class JobsPlugin extends YalpPlugin {
 
     public static ScheduledThreadPoolExecutor executor = null;
     public static List<Job> scheduledJobs = null;
@@ -61,7 +61,7 @@ public class JobsPlugin extends PlayPlugin {
 
                     String cron = job.getClass().getAnnotation(On.class).value();
                     if (cron != null && cron.startsWith("cron.")) {
-                        cron = Play.configuration.getProperty(cron);
+                        cron = Yalp.configuration.getProperty(cron);
                     }
                     out.print(" run with cron expression " + cron + ".");
                 }
@@ -97,7 +97,7 @@ public class JobsPlugin extends PlayPlugin {
     @Override
     public void afterApplicationStart() {
         List<Class<?>> jobs = new ArrayList<Class<?>>();
-        for (Class clazz : Play.classloader.getAllClasses()) {
+        for (Class clazz : Yalp.classloader.getAllClasses()) {
             if (Job.class.isAssignableFrom(clazz)) {
                 jobs.add(clazz);
             }
@@ -125,8 +125,8 @@ public class JobsPlugin extends PlayPlugin {
                     } catch (IllegalAccessException e) {
                         throw new UnexpectedException("Job could not be instantiated", e);
                     } catch (Throwable ex) {
-                        if (ex instanceof PlayException) {
-                            throw (PlayException) ex;
+                        if (ex instanceof YalpException) {
+                            throw (YalpException) ex;
                         }
                         throw new UnexpectedException(ex);
                     }
@@ -166,7 +166,7 @@ public class JobsPlugin extends PlayPlugin {
                     scheduledJobs.add(job);
                     String value = job.getClass().getAnnotation(Every.class).value();
                     if (value.startsWith("cron.")) {
-                        value = Play.configuration.getProperty(value);
+                        value = Yalp.configuration.getProperty(value);
                     }
                     value = Expression.evaluate(value, value).toString();
                     if(!"never".equalsIgnoreCase(value)){
@@ -183,7 +183,7 @@ public class JobsPlugin extends PlayPlugin {
 
     @Override
     public void onApplicationStart() {
-        int core = Integer.parseInt(Play.configuration.getProperty("play.jobs.pool", "10"));
+        int core = Integer.parseInt(Yalp.configuration.getProperty("yalp.jobs.pool", "10"));
         executor = new ScheduledThreadPoolExecutor(core, new PThreadFactory("jobs"), new ThreadPoolExecutor.AbortPolicy());
     }
 
@@ -193,7 +193,7 @@ public class JobsPlugin extends PlayPlugin {
         }
         String cron = job.getClass().getAnnotation(On.class).value();
         if (cron.startsWith("cron.")) {
-            cron = Play.configuration.getProperty(cron);
+            cron = Yalp.configuration.getProperty(cron);
         }
         cron = Expression.evaluate(cron, cron).toString();
         if (cron == null || "".equals(cron) || "never".equalsIgnoreCase(cron)) {
@@ -226,7 +226,7 @@ public class JobsPlugin extends PlayPlugin {
     @Override
     public void onApplicationStop() {
         
-        List<Class> jobs = Play.classloader.getAssignableClasses(Job.class);
+        List<Class> jobs = Yalp.classloader.getAssignableClasses(Job.class);
         
         for (final Class clazz : jobs) {
             // @OnApplicationStop
@@ -246,8 +246,8 @@ public class JobsPlugin extends PlayPlugin {
                 } catch (IllegalAccessException e) {
                     throw new UnexpectedException("Job could not be instantiated", e);
                 } catch (Throwable ex) {
-                    if (ex instanceof PlayException) {
-                        throw (PlayException) ex;
+                    if (ex instanceof YalpException) {
+                        throw (YalpException) ex;
                     }
                     throw new UnexpectedException(ex);
                 }

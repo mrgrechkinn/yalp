@@ -1,8 +1,8 @@
-package play.mvc.results;
+package yalp.mvc.results;
 
-import play.mvc.Http.Inbound;
-import play.mvc.Http.Outbound;
-import play.mvc.Http.Request;
+import yalp.mvc.Http.Inbound;
+import yalp.mvc.Http.Outbound;
+import yalp.mvc.Http.Request;
 
 public class WebSocketDisconnect extends WebSocketResult {
 

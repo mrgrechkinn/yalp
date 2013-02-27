@@ -1,4 +1,4 @@
-package play.data.validation;
+package yalp.data.validation;
 
 import net.sf.oval.Validator;
 import net.sf.oval.configuration.annotation.AbstractAnnotationCheck;

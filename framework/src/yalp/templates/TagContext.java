@@ -1,4 +1,4 @@
-package play.templates;
+package yalp.templates;
 
 import java.util.HashMap;
 import java.util.Map;

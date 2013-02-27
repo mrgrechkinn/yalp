@@ -1,4 +1,4 @@
-package play.utils;
+package yalp.utils;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;

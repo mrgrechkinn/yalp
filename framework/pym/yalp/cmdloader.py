@@ -2,16 +2,16 @@ import imp
 import os
 import warnings
 
-def play_formatwarning(msg, *a):
+def yalp_formatwarning(msg, *a):
     # ignore everything except the message
-    # format the message in a play cmdline way
+    # format the message in a yalp cmdline way
     return '~'+ '\n'+ '~ '+ str(msg) + '\n~\n'
 
-warnings.formatwarning = play_formatwarning
+warnings.formatwarning = yalp_formatwarning
 
 class CommandLoader:
-    def __init__(self, play_path):
-        self.path = os.path.join(play_path, 'framework', 'pym', 'play', 'commands')
+    def __init__(self, yalp_path):
+        self.path = os.path.join(yalp_path, 'framework', 'pym', 'yalp', 'commands')
         self.commands = {}
         self.modules = {}
         self.load_core()
@@ -26,7 +26,7 @@ class CommandLoader:
                 except:
                     warnings.warn("!! Warning: could not load core command file " + filename, RuntimeWarning)
 
-    def load_play_module(self, modname):
+    def load_yalp_module(self, modname):
         commands = os.path.join(modname, "commands.py")
         if os.path.exists(commands):
             try:

@@ -1,6 +1,6 @@
 package controllers;
 
-import play.mvc.Controller;
+import yalp.mvc.Controller;
 
 // Controller to test various redirects
 public class Redirector extends Controller {

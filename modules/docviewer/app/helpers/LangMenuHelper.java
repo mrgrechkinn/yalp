@@ -1,6 +1,6 @@
 package helpers;
 
-import play.Play;
+import yalp.Yalp;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LangMenuHelper {
-    private static final File baseDir = new File(Play.frameworkPath, "documentation");
+    private static final File baseDir = new File(Yalp.frameworkPath, "documentation");
     private static final Pattern ptn = Pattern.compile("manual_(.*)");
 
     public static List<LangMenu> getMenuList() {

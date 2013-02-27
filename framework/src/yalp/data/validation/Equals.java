@@ -1,4 +1,4 @@
-package play.data.validation;
+package yalp.data.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

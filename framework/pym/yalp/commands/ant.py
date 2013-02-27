@@ -2,7 +2,7 @@ import os, os.path
 import shutil
 import time
 
-from play.utils import *
+from yalp.utils import *
 
 COMMANDS = ['antify']
 
@@ -13,13 +13,13 @@ HELP = {
 def execute(**kargs):
     app = kargs.get("app")
     args = kargs.get("args")
-    play_env = kargs.get("env")
+    yalp_env = kargs.get("env")
 
     is_application = os.path.exists(os.path.join(app.path, 'conf', 'application.conf'))
     app.check()
     
-    shutil.copyfile(os.path.join(play_env["basedir"], 'resources/build.xml'), os.path.join(app.path, 'build.xml'))
+    shutil.copyfile(os.path.join(yalp_env["basedir"], 'resources/build.xml'), os.path.join(app.path, 'build.xml'))
     
     print "~ OK, a build.xml file has been created"
-    print "~ Define the PLAY_PATH env property, and use it with ant run|start|stop"
+    print "~ Define the YALP_PATH env property, and use it with ant run|start|stop"
     print "~"

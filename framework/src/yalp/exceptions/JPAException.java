@@ -1,4 +1,4 @@
-package play.exceptions;
+package yalp.exceptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import org.hibernate.exception.GenericJDBCException;
 /**
  * JPA exception
  */
-public class JPAException extends PlayException implements SourceAttachment {
+public class JPAException extends YalpException implements SourceAttachment {
 
     public JPAException(String message) {
         super(message, null);

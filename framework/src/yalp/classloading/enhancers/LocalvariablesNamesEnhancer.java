@@ -1,4 +1,4 @@
-package play.classloading.enhancers;
+package yalp.classloading.enhancers;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
@@ -24,10 +24,10 @@ import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.CodeIterator;
 import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.Opcode;
-import play.Logger;
-import play.classloading.ApplicationClasses.ApplicationClass;
-import play.exceptions.UnexpectedException;
-import play.libs.F.T2;
+import yalp.Logger;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.F.T2;
 
 /**
  * Track names of local variables ...
@@ -193,7 +193,7 @@ public class LocalvariablesNamesEnhancer extends Enhancer {
 
             // OK.
             // Here after each local variable creation instruction,
-            // we insert a call to play.utils.LocalVariables.addVariable('var', var)
+            // we insert a call to yalp.utils.LocalVariables.addVariable('var', var)
             // without breaking everything...
             for (int i = 0; i < localVariableAttribute.tableLength(); i++) {
 
@@ -265,8 +265,8 @@ public class LocalvariablesNamesEnhancer extends Enhancer {
             }
 
             // init variable tracer
-            method.insertBefore("play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer.enter();");
-            method.insertAfter("play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer.exit();", true);
+            method.insertBefore("yalp.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer.enter();");
+            method.insertAfter("yalp.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer.exit();", true);
 
         }
 
@@ -297,7 +297,7 @@ public class LocalvariablesNamesEnhancer extends Enhancer {
 
         Logger.trace("for variable '%s' in slot=%s, sig was '%s' and is now '%s'", name, slot, sig, localVarDescriptor);
 
-        b.addInvokestatic("play.classloading.enhancers.LocalvariablesNamesEnhancer$LocalVariablesNamesTracer", "addVariable", "(Ljava/lang/String;"+localVarDescriptor+")V");
+        b.addInvokestatic("yalp.classloading.enhancers.LocalvariablesNamesEnhancer$LocalVariablesNamesTracer", "addVariable", "(Ljava/lang/String;"+localVarDescriptor+")V");
         
         return b;
     }

@@ -1,4 +1,4 @@
-package play.server;
+package yalp.server;
 
 import org.apache.commons.io.IOUtils;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
@@ -6,7 +6,7 @@ import org.jboss.netty.channel.*;
 import org.jboss.netty.handler.codec.http.HttpChunk;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpMessage;
-import play.Play;
+import yalp.Yalp;
 
 import java.io.*;
 import java.util.List;
@@ -16,7 +16,7 @@ public class StreamChunkAggregator extends SimpleChannelUpstreamHandler {
 
     private volatile HttpMessage currentMessage;
     private volatile OutputStream out;
-    private final static int maxContentLength = Integer.valueOf(Play.configuration.getProperty("play.netty.maxContentLength", "-1"));
+    private final static int maxContentLength = Integer.valueOf(Yalp.configuration.getProperty("yalp.netty.maxContentLength", "-1"));
     private volatile File file;
 
     /**
@@ -46,7 +46,7 @@ public class StreamChunkAggregator extends SimpleChannelUpstreamHandler {
                     m.removeHeader(HttpHeaders.Names.TRANSFER_ENCODING);
                 }
                 this.currentMessage = m;
-                this.file = new File(Play.tmpDir, localName);
+                this.file = new File(Yalp.tmpDir, localName);
                 this.out = new FileOutputStream(file, true);
             } else {
                 // Not a chunked message - pass through.
@@ -57,7 +57,7 @@ public class StreamChunkAggregator extends SimpleChannelUpstreamHandler {
             // Merge the received chunk into the content of the current message.
             final HttpChunk chunk = (HttpChunk) msg;
             if (maxContentLength != -1 && (localFile.length() > (maxContentLength - chunk.getContent().readableBytes()))) {
-                currentMessage.setHeader(HttpHeaders.Names.WARNING, "play.netty.content.length.exceeded");
+                currentMessage.setHeader(HttpHeaders.Names.WARNING, "yalp.netty.content.length.exceeded");
             } else {
                 IOUtils.copyLarge(new ChannelBufferInputStream(chunk.getContent()), this.out);
 

@@ -3,7 +3,7 @@ package controllers;
 import models.orphans.collections.BaseModel;
 import models.orphans.collections.LevelOne;
 import models.orphans.collections.LevelTwo;
-import play.mvc.Controller;
+import yalp.mvc.Controller;
 
 public class CollectionOrphan extends Controller {
 

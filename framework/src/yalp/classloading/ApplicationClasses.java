@@ -1,4 +1,4 @@
-package play.classloading;
+package yalp.classloading;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -11,12 +11,12 @@ import java.util.Map;
 
 import javassist.ClassPool;
 import javassist.CtClass;
-import play.Logger;
-import play.Play;
-import play.PlayPlugin;
-import play.classloading.enhancers.Enhancer;
-import play.exceptions.UnexpectedException;
-import play.vfs.VirtualFile;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.YalpPlugin;
+import yalp.classloading.enhancers.Enhancer;
+import yalp.exceptions.UnexpectedException;
+import yalp.vfs.VirtualFile;
 
 /**
  * Application classes container.
@@ -64,7 +64,7 @@ public class ApplicationClasses {
                     continue;
                 }
                 try {
-                    Play.classloader.loadClass(applicationClass.name);
+                    Yalp.classloader.loadClass(applicationClass.name);
                 } catch (ClassNotFoundException ex) {
                     throw new UnexpectedException(ex);
                 }
@@ -91,7 +91,7 @@ public class ApplicationClasses {
                 continue;
             }
             try {
-                Play.classloader.loadClass(applicationClass.name);
+                Yalp.classloader.loadClass(applicationClass.name);
             } catch (ClassNotFoundException ex) {
                 throw new UnexpectedException(ex);
             }
@@ -205,7 +205,7 @@ public class ApplicationClasses {
         }
 
         static final ClassPool enhanceChecker_classPool = Enhancer.newClassPool();
-        static final CtClass ctPlayPluginClass = enhanceChecker_classPool.makeClass(PlayPlugin.class.getName());
+        static final CtClass ctYalpPluginClass = enhanceChecker_classPool.makeClass(YalpPlugin.class.getName());
 
         /**
          * Enhance this class
@@ -215,16 +215,16 @@ public class ApplicationClasses {
             this.enhancedByteCode = this.javaByteCode;
             if (isClass()) {
 
-                // before we can start enhancing this class we must make sure it is not a PlayPlugin.
-                // PlayPlugins can be included as regular java files in a Play-application.
-                // If a PlayPlugin is present in the application, it is loaded when other plugins are loaded.
+                // before we can start enhancing this class we must make sure it is not a YalpPlugin.
+                // YalpPlugins can be included as regular java files in a Yalp-application.
+                // If a YalpPlugin is present in the application, it is loaded when other plugins are loaded.
                 // All plugins must be loaded before we can start enhancing.
-                // This is a problem when loading PlayPlugins bundled as regular app-class since it uses the same classloader
-                // as the other (soon to be) enhanched play-app-classes.
+                // This is a problem when loading YalpPlugins bundled as regular app-class since it uses the same classloader
+                // as the other (soon to be) enhanched yalp-app-classes.
                 boolean shouldEnhance = true;
                 try {
                     CtClass ctClass = enhanceChecker_classPool.makeClass(new ByteArrayInputStream(this.enhancedByteCode));
-                    if (ctClass.subclassOf(ctPlayPluginClass)) {
+                    if (ctClass.subclassOf(ctYalpPluginClass)) {
                         shouldEnhance = false;
                     }
                 } catch( Exception e) {
@@ -232,13 +232,13 @@ public class ApplicationClasses {
                 }
 
                 if (shouldEnhance) {
-                    Play.pluginCollection.enhance(this);
+                    Yalp.pluginCollection.enhance(this);
                 }
             }
             if (System.getProperty("precompile") != null) {
                 try {
                     // emit bytecode to standard class layout as well
-                    File f = Play.getFile("precompiled/java/" + (name.replace(".", "/")) + ".class");
+                    File f = Yalp.getFile("precompiled/java/" + (name.replace(".", "/")) + ".class");
                     f.getParentFile().mkdirs();
                     FileOutputStream fos = new FileOutputStream(f);
                     fos.write(this.enhancedByteCode);
@@ -278,7 +278,7 @@ public class ApplicationClasses {
          */
         public byte[] compile() {
             long start = System.currentTimeMillis();
-            Play.classes.compiler.compile(new String[]{this.name});
+            Yalp.classes.compiler.compile(new String[]{this.name});
 
             if (Logger.isTraceEnabled()) {
                 Logger.trace("%sms to compile class %s", System.currentTimeMillis() - start, name);
@@ -324,7 +324,7 @@ public class ApplicationClasses {
             fileName = fileName.substring(0, fileName.indexOf("$"));
         }
         fileName = fileName.replace(".", "/") + ".java";
-        for (VirtualFile path : Play.javaPath) {
+        for (VirtualFile path : Yalp.javaPath) {
             VirtualFile javaFile = path.child(fileName);
             if (javaFile.exists()) {
                 return javaFile;

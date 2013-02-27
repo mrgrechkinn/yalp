@@ -1,14 +1,14 @@
-package play.data.binding;
+package yalp.data.binding;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import play.Logger;
-import play.Play;
-import play.data.Upload;
-import play.data.binding.types.*;
-import play.data.validation.Validation;
-import play.db.Model;
-import play.exceptions.UnexpectedException;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.data.Upload;
+import yalp.data.binding.types.*;
+import yalp.data.validation.Validation;
+import yalp.db.Model;
+import yalp.exceptions.UnexpectedException;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -109,7 +109,7 @@ public abstract class Binder {
         if (paramNode != null) {
 
             // Let a chance to plugins to bind this object
-            result = Play.pluginCollection.bind(parentParamNode, name, clazz, type, annotations);
+            result = Yalp.pluginCollection.bind(parentParamNode, name, clazz, type, annotations);
             if (result != null) {
                 return result;
             }
@@ -285,7 +285,7 @@ public abstract class Binder {
     public static void bindBean(RootParamNode rootParamNode, String name, Object bean) {
 
         // Let a chance to plugins to bind this object
-        Object result = Play.pluginCollection.bindBean(rootParamNode, name, bean);
+        Object result = Yalp.pluginCollection.bindBean(rootParamNode, name, bean);
         if (result != null) {
             return;
         }
@@ -553,7 +553,7 @@ public abstract class Binder {
         }
 
         // application custom types have higher priority. If unable to bind proceed with the next one
-        for (Class<TypeBinder<?>> c : Play.classloader.getAssignableClasses(TypeBinder.class)) {
+        for (Class<TypeBinder<?>> c : Yalp.classloader.getAssignableClasses(TypeBinder.class)) {
             if (c.isAnnotationPresent(Global.class)) {
                 Class<?> forType = (Class) ((ParameterizedType) c.getGenericInterfaces()[0]).getActualTypeArguments()[0];
                 if (forType.isAssignableFrom(clazz)) {

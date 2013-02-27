@@ -1,10 +1,10 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
-import play.db.jpa.*;
-import play.libs.*;
-import play.libs.F.*;
+import yalp.*;
+import yalp.mvc.*;
+import yalp.db.jpa.*;
+import yalp.libs.*;
+import yalp.libs.F.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;

@@ -1,9 +1,9 @@
-package play.mvc;
+package yalp.mvc;
 
-import play.Play;
-import play.data.validation.Validation;
-import play.exceptions.PlayException;
-import play.exceptions.UnexpectedException;
+import yalp.Yalp;
+import yalp.data.validation.Validation;
+import yalp.exceptions.YalpException;
+import yalp.exceptions.UnexpectedException;
 
 public class WebSocketInvoker {
 
@@ -16,7 +16,7 @@ public class WebSocketInvoker {
         try {
 
             // 1. Easy debugging ...
-            if (Play.mode == Play.Mode.DEV) {
+            if (Yalp.mode == Yalp.Mode.DEV) {
                 WebSocketController.class.getDeclaredField("inbound").set(null, Http.Inbound.current());
                 WebSocketController.class.getDeclaredField("outbound").set(null, Http.Outbound.current());
                 WebSocketController.class.getDeclaredField("params").set(null, Scope.Params.current());
@@ -27,7 +27,7 @@ public class WebSocketInvoker {
 
             ActionInvoker.invoke(request, null);
 
-        }catch (PlayException e) {
+        }catch (YalpException e) {
             throw e;
         } catch (Exception e) {
             throw new UnexpectedException(e);

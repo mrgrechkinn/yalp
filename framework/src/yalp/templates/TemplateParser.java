@@ -1,4 +1,4 @@
-package play.templates;
+package yalp.templates;
 
 /**
  * Template parser

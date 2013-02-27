@@ -16,9 +16,9 @@ import models.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import play.Logger;
-import play.test.Fixtures;
-import play.test.UnitTest;
+import yalp.Logger;
+import yalp.test.Fixtures;
+import yalp.test.UnitTest;
 
 public class FixturesTest extends UnitTest {
 

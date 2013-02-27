@@ -1,7 +1,7 @@
 /**
  * 
  */
-package play.libs;
+package yalp.libs;
 
 import static org.junit.Assert.*;
 
@@ -12,9 +12,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import play.libs.F.ArchivedEventStream;
-import play.libs.F.IndexedEvent;
-import play.libs.F.Promise;
+import yalp.libs.F.ArchivedEventStream;
+import yalp.libs.F.IndexedEvent;
+import yalp.libs.F.Promise;
 
 /**
  * @author olger
@@ -36,7 +36,7 @@ public class ArchivedEventStreamTest {
     }
 
     /**
-     * Test method for {@link play.libs.F.ArchivedEventStream#publish(java.lang.Object)}.
+     * Test method for {@link yalp.libs.F.ArchivedEventStream#publish(java.lang.Object)}.
      * @throws ExecutionException 
      * @throws InterruptedException 
      */

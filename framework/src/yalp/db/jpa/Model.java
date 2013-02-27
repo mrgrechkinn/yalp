@@ -1,4 +1,4 @@
-package play.db.jpa;
+package yalp.db.jpa;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

@@ -1,11 +1,11 @@
-package play.mvc;
+package yalp.mvc;
 
 import java.util.concurrent.Future;
-import play.classloading.enhancers.ControllersEnhancer.ControllerSupport;
-import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesSupport;
-import play.data.validation.Validation;
-import play.libs.F;
-import play.mvc.results.WebSocketDisconnect;
+import yalp.classloading.enhancers.ControllersEnhancer.ControllerSupport;
+import yalp.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesSupport;
+import yalp.data.validation.Validation;
+import yalp.libs.F;
+import yalp.mvc.results.WebSocketDisconnect;
 
 public class WebSocketController implements ControllerSupport, LocalVariablesSupport {
 

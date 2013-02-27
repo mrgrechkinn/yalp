@@ -1,4 +1,4 @@
-package play.db.jpa;
+package yalp.db.jpa;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,11 +14,11 @@ import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.type.StringType;
 import org.hibernate.usertype.UserType;
 
-import play.Play;
-import play.db.Model.BinaryField;
-import play.exceptions.UnexpectedException;
-import play.libs.Codec;
-import play.libs.IO;
+import yalp.Yalp;
+import yalp.db.Model.BinaryField;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.Codec;
+import yalp.libs.IO;
 
 public class Blob implements BinaryField, UserType {
 
@@ -145,12 +145,12 @@ public class Blob implements BinaryField, UserType {
     }
 
     public static File getStore() {
-        String name = Play.configuration.getProperty("attachments.path", "attachments");
+        String name = Yalp.configuration.getProperty("attachments.path", "attachments");
         File store = null;
         if(new File(name).isAbsolute()) {
             store = new File(name);
         } else {
-            store = Play.getFile(name);
+            store = Yalp.getFile(name);
         }
         if(!store.exists()) {
             store.mkdirs();

@@ -1,8 +1,8 @@
-package play.mvc.results;
+package yalp.mvc.results;
 
-import play.exceptions.UnexpectedException;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
+import yalp.exceptions.UnexpectedException;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
 
 /**
  * 200 OK with a text/plain

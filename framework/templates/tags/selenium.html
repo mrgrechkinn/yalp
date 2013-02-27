@@ -12,7 +12,7 @@
             <td colspan="3" style="font-style:italic; background: #e2e2e2">${command}</td>
         </tr>
       %{ } else { 
-            def parts = play.test.Helpers.seleniumCommand(command); }%
+            def parts = yalp.test.Helpers.seleniumCommand(command); }%
             %{ if(parts && parts[0]) { }%
               <tr>
                 <td width="33%">${parts[0] ?: ''}</td>

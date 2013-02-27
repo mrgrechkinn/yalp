@@ -1,4 +1,4 @@
-package play.libs;
+package yalp.libs;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -12,13 +12,13 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
-import play.Logger;
-import play.exceptions.PlayException;
-import play.libs.WS.HttpResponse;
-import play.mvc.Router;
-import play.mvc.Http.Request;
-import play.mvc.Scope.Params;
-import play.mvc.results.Redirect;
+import yalp.Logger;
+import yalp.exceptions.YalpException;
+import yalp.libs.WS.HttpResponse;
+import yalp.mvc.Router;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Scope.Params;
+import yalp.mvc.results.Redirect;
 
 public class OpenID {
 
@@ -197,7 +197,7 @@ public class OpenID {
             throw new Redirect(url);
         } catch (Redirect e) {
             throw e;
-        } catch (PlayException e) {
+        } catch (YalpException e) {
             throw e;
         } catch (Exception e) {
             return false;

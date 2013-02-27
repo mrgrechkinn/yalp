@@ -1,12 +1,12 @@
 %{
     models = [];
-    for(controllerClass in play.Play.classloader.getAssignableClasses(_('controllers.CRUD'))) {
+    for(controllerClass in yalp.Yalp.classloader.getAssignableClasses(_('controllers.CRUD'))) {
         resourceModel = _('controllers.CRUD$ObjectType').get(controllerClass)
         if(resourceModel != null) {
             models.add(resourceModel)
         }
     }
-    for(controllerClass in play.Play.classloader.getAssignableClasses(_('play.scalasupport.crud.CRUDWrapper'))) {
+    for(controllerClass in yalp.Yalp.classloader.getAssignableClasses(_('yalp.scalasupport.crud.CRUDWrapper'))) {
         resourceModel = _('controllers.CRUD$ObjectType').get(controllerClass)
         if(resourceModel != null) {
             models.add(resourceModel)

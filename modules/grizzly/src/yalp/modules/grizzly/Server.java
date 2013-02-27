@@ -1,4 +1,4 @@
-package play.modules.grizzly;
+package yalp.modules.grizzly;
 
 import com.sun.grizzly.http.embed.GrizzlyWebServer;
 import java.io.File;
@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Properties;
 import java.util.logging.Level;
-import play.Logger;
-import play.Play;
-import play.Play.Mode;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.Yalp.Mode;
 
 public class Server {
 
@@ -16,7 +16,7 @@ public class Server {
 
     public Server(File applicationDir, String frameworkId) {
         java.util.logging.Logger.getLogger("").setLevel(Level.OFF);
-        Properties p = Play.configuration;
+        Properties p = Yalp.configuration;
         int httpPort = Integer.parseInt(p.getProperty("http.port", "9000"));
         InetAddress address = null;
         if (System.getProperties().containsKey("http.port")) {
@@ -35,10 +35,10 @@ public class Server {
         }
         ws = new GrizzlyWebServer(httpPort);
         ws.useAsynchronousWrite(true);
-        ws.addGrizzlyAdapter(new PlayGrizzlyAdapter(applicationDir, frameworkId, ""), new String[] {"/"});
+        ws.addGrizzlyAdapter(new YalpGrizzlyAdapter(applicationDir, frameworkId, ""), new String[] {"/"});
         try {
             ws.start();
-            if (Play.mode == Mode.DEV) {
+            if (Yalp.mode == Mode.DEV) {
                 if(address == null) {
                     Logger.info("Listening for HTTP on port %s (Waiting a first request to start) ...", httpPort);
                 } else {
@@ -60,7 +60,7 @@ public class Server {
 
     public static void main(String[] args) throws Exception {
         File root = new File(System.getProperty("application.path"));
-        new Server(root, System.getProperty("play.id", ""));
+        new Server(root, System.getProperty("yalp.id", ""));
     }
 
 }

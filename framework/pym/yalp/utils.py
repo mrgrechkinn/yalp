@@ -7,9 +7,9 @@ import getopt
 import shutil
 import zipfile
 
-def playVersion(play_env):
-    play_version_file = os.path.join(play_env["basedir"], 'framework', 'src', 'play', 'version')
-    return open(play_version_file).readline().strip()
+def yalpVersion(yalp_env):
+    yalp_version_file = os.path.join(yalp_env["basedir"], 'framework', 'src', 'yalp', 'version')
+    return open(yalp_version_file).readline().strip()
 
 def replaceAll(file, searchExp, replaceExp, regexp=False):
     if not regexp:
@@ -74,7 +74,7 @@ def getWithModules(args, env):
                     dirname = os.path.join(env["basedir"], 'modules/%s' % f)
                     break
         if not dirname:
-            print "~ Oops. Module " + m + " not found (try running `play install " + m + "`)"
+            print "~ Oops. Module " + m + " not found (try running `yalp install " + m + "`)"
             print "~"
             sys.exit(-1)
         
@@ -118,9 +118,9 @@ def package_as_war(app, env, war_path, war_zip_path, war_exclusion_list = None):
     application_name = app.readConf('application.name')
     replaceAll(os.path.join(war_path, 'WEB-INF/web.xml'), r'%APPLICATION_NAME%', application_name)
     if env["id"] is not "":
-        replaceAll(os.path.join(war_path, 'WEB-INF/web.xml'), r'%PLAY_ID%', env["id"])
+        replaceAll(os.path.join(war_path, 'WEB-INF/web.xml'), r'%YALP_ID%', env["id"])
     else:
-        replaceAll(os.path.join(war_path, 'WEB-INF/web.xml'), r'%PLAY_ID%', 'war')
+        replaceAll(os.path.join(war_path, 'WEB-INF/web.xml'), r'%YALP_ID%', 'war')
     if os.path.exists(os.path.join(war_path, 'WEB-INF/application')): shutil.rmtree(os.path.join(war_path, 'WEB-INF/application'))
     copy_directory(app.path, os.path.join(war_path, 'WEB-INF/application'), war_exclusion_list)
     if os.path.exists(os.path.join(war_path, 'WEB-INF/application/war')):

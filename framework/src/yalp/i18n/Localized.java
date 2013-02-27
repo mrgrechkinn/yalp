@@ -1,4 +1,4 @@
-package play.i18n;
+package yalp.i18n;
 
 import java.util.HashMap;
 import java.util.HashSet;

@@ -1,12 +1,12 @@
-package play.data.binding.types;
+package yalp.data.binding.types;
 
-import play.data.binding.TypeBinder;
+import yalp.data.binding.TypeBinder;
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.List;
-import play.data.Upload;
-import play.mvc.Http.Request;
+import yalp.data.Upload;
+import yalp.mvc.Http.Request;
 
 /**
  * Bind file form multipart/form-data request.

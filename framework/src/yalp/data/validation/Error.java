@@ -1,6 +1,6 @@
-package play.data.validation;
+package yalp.data.validation;
 
-import play.i18n.Messages;
+import yalp.i18n.Messages;
 
 /**
  * A validation error.

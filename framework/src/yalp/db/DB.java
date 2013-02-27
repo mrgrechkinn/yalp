@@ -1,4 +1,4 @@
-package play.db;
+package yalp.db;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.hibernate.internal.SessionImpl;
-import play.db.jpa.JPA;
-import play.exceptions.DatabaseException;
-import play.Logger;
+import yalp.db.jpa.JPA;
+import yalp.exceptions.DatabaseException;
+import yalp.Logger;
 
 /**
  * Database connection utilities.

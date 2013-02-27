@@ -1,11 +1,11 @@
-package play.data.parsing;
+package yalp.data.parsing;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import play.exceptions.UnexpectedException;
-import play.mvc.Http;
+import yalp.exceptions.UnexpectedException;
+import yalp.mvc.Http;
 
 public class TextParser extends DataParser {
 

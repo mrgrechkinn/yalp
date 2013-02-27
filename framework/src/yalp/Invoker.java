@@ -1,4 +1,4 @@
-package play;
+package yalp;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -15,17 +15,17 @@ import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import java.util.ArrayList;
 
-import play.Play.Mode;
-import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
-import play.exceptions.PlayException;
-import play.exceptions.UnexpectedException;
-import play.i18n.Lang;
-import play.libs.F;
-import play.libs.F.Promise;
-import play.utils.PThreadFactory;
+import yalp.Yalp.Mode;
+import yalp.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
+import yalp.exceptions.YalpException;
+import yalp.exceptions.UnexpectedException;
+import yalp.i18n.Lang;
+import yalp.libs.F;
+import yalp.libs.F.Promise;
+import yalp.utils.PThreadFactory;
 
 /**
- * Run some code in a Play! context
+ * Run some code in a Yalp context
  */
 public class Invoker {
 
@@ -164,7 +164,7 @@ public class Invoker {
     }
 
     /**
-     * An Invocation in something to run in a Play! context
+     * An Invocation in something to run in a Yalp context
      */
     public static abstract class Invocation implements Runnable {
 
@@ -194,13 +194,13 @@ public class Invoker {
          * Init the call (especially usefull in DEV mode to detect changes)
          */
         public boolean init() {
-            Thread.currentThread().setContextClassLoader(Play.classloader);
-            Play.detectChanges();
-            if (!Play.started) {
-                if (Play.mode == Mode.PROD) {
+            Thread.currentThread().setContextClassLoader(Yalp.classloader);
+            Yalp.detectChanges();
+            if (!Yalp.started) {
+                if (Yalp.mode == Mode.PROD) {
                     throw new UnexpectedException("Application is not started");
                 }
-                Play.start();
+                Yalp.start();
             }
             InvocationContext.current.set(getInvocationContext());
             return true;
@@ -213,8 +213,8 @@ public class Invoker {
          * Things to do before an Invocation
          */
         public void before() {
-            Thread.currentThread().setContextClassLoader(Play.classloader);
-            Play.pluginCollection.beforeInvocation();
+            Thread.currentThread().setContextClassLoader(Yalp.classloader);
+            Yalp.pluginCollection.beforeInvocation();
         }
 
         /**
@@ -222,7 +222,7 @@ public class Invoker {
          * (if the Invocation code has not thrown any exception)
          */
         public void after() {
-            Play.pluginCollection.afterInvocation();
+            Yalp.pluginCollection.afterInvocation();
             LocalVariablesNamesTracer.checkEmpty(); // detect bugs ....
         }
 
@@ -230,16 +230,16 @@ public class Invoker {
          * Things to do when the whole invocation has succeeded (before + execute + after)
          */
         public void onSuccess() throws Exception {
-            Play.pluginCollection.onInvocationSuccess();
+            Yalp.pluginCollection.onInvocationSuccess();
         }
 
         /**
          * Things to do if the Invocation code thrown an exception
          */
         public void onException(Throwable e) {
-            Play.pluginCollection.onInvocationException(e);
-            if (e instanceof PlayException) {
-                throw (PlayException) e;
+            Yalp.pluginCollection.onInvocationException(e);
+            if (e instanceof YalpException) {
+                throw (YalpException) e;
             }
             throw new UnexpectedException(e);
         }
@@ -260,7 +260,7 @@ public class Invoker {
          * Things to do in all cases after the invocation.
          */
         public void _finally() {
-            Play.pluginCollection.invocationFinally();
+            Yalp.pluginCollection.invocationFinally();
             InvocationContext.current.remove();
         }
 
@@ -320,14 +320,14 @@ public class Invoker {
      * Init executor at load time.
      */
     static {
-        int core = Integer.parseInt(Play.configuration.getProperty("play.pool", Play.mode == Mode.DEV ? "1" : ((Runtime.getRuntime().availableProcessors() + 1) + "")));
-        executor = new ScheduledThreadPoolExecutor(core, new PThreadFactory("play"), new ThreadPoolExecutor.AbortPolicy());
+        int core = Integer.parseInt(Yalp.configuration.getProperty("yalp.pool", Yalp.mode == Mode.DEV ? "1" : ((Runtime.getRuntime().availableProcessors() + 1) + "")));
+        executor = new ScheduledThreadPoolExecutor(core, new PThreadFactory("yalp"), new ThreadPoolExecutor.AbortPolicy());
     }
 
     /**
      * Throwable to indicate that the request must be suspended
      */
-    public static class Suspend extends PlayException {
+    public static class Suspend extends YalpException {
 
         /**
          * Suspend for a timeout (in milliseconds).

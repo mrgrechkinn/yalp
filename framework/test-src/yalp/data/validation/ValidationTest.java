@@ -1,7 +1,7 @@
-package play.data.validation;
+package yalp.data.validation;
 
 import org.junit.Test;
-import play.i18n.MessagesBuilder;
+import yalp.i18n.MessagesBuilder;
 
 import static org.fest.assertions.Assertions.assertThat;
 

@@ -1,4 +1,4 @@
-package play.data.validation;
+package yalp.data.validation;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -8,10 +8,10 @@ import net.sf.oval.configuration.annotation.AbstractAnnotationCheck;
 import net.sf.oval.context.FieldContext;
 import net.sf.oval.context.OValContext;
 import org.apache.commons.lang.StringUtils;
-import play.db.jpa.GenericModel;
-import play.db.jpa.JPQL;
-import play.db.jpa.Model;
-import play.exceptions.UnexpectedException;
+import yalp.db.jpa.GenericModel;
+import yalp.db.jpa.JPQL;
+import yalp.db.jpa.Model;
+import yalp.exceptions.UnexpectedException;
 
 /**
  * Check which proof if one or a set of properties is unique.

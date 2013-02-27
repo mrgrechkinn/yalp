@@ -1,9 +1,9 @@
 import org.junit.Test;
-import play.libs.WS;
-import play.mvc.Http;
-import play.mvc.Router;
-import play.test.FunctionalTest;
-import play.test.UnitTest;
+import yalp.libs.WS;
+import yalp.mvc.Http;
+import yalp.mvc.Router;
+import yalp.test.FunctionalTest;
+import yalp.test.UnitTest;
 
 public class DataBindingTest extends FunctionalTest {
 

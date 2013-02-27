@@ -1,4 +1,4 @@
-package play.utils;
+package yalp.utils;
 
 import net.sf.oval.internal.util.LinkedSet;
 import org.apache.commons.codec.net.URLCodec;

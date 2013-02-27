@@ -1,8 +1,8 @@
 import org.junit.Test;
 
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
-import play.test.FunctionalTest;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
+import yalp.test.FunctionalTest;
 
 public class RedirectTest extends FunctionalTest {
 

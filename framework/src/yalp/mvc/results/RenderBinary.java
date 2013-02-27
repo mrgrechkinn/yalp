@@ -1,4 +1,4 @@
-package play.mvc.results;
+package yalp.mvc.results;
 
 import java.io.File;
 import java.io.InputStream;
@@ -7,10 +7,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
 import org.apache.commons.codec.net.URLCodec;
-import play.exceptions.UnexpectedException;
-import play.libs.MimeTypes;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.MimeTypes;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
 
 /**
  * 200 OK with application/octet-stream

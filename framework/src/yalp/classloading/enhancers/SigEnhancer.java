@@ -1,4 +1,4 @@
-package play.classloading.enhancers;
+package yalp.classloading.enhancers;
 
 import javassist.CtClass;
 import javassist.CtField;
@@ -8,7 +8,7 @@ import javassist.bytecode.CodeIterator;
 import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.Opcode;
 import javassist.bytecode.annotation.Annotation;
-import play.classloading.ApplicationClasses.ApplicationClass;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
 
 /**
  * Compute a unique hash for the class signature.

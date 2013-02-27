@@ -1,4 +1,4 @@
-package play.classloading.enhancers;
+package yalp.classloading.enhancers;
 
 import java.io.File;
 import java.io.ByteArrayInputStream;
@@ -19,9 +19,9 @@ import javassist.LoaderClassPath;
 import javassist.NotFoundException;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.annotation.MemberValue;
-import play.Play;
-import play.Logger;
-import play.classloading.ApplicationClasses.ApplicationClass;
+import yalp.Yalp;
+import yalp.Logger;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
 
 /**
  * Enhancer support
@@ -61,15 +61,15 @@ public abstract class Enhancer {
 
         public InputStream openClassfile(String className) throws NotFoundException {
 
-            if(Play.usePrecompiled) {
+            if(Yalp.usePrecompiled) {
                 try {
-                    File file = Play.getFile("precompiled/java/" + className.replace(".", "/") + ".class");
+                    File file = Yalp.getFile("precompiled/java/" + className.replace(".", "/") + ".class");
                     return new FileInputStream(file);
                 } catch(Exception e) {
                     Logger.error("Missing class %s", className);
                 }
             }
-            ApplicationClass appClass = Play.classes.getApplicationClass(className);
+            ApplicationClass appClass = Yalp.classes.getApplicationClass(className);
 
             if ( appClass.enhancedByteCode == null) {
                 throw new RuntimeException("Trying to visit uncompiled class while enhancing. Uncompiled class: " + className);
@@ -79,7 +79,7 @@ public abstract class Enhancer {
         }
 
         public URL find(String className) {
-            if (Play.classes.getApplicationClass(className) != null) {
+            if (Yalp.classes.getApplicationClass(className) != null) {
                 String cname = className.replace('.', '/') + ".class";
                 try {
                     // return new File(cname).toURL();

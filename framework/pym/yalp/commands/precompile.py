@@ -2,7 +2,7 @@ import os, os.path
 import shutil
 import subprocess
 
-from play.utils import *
+from yalp.utils import *
 
 COMMANDS = ['precompile']
 
@@ -14,7 +14,7 @@ def execute(**kargs):
     command = kargs.get("command")
     app = kargs.get("app")
     args = kargs.get("args")
-    play_env = kargs.get("env")
+    yalp_env = kargs.get("env")
 
     app.check()
     java_cmd = app.java_cmd(args)

@@ -1,8 +1,8 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
-import play.db.jpa.JPA;
+import yalp.*;
+import yalp.mvc.*;
+import yalp.db.jpa.JPA;
 
 import java.util.*;
 

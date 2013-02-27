@@ -1,4 +1,4 @@
-package play.data.validation;
+package yalp.data.validation;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import net.sf.oval.Validator;
 import net.sf.oval.configuration.annotation.AbstractAnnotationCheck;
 import net.sf.oval.context.OValContext;
-import play.exceptions.UnexpectedException;
+import yalp.exceptions.UnexpectedException;
 
 @SuppressWarnings("serial")
 public class CheckWithCheck extends AbstractAnnotationCheck<CheckWith> {

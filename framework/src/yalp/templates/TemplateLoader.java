@@ -1,4 +1,4 @@
-package play.templates;
+package yalp.templates;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import play.Logger;
-import play.Play;
-import play.vfs.VirtualFile;
-import play.exceptions.TemplateCompilationException;
-import play.exceptions.TemplateNotFoundException;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.vfs.VirtualFile;
+import yalp.exceptions.TemplateCompilationException;
+import yalp.exceptions.TemplateNotFoundException;
 
 /**
  * Load templates
@@ -57,7 +57,7 @@ public class TemplateLoader {
      */
     public static Template load(VirtualFile file) {
         // Try with plugin
-        Template pluginProvided = Play.pluginCollection.loadTemplate(file);
+        Template pluginProvided = Yalp.pluginCollection.loadTemplate(file);
         if (pluginProvided != null) {
             return pluginProvided;
         }
@@ -65,7 +65,7 @@ public class TemplateLoader {
         // Use default engine
         final String key = getUniqueNumberForTemplateFile(file.relativePath());
         if (!templates.containsKey(key) || templates.get(key).compiledTemplate == null) {
-            if (Play.usePrecompiled) {
+            if (Yalp.usePrecompiled) {
                 BaseTemplate template = new GroovyTemplate(file.relativePath().replaceAll("\\{(.*)\\}", "from_$1").replace(":", "_").replace("..", "parent"), file.contentAsString());
                 try {
                     template.loadPrecompiled();
@@ -83,7 +83,7 @@ public class TemplateLoader {
             }
         } else {
             BaseTemplate template = templates.get(key);
-            if (Play.mode == Play.Mode.DEV && template.timestamp < file.lastModified()) {
+            if (Yalp.mode == Yalp.Mode.DEV && template.timestamp < file.lastModified()) {
                 templates.put(key, new GroovyTemplateCompiler().compile(file));
             }
         }
@@ -109,7 +109,7 @@ public class TemplateLoader {
             }
         } else {
             BaseTemplate template = new GroovyTemplate(key, source);
-            if (Play.mode == Play.Mode.DEV) {
+            if (Yalp.mode == Yalp.Mode.DEV) {
                 templates.put(key, new GroovyTemplateCompiler().compile(template));
             }
         }
@@ -163,7 +163,7 @@ public class TemplateLoader {
      */
     public static Template load(String path) {
         Template template = null;
-        for (VirtualFile vf : Play.templatesPath) {
+        for (VirtualFile vf : Yalp.templatesPath) {
             if (vf == null) {
                 continue;
             }
@@ -185,7 +185,7 @@ public class TemplateLoader {
          */
         //TODO: remove ?
         if (template == null) {
-            VirtualFile tf = Play.getVirtualFile(path);
+            VirtualFile tf = Yalp.getVirtualFile(path);
             if (tf != null && tf.exists()) {
                 template = TemplateLoader.load(tf);
             } else {
@@ -201,10 +201,10 @@ public class TemplateLoader {
      */
     public static List<Template> getAllTemplate() {
         List<Template> res = new ArrayList<Template>();
-        for (VirtualFile virtualFile : Play.templatesPath) {
+        for (VirtualFile virtualFile : Yalp.templatesPath) {
             scan(res, virtualFile);
         }
-        for (VirtualFile root : Play.roots) {
+        for (VirtualFile root : Yalp.roots) {
             VirtualFile vf = root.child("conf/routes");
             if (vf != null && vf.exists()) {
                 Template template = load(vf);

@@ -1,4 +1,4 @@
-package play.vfs;
+package yalp.vfs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,12 +17,12 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import play.Play;
-import play.exceptions.UnexpectedException;
-import play.libs.IO;
+import yalp.Yalp;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.IO;
 
 /**
- * The VFS used by Play!
+ * The VFS used by Yalp
  */
 public class VirtualFile {
 
@@ -50,11 +50,11 @@ public class VirtualFile {
             if (f == null) {
                 break; // ??
             }
-            if (f.equals(Play.frameworkPath)) {
-                prefix = "{play}";
+            if (f.equals(Yalp.frameworkPath)) {
+                prefix = "{yalp}";
                 break;
             }
-            if (f.equals(Play.applicationPath)) {
+            if (f.equals(Yalp.applicationPath)) {
                 prefix = "";
                 break;
             }
@@ -74,7 +74,7 @@ public class VirtualFile {
     }
 
     String isRoot(File f) {
-        for (VirtualFile vf : Play.roots) {
+        for (VirtualFile vf : Yalp.roots) {
             if (vf.realFile.getAbsolutePath().equals(f.getAbsolutePath())) {
                 return "{module:" + vf.getName() + "}";
             }
@@ -227,14 +227,14 @@ public class VirtualFile {
             String path = matcher.group(3);
             String module = matcher.group(2);
             if(module == null || module.equals("?") || module.equals("")) {
-                return new VirtualFile(Play.applicationPath).child(path);
+                return new VirtualFile(Yalp.applicationPath).child(path);
             } else {
-                if(module.equals("play")) {
-                    return new VirtualFile(Play.frameworkPath).child(path);
+                if(module.equals("yalp")) {
+                    return new VirtualFile(Yalp.frameworkPath).child(path);
                 }
                 if(module.startsWith("module:")){
                     module = module.substring("module:".length());
-                    for(Entry<String, VirtualFile> entry : Play.modules.entrySet()) {
+                    for(Entry<String, VirtualFile> entry : Yalp.modules.entrySet()) {
                         if(entry.getKey().equals(module))
                             return entry.getValue().child(path);
                     }

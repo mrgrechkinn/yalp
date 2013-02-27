@@ -1,4 +1,4 @@
-package play.templates;
+package yalp.templates;
 
 import groovy.lang.Closure;
 import java.io.PrintWriter;
@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Collections;
 import java.util.regex.Pattern;
-import play.Play;
-import play.exceptions.TemplateCompilationException;
-import play.templates.GroovyInlineTags.CALL;
+import yalp.Yalp;
+import yalp.exceptions.TemplateCompilationException;
+import yalp.templates.GroovyInlineTags.CALL;
 
 /**
  * The template compiler
@@ -31,8 +31,8 @@ public class GroovyTemplateCompiler extends TemplateCompiler {
     public BaseTemplate compile(BaseTemplate template) {
         try {
             extensionsClassnames.clear();
-            extensionsClassnames.addAll( Play.pluginCollection.addTemplateExtensions());
-            List<Class> extensionsClasses = Play.classloader.getAssignableClasses(JavaExtensions.class);
+            extensionsClassnames.addAll( Yalp.pluginCollection.addTemplateExtensions());
+            List<Class> extensionsClasses = Yalp.classloader.getAssignableClasses(JavaExtensions.class);
             for (Class extensionsClass : extensionsClasses) {
                 extensionsClassnames.add(extensionsClass.getName());
             }
@@ -47,12 +47,12 @@ public class GroovyTemplateCompiler extends TemplateCompiler {
         String source = template.source;
 
         // If a plugin has something to change in the template before the compilation
-        source = Play.pluginCollection.overrideTemplateSource(template, source);
+        source = Yalp.pluginCollection.overrideTemplateSource(template, source);
 
         // Static access
         List<String> names = new ArrayList<String>();
         Map<String, String> originalNames = new HashMap<String, String>();
-        for (Class clazz : Play.classloader.getAllClasses()) {
+        for (Class clazz : Yalp.classloader.getAllClasses()) {
             if (clazz.getName().endsWith("$")) {
                 String name = clazz.getName().substring(0, clazz.getName().length() - 1).replace('$', '.') + '$';
                 names.add(name);
@@ -123,8 +123,8 @@ public class GroovyTemplateCompiler extends TemplateCompiler {
 
         String className = "Template_" + uniqueNumberForTemplateFile;
         print(className);
-        println(" extends play.templates.GroovyTemplate.ExecutableTemplate {");
-        println("public Object run() { use(play.templates.JavaExtensions) {");
+        println(" extends yalp.templates.GroovyTemplate.ExecutableTemplate {");
+        println("public Object run() { use(yalp.templates.JavaExtensions) {");
         for (String n : extensionsClassnames) {
             println("use(_('" + n + "')) {");
         }
@@ -279,7 +279,7 @@ public class GroovyTemplateCompiler extends TemplateCompiler {
         // Use inlineTag if exists
         try {
             Method m = GroovyInlineTags.class.getDeclaredMethod("_" + tag.name, int.class, CALL.class);
-            print("play.templates.TagContext.enterTag('" + tag.name + "');");
+            print("yalp.templates.TagContext.enterTag('" + tag.name + "');");
             print((String) m.invoke(null, new Object[]{tagIndex, CALL.START}));
             tag.hasBody = false;
             markLine(parser.getLine());
@@ -335,12 +335,12 @@ public class GroovyTemplateCompiler extends TemplateCompiler {
             try {
                 Method m = GroovyInlineTags.class.getDeclaredMethod("_" + tag.name, int.class, CALL.class);
                 println((String) m.invoke(null, new Object[]{tagIndex, CALL.END}));
-                print("play.templates.TagContext.exitTag();");
+                print("yalp.templates.TagContext.exitTag();");
             } catch (Exception e) {
                 // Use fastTag if exists
                 List<Class> fastClasses = new ArrayList<Class>();
                 try {
-                    fastClasses = Play.classloader.getAssignableClasses(FastTags.class);
+                    fastClasses = Yalp.classloader.getAssignableClasses(FastTags.class);
                 } catch (Exception xe) {
                     //
                 }
@@ -366,9 +366,9 @@ public class GroovyTemplateCompiler extends TemplateCompiler {
                     }
                 }
                 if (m != null) {
-                    print("play.templates.TagContext.enterTag('" + tag.name + "');");
+                    print("yalp.templates.TagContext.enterTag('" + tag.name + "');");
                     print("_('" + m.getDeclaringClass().getName() + "')._" + tName + "(attrs" + tagIndex + ",body" + tagIndex + ", out, this, " + tag.startLine + ");");
-                    print("play.templates.TagContext.exitTag();");
+                    print("yalp.templates.TagContext.exitTag();");
                 } else {
                     print("invokeTag(" + tag.startLine + ",'" + tagName + "',attrs" + tagIndex + ",body" + tagIndex + ");");
                 }

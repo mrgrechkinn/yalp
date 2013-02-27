@@ -1,4 +1,4 @@
-package play.test;
+package yalp.test;
 
 public class UnitTest extends BaseTest {
 

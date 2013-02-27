@@ -1,23 +1,23 @@
-package play.mvc;
+package yalp.mvc;
 
 import java.lang.reflect.*;
 import java.util.HashMap;
 
 import org.junit.*;
 
-import play.Play;
-import play.libs.Crypto;
-import play.PlayBuilder;
-import play.mvc.Http.*;
-import play.mvc.Scope.Session;
+import yalp.Yalp;
+import yalp.libs.Crypto;
+import yalp.YalpBuilder;
+import yalp.mvc.Http.*;
+import yalp.mvc.Scope.Session;
 
 import static org.junit.Assert.*;
 
 public class SessionTest {
 
     @org.junit.Before
-    public void playBuilderBefore() {
-        new PlayBuilder().build();
+    public void yalpBuilderBefore() {
+        new YalpBuilder().build();
     }
 
     private static void mockRequestAndResponse() {
@@ -69,7 +69,7 @@ public class SessionTest {
     @Test
     public void testSendOnlyIfChanged() {
         // Mock secret
-        Play.secretKey = "0112358";
+        Yalp.secretKey = "0112358";
 
         Session session;
         setSendOnlyIfChangedConstant(true);
@@ -107,7 +107,7 @@ public class SessionTest {
 
     @After
     public void restoreDefault() {
-        final boolean SESSION_SEND_ONLY_IF_CHANGED = Play.configuration.getProperty("application.session.sendOnlyIfChanged", "false").toLowerCase().equals("true"); 
+        final boolean SESSION_SEND_ONLY_IF_CHANGED = Yalp.configuration.getProperty("application.session.sendOnlyIfChanged", "false").toLowerCase().equals("true"); 
         setSendOnlyIfChangedConstant(SESSION_SEND_ONLY_IF_CHANGED);
     }
 }

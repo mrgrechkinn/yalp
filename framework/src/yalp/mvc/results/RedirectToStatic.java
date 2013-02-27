@@ -1,9 +1,9 @@
-package play.mvc.results;
+package yalp.mvc.results;
 
-import play.exceptions.UnexpectedException;
-import play.mvc.Http;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
+import yalp.exceptions.UnexpectedException;
+import yalp.mvc.Http;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
 
 /**
  * 302 Redirect

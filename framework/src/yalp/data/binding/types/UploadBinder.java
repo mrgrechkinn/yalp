@@ -1,13 +1,13 @@
-package play.data.binding.types;
+package yalp.data.binding.types;
 
-import play.Logger;
-import play.data.Upload;
-import play.data.binding.Binder;
-import play.data.binding.TypeBinder;
-import play.db.Model;
-import play.exceptions.UnexpectedException;
-import play.mvc.Http.Request;
-import play.mvc.Scope.Params;
+import yalp.Logger;
+import yalp.data.Upload;
+import yalp.data.binding.Binder;
+import yalp.data.binding.TypeBinder;
+import yalp.db.Model;
+import yalp.exceptions.UnexpectedException;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Scope.Params;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;

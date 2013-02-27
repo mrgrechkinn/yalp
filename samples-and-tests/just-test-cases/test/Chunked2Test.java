@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import org.junit.Test;
-import play.test.UnitTest;
+import yalp.test.UnitTest;
 
 public class Chunked2Test extends UnitTest {
     private String callChunked2AndGetFirstLine() {

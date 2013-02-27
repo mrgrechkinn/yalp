@@ -1,4 +1,4 @@
-package play.data.validation;
+package yalp.data.validation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import net.sf.oval.configuration.annotation.AbstractAnnotationCheck;
-import play.Play;
-import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
-import play.exceptions.UnexpectedException;
+import yalp.Yalp;
+import yalp.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
+import yalp.exceptions.UnexpectedException;
 
 public class Validation {
 
@@ -152,7 +152,7 @@ public class Validation {
                 try {
                     Field field = clazz.getDeclaredField(property);
                     for (Annotation annotation : field.getDeclaredAnnotations()) {
-                        if (annotation.annotationType().getName().startsWith("play.data.validation")) {
+                        if (annotation.annotationType().getName().startsWith("yalp.data.validation")) {
                             Validator validator = new Validator(annotation);
                             validators.add(validator);
                             if (annotation.annotationType().equals(Equals.class)) {
@@ -184,7 +184,7 @@ public class Validation {
             String key = name + "." + field.getName();
             boolean containsAtValid = false;
             for (Annotation annotation : field.getDeclaredAnnotations()) {
-                if (annotation.annotationType().getName().startsWith("play.data.validation")) {
+                if (annotation.annotationType().getName().startsWith("yalp.data.validation")) {
                     Validator validator = new Validator(annotation);
                     validators.add(validator);
                     if (annotation.annotationType().equals(Equals.class)) {
@@ -473,6 +473,6 @@ public class Validation {
     }
 
     public static Object willBeValidated(Object value) {
-        return Play.pluginCollection.willBeValidated(value);
+        return Yalp.pluginCollection.willBeValidated(value);
     }
 }

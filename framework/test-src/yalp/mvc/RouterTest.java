@@ -1,8 +1,8 @@
-package play.mvc;
+package yalp.mvc;
 
 import com.ning.http.client.RequestBuilder;
 import org.junit.Test;
-import play.Play;
+import yalp.Yalp;
 
 import java.util.Properties;
 
@@ -13,7 +13,7 @@ public class RouterTest {
     @Test
     public void test_getBaseUrl() {
 
-        Play.configuration = new Properties();
+        Yalp.configuration = new Properties();
 
         // test with currentRequest
         Http.Request request = Http.Request.createRequest(
@@ -39,11 +39,11 @@ public class RouterTest {
         // test without current request
         Http.Request.current.remove();
         // application.baseUrl without trailing /
-        Play.configuration.setProperty("application.baseUrl", "http://a");
+        Yalp.configuration.setProperty("application.baseUrl", "http://a");
         assertThat(Router.getBaseUrl()).isEqualTo("http://a");
 
         // application.baseUrl with trailing /
-        Play.configuration.setProperty("application.baseUrl", "http://b/");
+        Yalp.configuration.setProperty("application.baseUrl", "http://b/");
         assertThat(Router.getBaseUrl()).isEqualTo("http://b");
     }
 }

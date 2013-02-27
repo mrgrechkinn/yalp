@@ -1,4 +1,4 @@
-package play.deps;
+package yalp.deps;
 
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +41,7 @@ public class HumanReadyLogger implements MessageLogger, TransferListener {
             }
 
             if (msg.startsWith("found ")) { // Depedency found
-                if (msg.contains("playCore")) {
+                if (msg.contains("yalpCore")) {
                     return;
                 }
                 Matcher m = dep.matcher(msg);

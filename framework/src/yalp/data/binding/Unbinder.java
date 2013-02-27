@@ -1,4 +1,4 @@
-package play.data.binding;
+package yalp.data.binding;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -8,11 +8,11 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import play.Logger;
-import play.Play;
-import play.data.binding.types.DateBinder;
-import play.libs.I18N;
-import play.utils.Utils;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.data.binding.types.DateBinder;
+import yalp.libs.I18N;
+import yalp.utils.Utils;
 
 /**
  * Try to unbind an object to a Map<String,String>
@@ -30,7 +30,7 @@ public class Unbinder {
     }
 
     private static void unBind(Map<String, Object> result, Object src, Class<?> srcClazz, String name, Annotation[] annotations) {
-        Map<String, Object> r = Play.pluginCollection.unBind(src, name);
+        Map<String, Object> r = Yalp.pluginCollection.unBind(src, name);
         if (r != null) {
             result.putAll(r);
             return;

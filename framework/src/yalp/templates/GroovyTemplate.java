@@ -1,4 +1,4 @@
-package play.templates;
+package yalp.templates;
 
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
@@ -28,33 +28,33 @@ import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.codehaus.groovy.syntax.SyntaxException;
 import org.codehaus.groovy.tools.GroovyClass;
-import play.Logger;
-import play.Play;
-import play.Play.Mode;
-import play.classloading.BytecodeCache;
-import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
-import play.data.binding.Unbinder;
-import play.exceptions.ActionNotFoundException;
-import play.exceptions.NoRouteFoundException;
-import play.exceptions.PlayException;
-import play.exceptions.TagInternalException;
-import play.exceptions.TemplateCompilationException;
-import play.exceptions.TemplateExecutionException;
-import play.exceptions.TemplateExecutionException.DoBodyException;
-import play.exceptions.TemplateNotFoundException;
-import play.exceptions.UnexpectedException;
-import play.i18n.Lang;
-import play.i18n.Messages;
-import play.libs.Codec;
-import play.mvc.Http;
-import play.utils.Java;
-import play.mvc.ActionInvoker;
-import play.mvc.Http.Request;
-import play.mvc.Router;
-import play.templates.types.SafeCSVFormatter;
-import play.templates.types.SafeHTMLFormatter;
-import play.templates.types.SafeXMLFormatter;
-import play.utils.HTML;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.Yalp.Mode;
+import yalp.classloading.BytecodeCache;
+import yalp.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
+import yalp.data.binding.Unbinder;
+import yalp.exceptions.ActionNotFoundException;
+import yalp.exceptions.NoRouteFoundException;
+import yalp.exceptions.YalpException;
+import yalp.exceptions.TagInternalException;
+import yalp.exceptions.TemplateCompilationException;
+import yalp.exceptions.TemplateExecutionException;
+import yalp.exceptions.TemplateExecutionException.DoBodyException;
+import yalp.exceptions.TemplateNotFoundException;
+import yalp.exceptions.UnexpectedException;
+import yalp.i18n.Lang;
+import yalp.i18n.Messages;
+import yalp.libs.Codec;
+import yalp.mvc.Http;
+import yalp.utils.Java;
+import yalp.mvc.ActionInvoker;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Router;
+import yalp.templates.types.SafeCSVFormatter;
+import yalp.templates.types.SafeHTMLFormatter;
+import yalp.templates.types.SafeXMLFormatter;
+import yalp.utils.HTML;
 
 /**
  * A template
@@ -88,11 +88,11 @@ public class GroovyTemplate extends BaseTemplate {
     public static class TClassLoader extends GroovyClassLoader {
 
         public TClassLoader() {
-            super(Play.classloader);
+            super(Yalp.classloader);
         }
 
         public Class defineTemplate(String name, byte[] byteCode) {
-            return defineClass(name, byteCode, 0, byteCode.length, Play.classloader.protectionDomain);
+            return defineClass(name, byteCode, 0, byteCode.length, Yalp.classloader.protectionDomain);
         }
     }
 
@@ -160,7 +160,7 @@ public class GroovyTemplate extends BaseTemplate {
                 if (System.getProperty("precompile") != null) {
                     try {
                         // emit bytecode to standard class layout as well
-                        File f = Play.getFile("precompiled/templates/" + name.replaceAll("\\{(.*)\\}", "from_$1").replace(":", "_").replace("..", "parent"));
+                        File f = Yalp.getFile("precompiled/templates/" + name.replaceAll("\\{(.*)\\}", "from_$1").replace(":", "_").replace("..", "parent"));
                         f.getParentFile().mkdirs();
                         FileOutputStream fos = new FileOutputStream(f);
                         fos.write(sb.toString().getBytes("utf-8"));
@@ -209,7 +209,7 @@ public class GroovyTemplate extends BaseTemplate {
     protected String internalRender(Map<String, Object> args) {
         compile();
         Binding binding = new Binding(args);
-        binding.setVariable("play", new Play());
+        binding.setVariable("yalp", new Yalp());
         binding.setVariable("messages", new Messages());
         binding.setVariable("lang", Lang.get());
         // If current response-object is present, add _response_encoding'
@@ -255,17 +255,17 @@ public class GroovyTemplate extends BaseTemplate {
                 throw e;
             }
             throwException(e);
-        } catch (PlayException e) {
-            throw (PlayException) cleanStackTrace(e);
+        } catch (YalpException e) {
+            throw (YalpException) cleanStackTrace(e);
         } catch (DoBodyException e) {
-            if (Play.mode == Mode.DEV) {
+            if (Yalp.mode == Mode.DEV) {
                 compiledTemplate = null;
                 BytecodeCache.deleteBytecode(name);
             }
             Exception ex = (Exception) e.getCause();
             throwException(ex);
         } catch (Throwable e) {
-            if (Play.mode == Mode.DEV) {
+            if (Yalp.mode == Mode.DEV) {
                 compiledTemplate = null;
                 BytecodeCache.deleteBytecode(name);
             }
@@ -384,7 +384,7 @@ public class GroovyTemplate extends BaseTemplate {
             args.put("flash", getBinding().getVariables().get("flash"));
             args.put("request", getBinding().getVariables().get("request"));
             args.put("params", getBinding().getVariables().get("params"));
-            args.put("play", getBinding().getVariables().get("play"));
+            args.put("yalp", getBinding().getVariables().get("yalp"));
             args.put("lang", getBinding().getVariables().get("lang"));
             args.put("messages", getBinding().getVariables().get("messages"));
             args.put("out", getBinding().getVariable("out"));
@@ -409,7 +409,7 @@ public class GroovyTemplate extends BaseTemplate {
 
         public Class _(String className) throws Exception {
             try {
-                return Play.classloader.loadClass(className);
+                return Yalp.classloader.loadClass(className);
             } catch (ClassNotFoundException e) {
                 return null;
             }
@@ -458,7 +458,7 @@ public class GroovyTemplate extends BaseTemplate {
         }
 
         private String __reverseWithCheck(String action, boolean absolute) {
-            return Router.reverseWithCheck(action, Play.getVirtualFile(action), absolute);
+            return Router.reverseWithCheck(action, Yalp.getVirtualFile(action), absolute);
         }
 
         public String __safe(Object val, String stringValue) {
@@ -549,8 +549,8 @@ public class GroovyTemplate extends BaseTemplate {
                         throw new NoRouteFoundException(action, null);
                     }
                 } catch (Exception e) {
-                    if (e instanceof PlayException) {
-                        throw (PlayException) e;
+                    if (e instanceof YalpException) {
+                        throw (YalpException) e;
                     }
                     throw new UnexpectedException(e);
                 }

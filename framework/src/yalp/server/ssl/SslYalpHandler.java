@@ -1,19 +1,19 @@
-package play.server.ssl;
+package yalp.server.ssl;
 
 import org.jboss.netty.channel.*;
 import org.jboss.netty.handler.codec.http.*;
 import org.jboss.netty.handler.ssl.SslHandler;
-import play.Logger;
-import play.mvc.Http.Request;
-import play.server.PlayHandler;
-import play.server.Server;
+import yalp.Logger;
+import yalp.mvc.Http.Request;
+import yalp.server.YalpHandler;
+import yalp.server.Server;
 
 import javax.net.ssl.SSLException;
 import java.net.InetSocketAddress;
 
 import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.*;
 
-public class SslPlayHandler extends PlayHandler {
+public class SslYalpHandler extends YalpHandler {
 
     @Override
     public Request parseRequest(ChannelHandlerContext ctx, HttpRequest nettyRequest, MessageEvent e) throws Exception {

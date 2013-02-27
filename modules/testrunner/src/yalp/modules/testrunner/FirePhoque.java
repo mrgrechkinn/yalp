@@ -1,4 +1,4 @@
-package play.modules.testrunner;
+package yalp.modules.testrunner;
 
 import com.gargoylesoftware.htmlunit.AlertHandler;
 import com.gargoylesoftware.htmlunit.BrowserVersion;

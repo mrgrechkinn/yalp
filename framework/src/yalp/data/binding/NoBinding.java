@@ -1,4 +1,4 @@
-package play.data.binding;
+package yalp.data.binding;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,10 +1,10 @@
-package play.db;
+package yalp.db;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
-import play.Play;
-import play.exceptions.UnexpectedException;
+import yalp.Yalp;
+import yalp.exceptions.UnexpectedException;
 
 public interface Model {
 
@@ -49,7 +49,7 @@ public interface Model {
 
         public static Model.Factory factoryFor(Class<? extends Model> clazz) {
             if(Model.class.isAssignableFrom(clazz)) {
-                Model.Factory factory = Play.pluginCollection.modelFactory(clazz);
+                Model.Factory factory = Yalp.pluginCollection.modelFactory(clazz);
                 if( factory != null) {
                     return factory;
                 }

@@ -3,7 +3,7 @@ import shutil
 import urllib, urllib2
 import simplejson as json
 
-from play.utils import *
+from yalp.utils import *
 
 COMMANDS = ['check']
 
@@ -11,17 +11,17 @@ HELP = {
     'check': 'Check for a release newer than the current one'
 }
 
-TAGS_URL = "http://github.com/api/v2/json/repos/show/playframework/play/tags"
+TAGS_URL = "http://github.com/api/v2/json/repos/show/yalpframework/yalp/tags"
 
 
 def execute(**kargs):
     args = kargs.get("args")
-    play_env = kargs.get("env")
+    yalp_env = kargs.get("env")
 
     if len(sys.argv) == 3:
         version = sys.argv[2]
     else:
-        version = playVersion(play_env)
+        version = yalpVersion(yalp_env)
 
     current = Release(version)
     releases = allreleases()
@@ -74,6 +74,7 @@ class Release:
         if not self.rest: self.rest = "Z"
 
     def url(self):
+# FIXME
         return "http://download.playframework.org/releases/play-" + self.strversion + ".zip"
 
     def __eq__(self, other):

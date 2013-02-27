@@ -1,8 +1,8 @@
-package play.plugins;
+package yalp.plugins;
 
-import play.Logger;
-import play.Play;
-import play.PlayPlugin;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.YalpPlugin;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -20,7 +20,7 @@ import java.util.Set;
  * plugins.disable.whatever=full-plugin-class-name
  *
  */
-public class ConfigurablePluginDisablingPlugin extends PlayPlugin {
+public class ConfigurablePluginDisablingPlugin extends YalpPlugin {
 
     /**
      * List holding all disabled plugins.
@@ -36,15 +36,15 @@ public class ConfigurablePluginDisablingPlugin extends PlayPlugin {
 
         Set<String> disabledPlugins = new HashSet<String>();
 
-        for( Map.Entry<Object, Object> e : Play.configuration.entrySet()){
+        for( Map.Entry<Object, Object> e : Yalp.configuration.entrySet()){
             String key = (String)e.getKey();
             if( key.equals("plugins.disable") || key.startsWith("plugins.disable.")){
                 String pluginClassName = (String)e.getValue();
                 //try to find this class..
-                Class<? extends PlayPlugin> clazz = resolveClass(pluginClassName);
+                Class<? extends YalpPlugin> clazz = resolveClass(pluginClassName);
                 if( clazz != null ){
 
-                    PlayPlugin pluginInstance = Play.pluginCollection.getPluginInstance( clazz );
+                    YalpPlugin pluginInstance = Yalp.pluginCollection.getPluginInstance( clazz );
 
                     if( pluginInstance != null ){
 
@@ -52,7 +52,7 @@ public class ConfigurablePluginDisablingPlugin extends PlayPlugin {
                         //must remember that we have tries to disabled this plugin
                         disabledPlugins.add( pluginClassName );
 
-                        if( Play.pluginCollection.disablePlugin( clazz)){
+                        if( Yalp.pluginCollection.disablePlugin( clazz)){
                             Logger.info("Plugin disabled: " + clazz);
 
                         }else{
@@ -71,10 +71,10 @@ public class ConfigurablePluginDisablingPlugin extends PlayPlugin {
         for( String pluginClassName : previousDisabledPlugins ){
             if( !disabledPlugins.contains( pluginClassName)){
                 Logger.info("Enabling plugin " + pluginClassName + " since it is now longer listed in plugins.disable section in config");
-                Class<? extends PlayPlugin> clazz = resolveClass(pluginClassName);
+                Class<? extends YalpPlugin> clazz = resolveClass(pluginClassName);
                 if( clazz != null ){
                     //try to disable it
-                    if( Play.pluginCollection.enablePlugin( clazz)){
+                    if( Yalp.pluginCollection.enablePlugin( clazz)){
                         Logger.info("Plugin reenabled: " + clazz);
                     }else{
                         Logger.warn("Could not reenable Plugin: " + clazz);
@@ -90,9 +90,9 @@ public class ConfigurablePluginDisablingPlugin extends PlayPlugin {
     }
 
     @SuppressWarnings("unchecked")
-    private Class<PlayPlugin> resolveClass(String pluginClassName) {
+    private Class<YalpPlugin> resolveClass(String pluginClassName) {
         try{
-            return (Class<PlayPlugin>)getClass().getClassLoader().loadClass(pluginClassName);
+            return (Class<YalpPlugin>)getClass().getClassLoader().loadClass(pluginClassName);
         }catch(Exception e){
             Logger.error("Could not disable plugin " + pluginClassName, e);
         }

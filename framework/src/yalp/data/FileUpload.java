@@ -1,4 +1,4 @@
-package play.data;
+package yalp.data;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,11 +7,11 @@ import java.io.InputStream;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import play.Logger;
-import play.data.parsing.TempFilePlugin;
-import play.exceptions.UnexpectedException;
-import play.libs.Files;
-import play.libs.IO;
+import yalp.Logger;
+import yalp.data.parsing.TempFilePlugin;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.Files;
+import yalp.libs.IO;
 
 public class FileUpload implements Upload {
 

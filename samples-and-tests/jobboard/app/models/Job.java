@@ -2,10 +2,10 @@ package models;
 
 import java.util.*;
 
-import play.db.jpa.*;
-import play.data.validation.*;
-import play.templates.*;
-import play.mvc.Scope.*;
+import yalp.db.jpa.*;
+import yalp.data.validation.*;
+import yalp.templates.*;
+import yalp.mvc.Scope.*;
 
 import javax.persistence.*;
 

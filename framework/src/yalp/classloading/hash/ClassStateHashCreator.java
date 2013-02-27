@@ -1,6 +1,6 @@
-package play.classloading.hash;
+package yalp.classloading.hash;
 
-import play.vfs.VirtualFile;
+import yalp.vfs.VirtualFile;
 
 import java.io.File;
 import java.util.HashMap;

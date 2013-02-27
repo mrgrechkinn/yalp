@@ -1,4 +1,4 @@
-package play.deps;
+package yalp.deps;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import org.apache.ivy.plugins.conflict.AbstractConflictManager;
 import org.apache.ivy.plugins.conflict.LatestConflictManager;
 import org.apache.ivy.plugins.latest.LatestRevisionStrategy;
 
-public class PlayConflictManager extends AbstractConflictManager {
+public class YalpConflictManager extends AbstractConflictManager {
 
     public LatestConflictManager deleguate = new LatestConflictManager(new LatestRevisionStrategy());
 
@@ -37,7 +37,7 @@ public class PlayConflictManager extends AbstractConflictManager {
         for (Iterator iter = conflicts.iterator(); iter.hasNext();) {
             IvyNode node = (IvyNode) iter.next();
             ModuleRevisionId modRev = node.getResolvedId();
-            File jar = new File(System.getProperty("play.path") + "/framework/lib/" + modRev.getName() + "-" + modRev.getRevision() + ".jar");
+            File jar = new File(System.getProperty("yalp.path") + "/framework/lib/" + modRev.getName() + "-" + modRev.getRevision() + ".jar");
             if(jar.exists()) {
                foundBuiltInDependency = true;
                break;
@@ -49,14 +49,14 @@ public class PlayConflictManager extends AbstractConflictManager {
         }
 
         /**
-         * Choose the artifact version provided in $PLAY/framework/lib
+         * Choose the artifact version provided in $YALP/framework/lib
          * Evict other versions
          */
         List<IvyNode> result = new ArrayList<IvyNode>();
         for (Iterator iter = conflicts.iterator(); iter.hasNext();) {
             IvyNode node = (IvyNode) iter.next();
             ModuleRevisionId modRev = node.getResolvedId();
-            File jar = new File(System.getProperty("play.path") + "/framework/lib/" + modRev.getName() + "-" + modRev.getRevision() + ".jar");
+            File jar = new File(System.getProperty("yalp.path") + "/framework/lib/" + modRev.getName() + "-" + modRev.getRevision() + ".jar");
             if (jar.exists()) {
                 result.add(node);
             }

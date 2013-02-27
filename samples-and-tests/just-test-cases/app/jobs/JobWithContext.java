@@ -2,8 +2,8 @@ package jobs;
 
 import java.util.*;
 
-import play.*;
-import play.jobs.*;
+import yalp.*;
+import yalp.jobs.*;
 
 import utils.*;
 

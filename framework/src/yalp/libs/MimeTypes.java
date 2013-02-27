@@ -1,7 +1,7 @@
-package play.libs;
+package yalp.libs;
 
-import play.*;
-import play.mvc.Http;
+import yalp.*;
+import yalp.mvc.Http;
 
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -103,7 +103,7 @@ public class MimeTypes {
             charset = currentResponse.encoding;
         }
         else {
-            charset = Play.defaultWebEncoding;
+            charset = Yalp.defaultWebEncoding;
         }
 
         return charset;
@@ -113,26 +113,26 @@ public class MimeTypes {
         if (mimetypes != null) return;
         // Load default mimetypes from the framework
         try {
-            InputStream is = MimeTypes.class.getClassLoader().getResourceAsStream("play/libs/mime-types.properties");
+            InputStream is = MimeTypes.class.getClassLoader().getResourceAsStream("yalp/libs/mime-types.properties");
             mimetypes = new Properties();
             mimetypes.load(is);
         } catch (Exception ex) {
             Logger.warn(ex.getMessage());
         }
         // Load mimetypes from plugins
-        for (PlayPlugin plugin: Play.pluginCollection.getEnabledPlugins()) {
+        for (YalpPlugin plugin: Yalp.pluginCollection.getEnabledPlugins()) {
             Map<String, String> pluginTypes = plugin.addMimeTypes();
             for (String type: pluginTypes.keySet()) {
                 mimetypes.setProperty(type, pluginTypes.get(type));
             }
         }
         // Load custom mimetypes from the application configuration
-        Enumeration<Object> confenum = Play.configuration.keys();
+        Enumeration<Object> confenum = Yalp.configuration.keys();
         while (confenum.hasMoreElements()) {
             String key = (String)confenum.nextElement();
             if (key.startsWith("mimetype.")) {
                 String type = key.substring(key.indexOf('.') + 1).toLowerCase();
-                String value = (String)Play.configuration.get(key);
+                String value = (String)Yalp.configuration.get(key);
                 mimetypes.setProperty(type, value);
             }
         }

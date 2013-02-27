@@ -1,12 +1,12 @@
-package play.mvc.results;
+package yalp.mvc.results;
 
 import java.util.Map;
 
-import play.exceptions.UnexpectedException;
-import play.libs.MimeTypes;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
-import play.templates.Template;
+import yalp.exceptions.UnexpectedException;
+import yalp.libs.MimeTypes;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
+import yalp.templates.Template;
 
 /**
  * 200 OK with a template rendering

@@ -1,4 +1,4 @@
-package play.classloading;
+package yalp.classloading;
 
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;

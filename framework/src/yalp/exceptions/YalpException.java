@@ -1,27 +1,27 @@
-package play.exceptions;
+package yalp.exceptions;
 
 import java.util.concurrent.atomic.AtomicLong;
-import play.Play;
+import yalp.Yalp;
 
 /**
- * The super class for all Play! exceptions
+ * The super class for all Yalp exceptions
  */
-public abstract class PlayException extends RuntimeException {
+public abstract class YalpException extends RuntimeException {
 
     static AtomicLong atomicLong = new AtomicLong(System.currentTimeMillis());
     String id;
 
-    public PlayException() {
+    public YalpException() {
         super();
         setId();
     }
 
-    public PlayException(String message) {
+    public YalpException(String message) {
         super(message);
         setId();
     }
 
-    public PlayException(String message, Throwable cause) {
+    public YalpException(String message, Throwable cause) {
         super(message, cause);
         setId();
     }
@@ -53,7 +53,7 @@ public abstract class PlayException extends RuntimeException {
 
     public static StackTraceElement getInterestingStrackTraceElement(Throwable cause) {
         for (StackTraceElement stackTraceElement : cause.getStackTrace()) {
-            if (stackTraceElement.getLineNumber() > 0 && Play.classes.hasClass(stackTraceElement.getClassName())) {
+            if (stackTraceElement.getLineNumber() > 0 && Yalp.classes.hasClass(stackTraceElement.getClassName())) {
                 return stackTraceElement;
             }
         }

@@ -1,13 +1,13 @@
-package play.db.jpa;
+package yalp.db.jpa;
 
 import java.io.File;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
-import play.Play;
-import play.libs.Files;
+import yalp.Yalp;
+import yalp.libs.Files;
 
 /**
- * Please use play.db.jpa.Blob now
+ * Please use yalp.db.jpa.Blob now
  */
 @Embeddable
 @Deprecated
@@ -64,12 +64,12 @@ public class FileAttachment {
     }
 
     public static File getStore() {
-        String name = Play.configuration.getProperty("attachments.path", "attachments");
+        String name = Yalp.configuration.getProperty("attachments.path", "attachments");
         File store = null;
         if (new File(name).isAbsolute()) {
             store = new File(name);
         } else {
-            store = Play.getFile(name);
+            store = Yalp.getFile(name);
         }
         if (!store.exists()) {
             store.mkdirs();

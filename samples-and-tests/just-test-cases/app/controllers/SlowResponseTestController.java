@@ -1,9 +1,9 @@
 package controllers;
 
 import org.junit.Assert;
-import play.Logger;
-import play.libs.WS;
-import play.mvc.Controller;
+import yalp.Logger;
+import yalp.libs.WS;
+import yalp.mvc.Controller;
 
 /**
  * Created by IntelliJ IDEA.

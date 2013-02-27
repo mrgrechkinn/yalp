@@ -10,11 +10,11 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
-import play.*;
-import play.mvc.*;
-import play.i18n.Lang;
-import play.libs.*;
-import play.jobs.*;
+import yalp.*;
+import yalp.mvc.*;
+import yalp.i18n.Lang;
+import yalp.libs.*;
+import yalp.jobs.*;
 
 import models.*;
 import utils.*;
@@ -22,7 +22,7 @@ import jobs.*;
 
 import javax.mail.internet.InternetAddress;
 
-@play.db.jpa.Transactional
+@yalp.db.jpa.Transactional
 public class Application extends Controller {
 
     // bug
@@ -211,10 +211,10 @@ public class Application extends Controller {
         EmailAttachment attachment = new EmailAttachment();
         attachment.setDescription("An image");
         attachment.setDisposition(EmailAttachment.ATTACHMENT);
-        attachment.setPath(Play.applicationPath.getPath() + java.io.File.separator + "test" + java.io.File.separator + "fond2.png");
+        attachment.setPath(Yalp.applicationPath.getPath() + java.io.File.separator + "test" + java.io.File.separator + "fond2.png");
         EmailAttachment attachment2 = new EmailAttachment();
         attachment2.setName("fond3.jpg");
-        attachment2.setPath(Play.applicationPath.getPath() + java.io.File.separator + "test" + java.io.File.separator + "fond3.jpg");
+        attachment2.setPath(Yalp.applicationPath.getPath() + java.io.File.separator + "test" + java.io.File.separator + "fond3.jpg");
         email.attach(attachment);
         email.attach(attachment2);
         email.setFrom("test@localhost");

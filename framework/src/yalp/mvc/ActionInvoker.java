@@ -1,4 +1,4 @@
-package play.mvc;
+package yalp.mvc;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -10,28 +10,28 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
-import play.Logger;
-import play.Play;
-import play.cache.CacheFor;
-import play.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation;
-import play.classloading.enhancers.ControllersEnhancer.ControllerSupport;
-import play.data.binding.Binder;
-import play.data.binding.CachedBoundActionMethodArgs;
-import play.data.binding.ParamNode;
-import play.data.binding.RootParamNode;
-import play.data.parsing.UrlEncodedParser;
-import play.data.validation.Validation;
-import play.exceptions.ActionNotFoundException;
-import play.exceptions.JavaExecutionException;
-import play.exceptions.PlayException;
-import play.exceptions.UnexpectedException;
-import play.i18n.Lang;
-import play.mvc.Http.Request;
-import play.mvc.Router.Route;
-import play.mvc.results.NoResult;
-import play.mvc.results.Result;
-import play.utils.Java;
-import play.utils.Utils;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.cache.CacheFor;
+import yalp.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation;
+import yalp.classloading.enhancers.ControllersEnhancer.ControllerSupport;
+import yalp.data.binding.Binder;
+import yalp.data.binding.CachedBoundActionMethodArgs;
+import yalp.data.binding.ParamNode;
+import yalp.data.binding.RootParamNode;
+import yalp.data.parsing.UrlEncodedParser;
+import yalp.data.validation.Validation;
+import yalp.exceptions.ActionNotFoundException;
+import yalp.exceptions.JavaExecutionException;
+import yalp.exceptions.YalpException;
+import yalp.exceptions.UnexpectedException;
+import yalp.i18n.Lang;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Router.Route;
+import yalp.mvc.results.NoResult;
+import yalp.mvc.results.Result;
+import yalp.utils.Java;
+import yalp.utils.Utils;
 
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
@@ -39,9 +39,9 @@ import com.jamonapi.MonitorFactory;
 import java.util.concurrent.Future;
 import org.apache.commons.javaflow.Continuation;
 import org.apache.commons.javaflow.bytecode.StackRecorder;
-import play.Invoker.Suspend;
-import play.classloading.enhancers.ControllersEnhancer;
-import play.mvc.results.NotFound;
+import yalp.Invoker.Suspend;
+import yalp.classloading.enhancers.ControllersEnhancer;
+import yalp.mvc.results.NotFound;
 
 /**
  * Invoke an action after an HTTP request.
@@ -51,7 +51,7 @@ public class ActionInvoker {
     @SuppressWarnings("unchecked")
     public static void resolve(Http.Request request, Http.Response response) {
 
-        if (!Play.started) {
+        if (!Yalp.started) {
             return;
         }
 
@@ -73,9 +73,9 @@ public class ActionInvoker {
 
         // Route and resolve format if not already done
         if (request.action == null) {
-            Play.pluginCollection.routeRequest(request);
+            Yalp.pluginCollection.routeRequest(request);
             Route route = Router.route(request);
-            Play.pluginCollection.onRequestRouting(route);
+            Yalp.pluginCollection.onRequestRouting(route);
         }
         request.resolveFormat();
 
@@ -119,7 +119,7 @@ public class ActionInvoker {
             Scope.Params.current()._mergeWith(UrlEncodedParser.parseQueryString(new ByteArrayInputStream(request.querystring.getBytes(encoding))));
 
             // 2. Easy debugging ...
-            if (Play.mode == Play.Mode.DEV) {
+            if (Yalp.mode == Yalp.Mode.DEV) {
                 Controller.class.getDeclaredField("params").set(null, Scope.Params.current());
                 Controller.class.getDeclaredField("request").set(null, Http.Request.current());
                 Controller.class.getDeclaredField("response").set(null, Http.Response.current());
@@ -131,7 +131,7 @@ public class ActionInvoker {
             }
 
             ControllerInstrumentation.stopActionCall();
-            Play.pluginCollection.beforeActionInvocation(actionMethod);
+            Yalp.pluginCollection.beforeActionInvocation(actionMethod);
 
             // Monitoring
             monitor = MonitorFactory.start(request.action + "()");
@@ -152,7 +152,7 @@ public class ActionInvoker {
                     if ("".equals(cacheKey)) {
                         cacheKey = "urlcache:" + request.url + request.querystring;
                     }
-                    actionResult = (Result) play.cache.Cache.get(cacheKey);
+                    actionResult = (Result) yalp.cache.Cache.get(cacheKey);
                 }
 
                 if (actionResult == null) {
@@ -163,7 +163,7 @@ public class ActionInvoker {
                         actionResult = result;
                         // Cache it if needed
                         if (cacheKey != null) {
-                            play.cache.Cache.set(cacheKey, actionResult, actionMethod.getAnnotation(CacheFor.class).value());
+                            yalp.cache.Cache.set(cacheKey, actionResult, actionMethod.getAnnotation(CacheFor.class).value());
                         }
                     } catch (InvocationTargetException ex) {
                         // It's a Result ? (expected)
@@ -171,7 +171,7 @@ public class ActionInvoker {
                             actionResult = (Result) ex.getTargetException();
                             // Cache it if needed
                             if (cacheKey != null) {
-                                play.cache.Cache.set(cacheKey, actionResult, actionMethod.getAnnotation(CacheFor.class).value());
+                                yalp.cache.Cache.set(cacheKey, actionResult, actionMethod.getAnnotation(CacheFor.class).value());
                             }
 
                         } else {
@@ -229,19 +229,19 @@ public class ActionInvoker {
                     throw (Result) ex.getTargetException();
                 }
                 // Re-throw the enclosed exception
-                if (ex.getTargetException() instanceof PlayException) {
-                    throw (PlayException) ex.getTargetException();
+                if (ex.getTargetException() instanceof YalpException) {
+                    throw (YalpException) ex.getTargetException();
                 }
-                StackTraceElement element = PlayException.getInterestingStrackTraceElement(ex.getTargetException());
+                StackTraceElement element = YalpException.getInterestingStrackTraceElement(ex.getTargetException());
                 if (element != null) {
-                    throw new JavaExecutionException(Play.classes.getApplicationClass(element.getClassName()), element.getLineNumber(), ex.getTargetException());
+                    throw new JavaExecutionException(Yalp.classes.getApplicationClass(element.getClassName()), element.getLineNumber(), ex.getTargetException());
                 }
                 throw new JavaExecutionException(Http.Request.current().action, ex);
             }
 
         } catch (Result result) {
 
-            Play.pluginCollection.onActionInvocationResult(result);
+            Yalp.pluginCollection.onActionInvocationResult(result);
 
             // OK there is a result to apply
             // Save session & flash scope now
@@ -251,12 +251,12 @@ public class ActionInvoker {
 
             result.apply(request, response);
 
-            Play.pluginCollection.afterActionInvocation();
+            Yalp.pluginCollection.afterActionInvocation();
 
             // @Finally
             handleFinallies(request, null);
 
-        } catch (PlayException e) {
+        } catch (YalpException e) {
             handleFinallies(request, e);
             throw e;
         } catch (Throwable e) {
@@ -377,9 +377,9 @@ public class ActionInvoker {
      * The caughtException-value is sent as argument to @Finally-method if method has one argument which is Throwable
      * @param request
      * @param caughtException If @Finally-methods are called after an error, this variable holds the caught error
-     * @throws PlayException
+     * @throws YalpException
      */
-    static void handleFinallies(Http.Request request, Throwable caughtException) throws PlayException {
+    static void handleFinallies(Http.Request request, Throwable caughtException) throws YalpException {
 
         if (Controller.getControllerClass() == null) {
             //skip it
@@ -436,9 +436,9 @@ public class ActionInvoker {
                 }
             }
         } catch (InvocationTargetException ex) {
-            StackTraceElement element = PlayException.getInterestingStrackTraceElement(ex.getTargetException());
+            StackTraceElement element = YalpException.getInterestingStrackTraceElement(ex.getTargetException());
             if (element != null) {
-                throw new JavaExecutionException(Play.classes.getApplicationClass(element.getClassName()), element.getLineNumber(), ex.getTargetException());
+                throw new JavaExecutionException(Yalp.classes.getApplicationClass(element.getClassName()), element.getLineNumber(), ex.getTargetException());
             }
             throw new JavaExecutionException(Http.Request.current().action, ex);
         } catch (Exception e) {
@@ -594,22 +594,22 @@ public class ActionInvoker {
             }
             String controller = fullAction.substring(0, fullAction.lastIndexOf("."));
             String action = fullAction.substring(fullAction.lastIndexOf(".") + 1);
-            controllerClass = Play.classloader.getClassIgnoreCase(controller);
+            controllerClass = Yalp.classloader.getClassIgnoreCase(controller);
             if (controllerClass == null) {
                 throw new ActionNotFoundException(fullAction, new Exception("Controller " + controller + " not found"));
             }
             if (!ControllerSupport.class.isAssignableFrom(controllerClass)) {
                 // Try the scala way
-                controllerClass = Play.classloader.getClassIgnoreCase(controller + "$");
+                controllerClass = Yalp.classloader.getClassIgnoreCase(controller + "$");
                 if (!ControllerSupport.class.isAssignableFrom(controllerClass)) {
-                    throw new ActionNotFoundException(fullAction, new Exception("class " + controller + " does not extend play.mvc.Controller"));
+                    throw new ActionNotFoundException(fullAction, new Exception("class " + controller + " does not extend yalp.mvc.Controller"));
                 }
             }
             actionMethod = Java.findActionMethod(action, controllerClass);
             if (actionMethod == null) {
                 throw new ActionNotFoundException(fullAction, new Exception("No method public static void " + action + "() was found in class " + controller));
             }
-        } catch (PlayException e) {
+        } catch (YalpException e) {
             throw e;
         } catch (Exception e) {
             throw new ActionNotFoundException(fullAction, e);

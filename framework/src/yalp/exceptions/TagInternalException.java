@@ -1,4 +1,4 @@
-package play.exceptions;
+package yalp.exceptions;
 
 /**
  * A exception during tag invocation

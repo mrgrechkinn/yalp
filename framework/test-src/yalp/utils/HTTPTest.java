@@ -1,4 +1,4 @@
-package play.utils;
+package yalp.utils;
 
 import org.junit.Test;
 

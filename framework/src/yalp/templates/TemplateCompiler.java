@@ -1,11 +1,11 @@
-package play.templates;
+package yalp.templates;
 
 import java.util.Stack;
-import play.Logger;
-import play.vfs.VirtualFile;
-import play.exceptions.TemplateCompilationException;
-import play.exceptions.PlayException;
-import play.exceptions.UnexpectedException;
+import yalp.Logger;
+import yalp.vfs.VirtualFile;
+import yalp.exceptions.TemplateCompilationException;
+import yalp.exceptions.YalpException;
+import yalp.exceptions.UnexpectedException;
 
 public abstract class TemplateCompiler {
 
@@ -17,7 +17,7 @@ public abstract class TemplateCompiler {
                 Logger.trace("%sms to parse template %s", System.currentTimeMillis() - start, template.name);
             }
             return template;
-        } catch (PlayException e) {
+        } catch (YalpException e) {
             throw e;
         } catch (Exception e) {
             throw new UnexpectedException(e);

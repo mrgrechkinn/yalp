@@ -1,13 +1,13 @@
-package play.data.binding;
+package yalp.data.binding;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 
-import play.Logger;
-import play.classloading.enhancers.PropertiesEnhancer.PlayPropertyAccessor;
-import play.exceptions.UnexpectedException;
-import play.utils.Utils;
+import yalp.Logger;
+import yalp.classloading.enhancers.PropertiesEnhancer.YalpPropertyAccessor;
+import yalp.exceptions.UnexpectedException;
+import yalp.utils.Utils;
 
 /**
  * Parameters map to POJO binder.
@@ -64,11 +64,11 @@ public class BeanWrapper {
     }
 
     private boolean isSetter(Method method) {
-        return (!method.isAnnotationPresent(PlayPropertyAccessor.class) && method.getName().startsWith("set") && method.getName().length() > 3 && method.getParameterTypes().length == 1 && (method.getModifiers() & notaccessibleMethod) == 0);
+        return (!method.isAnnotationPresent(YalpPropertyAccessor.class) && method.getName().startsWith("set") && method.getName().length() > 3 && method.getParameterTypes().length == 1 && (method.getModifiers() & notaccessibleMethod) == 0);
     }
 
     private boolean isScalaSetter(Method method) {
-        return (!method.isAnnotationPresent(PlayPropertyAccessor.class) && method.getName().endsWith("_$eq") && method.getParameterTypes().length == 1 && (method.getModifiers() & notaccessibleMethod) == 0);
+        return (!method.isAnnotationPresent(YalpPropertyAccessor.class) && method.getName().endsWith("_$eq") && method.getParameterTypes().length == 1 && (method.getModifiers() & notaccessibleMethod) == 0);
     }
 
     protected Object newBeanInstance() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {

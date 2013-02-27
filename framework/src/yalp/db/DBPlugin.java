@@ -1,4 +1,4 @@
-package play.db;
+package yalp.db;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.mchange.v2.c3p0.ConnectionCustomizer;
@@ -20,25 +20,25 @@ import javax.sql.DataSource;
 
 import jregex.Matcher;
 import org.apache.commons.lang.StringUtils;
-import play.Logger;
-import play.Play;
-import play.PlayPlugin;
-import play.exceptions.DatabaseException;
-import play.mvc.Http;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.YalpPlugin;
+import yalp.exceptions.DatabaseException;
+import yalp.mvc.Http;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Http.Response;
 
 /**
  * The DB plugin
  */
-public class DBPlugin extends PlayPlugin {
+public class DBPlugin extends YalpPlugin {
 
     public static String url = "";
     org.h2.tools.Server h2Server;
 
     @Override
     public boolean rawInvocation(Request request, Response response) throws Exception {
-        if (Play.mode.isDev() && request.path.equals("/@db")) {
+        if (Yalp.mode.isDev() && request.path.equals("/@db")) {
             response.status = Http.StatusCode.MOVED;
             String serverOptions[] = new String[] { };
 
@@ -70,7 +70,7 @@ public class DBPlugin extends PlayPlugin {
         if (changed()) {
             try {
 
-                Properties p = Play.configuration;
+                Properties p = Yalp.configuration;
 
                 if (DB.datasource != null) {
                     DB.destroy();
@@ -94,7 +94,7 @@ public class DBPlugin extends PlayPlugin {
                     // Try the driver
                     String driver = p.getProperty("db.driver");
                     try {
-                        Driver d = (Driver) Class.forName(driver, true, Play.classloader).newInstance();
+                        Driver d = (Driver) Class.forName(driver, true, Yalp.classloader).newInstance();
                         DriverManager.registerDriver(new ProxyDriver(d));
                     } catch (Exception e) {
                         throw new Exception("Driver not found (" + driver + ")");
@@ -133,7 +133,7 @@ public class DBPlugin extends PlayPlugin {
                     // This check is not required, but here to make it clear that nothing changes for people
                     // that don't set this configuration property. It may be safely removed.
                     if(p.getProperty("db.isolation") != null) {
-                        ds.setConnectionCustomizerClassName(play.db.DBPlugin.PlayConnectionCustomizer.class.getName());
+                        ds.setConnectionCustomizerClassName(yalp.db.DBPlugin.YalpConnectionCustomizer.class.getName());
                     }
                     
                     DB.datasource = ds;
@@ -165,7 +165,7 @@ public class DBPlugin extends PlayPlugin {
 
     @Override
     public void onApplicationStop() {
-        if (Play.mode.isProd()) {
+        if (Yalp.mode.isProd()) {
             DB.destroy();
         }
     }
@@ -206,18 +206,18 @@ public class DBPlugin extends PlayPlugin {
     }
 
     private static boolean changed() {
-        Properties p = Play.configuration;
+        Properties p = Yalp.configuration;
 
         if ("mem".equals(p.getProperty("db")) && p.getProperty("db.url") == null) {
             p.put("db.driver", "org.h2.Driver");
-            p.put("db.url", "jdbc:h2:mem:play;MODE=MYSQL");
+            p.put("db.url", "jdbc:h2:mem:yalp;MODE=MYSQL");
             p.put("db.user", "sa");
             p.put("db.pass", "");
         }
 
         if ("fs".equals(p.getProperty("db")) && p.getProperty("db.url") == null) {
             p.put("db.driver", "org.h2.Driver");
-            p.put("db.url", "jdbc:h2:" + (new File(Play.applicationPath, "db/h2/play").getAbsolutePath()) + ";MODE=MYSQL");
+            p.put("db.url", "jdbc:h2:" + (new File(Yalp.applicationPath, "db/h2/yalp").getAbsolutePath()) + ";MODE=MYSQL");
             p.put("db.user", "sa");
             p.put("db.pass", "");
         }
@@ -313,6 +313,10 @@ public class DBPlugin extends PlayPlugin {
             this.driver = d;
         }
 
+        public java.util.logging.Logger getParentLogger() {
+            return null;
+        }
+
         public boolean acceptsURL(String u) throws SQLException {
             return this.driver.acceptsURL(u);
         }
@@ -338,7 +342,7 @@ public class DBPlugin extends PlayPlugin {
         }
     }
 
-    public static class PlayConnectionCustomizer implements ConnectionCustomizer {
+    public static class YalpConnectionCustomizer implements ConnectionCustomizer {
 
         public static Map<String, Integer> isolationLevels;
 
@@ -372,7 +376,7 @@ public class DBPlugin extends PlayPlugin {
          * parsing into an int.
          */
         private Integer getIsolationLevel() {
-            String isolation = Play.configuration.getProperty("db.isolation");
+            String isolation = Yalp.configuration.getProperty("db.isolation");
             if (isolation == null) {
                 return null;
             }

@@ -1,18 +1,18 @@
-package play.libs;
+package yalp.libs;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import play.mvc.Http.Request;
-import play.mvc.Scope.Params;
-import play.mvc.results.Redirect;
+import yalp.mvc.Http.Request;
+import yalp.mvc.Scope.Params;
+import yalp.mvc.results.Redirect;
 
-import play.libs.WS.HttpResponse;
+import yalp.libs.WS.HttpResponse;
 
 import com.google.gson.JsonObject;
 
 /**
- * Library to access ressources protected by OAuth 2.0. For OAuth 1.0a, see play.libs.OAuth.
+ * Library to access ressources protected by OAuth 2.0. For OAuth 1.0a, see yalp.libs.OAuth.
  * See the facebook-oauth2 example for usage.
  *
  */
@@ -98,7 +98,7 @@ public class OAuth2 {
     }
 
     /**
-     * @deprecated Use @{link play.libs.OAuth2.retrieveVerificationCode()} instead
+     * @deprecated Use @{link yalp.libs.OAuth2.retrieveVerificationCode()} instead
      */
     @Deprecated
     public void requestAccessToken() {
@@ -106,7 +106,7 @@ public class OAuth2 {
     }
 
     /**
-     * @deprecated Use @{link play.libs.OAuth2.retrieveAccessToken()} instead
+     * @deprecated Use @{link yalp.libs.OAuth2.retrieveAccessToken()} instead
      */
     @Deprecated
     public String getAccessToken() {

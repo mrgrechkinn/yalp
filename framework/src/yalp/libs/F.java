@@ -1,4 +1,4 @@
-package play.libs;
+package yalp.libs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
-import play.exceptions.UnexpectedException;
+import yalp.exceptions.UnexpectedException;
 
 public class F {
 

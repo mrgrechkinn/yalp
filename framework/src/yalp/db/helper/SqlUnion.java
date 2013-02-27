@@ -1,4 +1,4 @@
-package play.db.helper;
+package yalp.db.helper;
 
 public class SqlUnion extends SqlQuery {
 

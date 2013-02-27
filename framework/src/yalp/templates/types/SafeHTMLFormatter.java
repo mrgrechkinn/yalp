@@ -1,9 +1,9 @@
-package play.templates.types;
+package yalp.templates.types;
 
-import play.templates.SafeFormatter;
-import play.templates.TagContext;
-import play.templates.Template;
-import play.utils.HTML;
+import yalp.templates.SafeFormatter;
+import yalp.templates.TagContext;
+import yalp.templates.Template;
+import yalp.utils.HTML;
 
 public class SafeHTMLFormatter implements SafeFormatter {
 

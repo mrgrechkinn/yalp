@@ -1,4 +1,4 @@
-package play.data.parsing;
+package yalp.data.parsing;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,14 +6,14 @@ import java.text.DecimalFormat;
 
 import org.apache.commons.io.FileUtils;
 
-import play.Play;
-import play.PlayPlugin;
+import yalp.Yalp;
+import yalp.YalpPlugin;
 
 /**
  *  Creates temporary folders for file parsing, and deletes
  *  it after request completion.
  */
-public class TempFilePlugin extends PlayPlugin {
+public class TempFilePlugin extends YalpPlugin {
 
     private static DecimalFormat format = new DecimalFormat("##########");
     
@@ -30,11 +30,11 @@ public class TempFilePlugin extends PlayPlugin {
     public static ThreadLocal<File> tempFolder = new ThreadLocal<File>();
 
     public static File createTempFolder() {
-        if (Play.tmpDir == null || Play.readOnlyTmp) {
+        if (Yalp.tmpDir == null || Yalp.readOnlyTmp) {
             return null;
         }
         if (tempFolder.get() == null) {
-            File file = new File(Play.tmpDir +
+            File file = new File(Yalp.tmpDir +
                     File.separator + "uploads" + File.separator +
                     System.currentTimeMillis() + "_" + format.format(getCountLocal()));
             file.mkdirs();

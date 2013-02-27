@@ -1,4 +1,4 @@
-package play.data.binding;
+package yalp.data.binding;
 
 import java.lang.annotation.Annotation;
 import java.text.ParseException;
@@ -8,8 +8,8 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 
-import play.i18n.Lang;
-import play.libs.I18N;
+import yalp.i18n.Lang;
+import yalp.libs.I18N;
 
 public class AnnotationHelper {
 

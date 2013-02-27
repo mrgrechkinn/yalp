@@ -6,12 +6,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=${_response_encoding}"/>	
     </head>
     <body>
-        #{if play.mode.name() == 'DEV'}
+        #{if yalp.mode.name() == 'DEV'}
             #{500 exception /}
         #{/if}
         #{else}
             <h1>Oops, an error occured</h1>
-            #{if exception instanceof play.exceptions.PlayException}
+            #{if exception instanceof yalp.exceptions.YalpException}
                 <p>
                     This exception has been logged with id <strong>${exception.id}</strong>.
                 </p>

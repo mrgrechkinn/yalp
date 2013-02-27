@@ -4,7 +4,7 @@ import models.OptimisticLockingModel.OptimisticLockingCheck;
 
 import org.junit.Test;
 
-import play.data.validation.CheckWithCheck;
+import yalp.data.validation.CheckWithCheck;
 
 /**
  * @author niels

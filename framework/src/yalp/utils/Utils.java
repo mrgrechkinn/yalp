@@ -1,4 +1,4 @@
-package play.utils;
+package yalp.utils;
 
 import java.lang.annotation.Annotation;
 import java.net.URI;
@@ -22,9 +22,9 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import play.Logger;
-import play.Play;
-import play.mvc.Scope;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.mvc.Scope;
 
 /**
  * Generic utils
@@ -79,8 +79,8 @@ public class Utils {
     }
 
     public static String open(String file, Integer line) {
-        if (Play.configuration.containsKey("play.editor")) {
-            return String.format(Play.configuration.getProperty("play.editor"), Play.getFile(file).getAbsolutePath(), line);
+        if (Yalp.configuration.containsKey("yalp.editor")) {
+            return String.format(Yalp.configuration.getProperty("yalp.editor"), Yalp.getFile(file).getAbsolutePath(), line);
         }
         return null;
     }

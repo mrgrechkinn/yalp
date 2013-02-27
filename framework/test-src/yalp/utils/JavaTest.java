@@ -1,10 +1,10 @@
-package play.utils;
+package yalp.utils;
 
 import org.junit.Test;
-import play.PlayBuilder;
-import play.mvc.After;
-import play.mvc.Before;
-import play.mvc.Finally;
+import yalp.YalpBuilder;
+import yalp.mvc.After;
+import yalp.mvc.Before;
+import yalp.mvc.Finally;
 
 import java.lang.reflect.Method;
 
@@ -20,8 +20,8 @@ import static org.junit.Assert.*;
 public class JavaTest {
 
     @org.junit.Before
-    public void playBuilderBefore() {
-        new PlayBuilder().build();
+    public void yalpBuilderBefore() {
+        new YalpBuilder().build();
     }
 
     private static class ActionClass {

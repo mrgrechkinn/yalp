@@ -1,4 +1,4 @@
-package play.classloading.enhancers;
+package yalp.classloading.enhancers;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -12,24 +12,24 @@ import javassist.CtMethod;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 import org.apache.commons.javaflow.bytecode.transformation.asm.AsmClassTransformer;
-import play.Play;
-import play.classloading.ApplicationClasses.ApplicationClass;
+import yalp.Yalp;
+import yalp.classloading.ApplicationClasses.ApplicationClass;
 
 public class ContinuationEnhancer extends Enhancer {
 
     static final List<String> continuationMethods = new ArrayList<String>();
 
     static {
-        continuationMethods.add("play.mvc.Controller.await(java.lang.String)");
-        continuationMethods.add("play.mvc.Controller.await(int)");
-        continuationMethods.add("play.mvc.Controller.await(java.util.concurrent.Future)");
-        continuationMethods.add("play.mvc.WebSocketController.await(java.lang.String)");
-        continuationMethods.add("play.mvc.WebSocketController.await(int)");
-        continuationMethods.add("play.mvc.WebSocketController.await(java.util.concurrent.Future)");
+        continuationMethods.add("yalp.mvc.Controller.await(java.lang.String)");
+        continuationMethods.add("yalp.mvc.Controller.await(int)");
+        continuationMethods.add("yalp.mvc.Controller.await(java.util.concurrent.Future)");
+        continuationMethods.add("yalp.mvc.WebSocketController.await(java.lang.String)");
+        continuationMethods.add("yalp.mvc.WebSocketController.await(int)");
+        continuationMethods.add("yalp.mvc.WebSocketController.await(java.util.concurrent.Future)");
     }
 
     public static boolean isEnhanced(String appClassName) {
-        ApplicationClass appClass = Play.classes.getApplicationClass( appClassName);
+        ApplicationClass appClass = Yalp.classes.getApplicationClass( appClassName);
         if ( appClass == null) {
             return false;
         }
@@ -62,7 +62,7 @@ public class ContinuationEnhancer extends Enhancer {
         // we add the interface EnhancedForContinuations to the class
         CtClass enhancedForContinuationsInterface;
         try {
-            InputStream in = getClass().getClassLoader().getResourceAsStream("play/classloading/enhancers/EnhancedForContinuations.class");
+            InputStream in = getClass().getClassLoader().getResourceAsStream("yalp/classloading/enhancers/EnhancedForContinuations.class");
             enhancedForContinuationsInterface = classPool.makeClass( in );
             in.close();
         } catch (Exception e) {
@@ -79,7 +79,7 @@ public class ContinuationEnhancer extends Enhancer {
 
     private boolean shouldEnhance(CtClass ctClass) throws Exception {
 
-        if (ctClass == null || ctClass.getPackageName().startsWith("play.")) {
+        if (ctClass == null || ctClass.getPackageName().startsWith("yalp.")) {
             // If we have not found any await-usage yet, we return false..
             return false;
         }

@@ -1,4 +1,4 @@
-package play.utils;
+package yalp.utils;
 
 /**
  * Fast Exception - skips creating stackTrace.

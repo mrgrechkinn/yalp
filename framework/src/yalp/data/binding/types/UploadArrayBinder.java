@@ -1,9 +1,9 @@
-package play.data.binding.types;
+package yalp.data.binding.types;
 
-import play.data.Upload;
-import play.data.binding.TypeBinder;
-import play.db.Model;
-import play.mvc.Http.Request;
+import yalp.data.Upload;
+import yalp.data.binding.TypeBinder;
+import yalp.db.Model;
+import yalp.mvc.Http.Request;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;

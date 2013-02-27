@@ -1,4 +1,4 @@
-package play.templates;
+package yalp.templates;
 
 import groovy.lang.Closure;
 
@@ -18,20 +18,20 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
-import play.cache.Cache;
-import play.data.validation.Error;
-import play.data.validation.Validation;
-import play.exceptions.TagInternalException;
-import play.exceptions.TemplateExecutionException;
-import play.exceptions.TemplateNotFoundException;
-import play.libs.Codec;
-import play.mvc.Http;
-import play.mvc.Router.ActionDefinition;
-import play.mvc.Scope.Flash;
-import play.mvc.Scope.Session;
-import play.templates.BaseTemplate.RawData;
-import play.templates.GroovyTemplate.ExecutableTemplate;
-import play.utils.HTML;
+import yalp.cache.Cache;
+import yalp.data.validation.Error;
+import yalp.data.validation.Validation;
+import yalp.exceptions.TagInternalException;
+import yalp.exceptions.TemplateExecutionException;
+import yalp.exceptions.TemplateNotFoundException;
+import yalp.libs.Codec;
+import yalp.mvc.Http;
+import yalp.mvc.Router.ActionDefinition;
+import yalp.mvc.Scope.Flash;
+import yalp.mvc.Scope.Session;
+import yalp.templates.BaseTemplate.RawData;
+import yalp.templates.GroovyTemplate.ExecutableTemplate;
+import yalp.utils.HTML;
 
 /**
  * Fast tags implementation

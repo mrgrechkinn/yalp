@@ -1,8 +1,8 @@
-package play.templates.types;
+package yalp.templates.types;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import play.templates.SafeFormatter;
-import play.templates.Template;
+import yalp.templates.SafeFormatter;
+import yalp.templates.Template;
 
 public class SafeCSVFormatter implements SafeFormatter {
 

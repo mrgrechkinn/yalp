@@ -1,10 +1,10 @@
-package play.server.ssl;
+package yalp.server.ssl;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMReader;
 import org.bouncycastle.openssl.PasswordFinder;
-import play.Logger;
-import play.Play;
+import yalp.Logger;
+import yalp.Yalp;
 
 import java.security.cert.X509Certificate;
 import javax.net.ssl.*;
@@ -30,12 +30,12 @@ public class SslHttpServerContextFactory {
         SSLContext serverContext = null;
         KeyStore ks = null;
         try {
-            final Properties p = Play.configuration;
+            final Properties p = Yalp.configuration;
 
-            // Made sure play reads the properties
+            // Made sure yalp reads the properties
             // Look if we have key and cert files. If we do, we use our own keymanager
-            if (Play.getFile(p.getProperty("certificate.key.file", "conf/host.key")).exists()
-                && Play.getFile(p.getProperty("certificate.file", "conf/host.cert")).exists())
+            if (Yalp.getFile(p.getProperty("certificate.key.file", "conf/host.key")).exists()
+                && Yalp.getFile(p.getProperty("certificate.file", "conf/host.cert")).exists())
             {
                 Security.addProvider(new BouncyCastleProvider());
 
@@ -50,7 +50,7 @@ public class SslHttpServerContextFactory {
                 ks = KeyStore.getInstance(p.getProperty("keystore.algorithm", "JKS"));
                 // Load the file from the conf
                 char[] certificatePassword = p.getProperty("keystore.password", "secret").toCharArray();
-                ks.load(new FileInputStream(Play.getFile(p.getProperty("keystore.file", "conf/certificate.jks"))),
+                ks.load(new FileInputStream(Yalp.getFile(p.getProperty("keystore.file", "conf/certificate.jks"))),
                         certificatePassword);
 
                 // Set up key manager factory to use our key store
@@ -82,9 +82,9 @@ public class SslHttpServerContextFactory {
 
         public PEMKeyManager() {
             try {
-                final Properties p = Play.configuration;
+                final Properties p = Yalp.configuration;
 
-                PEMReader keyReader = new PEMReader(new FileReader(Play.getFile(p.getProperty("certificate.key.file",
+                PEMReader keyReader = new PEMReader(new FileReader(Yalp.getFile(p.getProperty("certificate.key.file",
                                                                                                "conf/host.key"))),
                                                     new PasswordFinder() {
                     public char[] getPassword() {
@@ -93,7 +93,7 @@ public class SslHttpServerContextFactory {
                 });
                 key = ((KeyPair) keyReader.readObject()).getPrivate();
 
-                PEMReader reader = new PEMReader(new FileReader(Play.getFile(p.getProperty("certificate.file", "conf/host.cert"))));
+                PEMReader reader = new PEMReader(new FileReader(Yalp.getFile(p.getProperty("certificate.file", "conf/host.cert"))));
 
 		X509Certificate cert;
 		Vector chainVector = new Vector();

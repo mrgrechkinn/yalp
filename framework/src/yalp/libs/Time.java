@@ -1,4 +1,4 @@
-package play.libs;
+package yalp.libs;
 
 import java.io.Serializable;
 import java.text.ParseException;

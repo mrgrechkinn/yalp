@@ -27,7 +27,7 @@ class YalpApplication(object):
             confFolder = os.path.join(application_path, 'conf/')
             try:
                 self.conf = YalpConfParser(confFolder, env)
-            except Exception as err:
+            except Exception, err:
                 print "~ Failed to parse application configuration", err
                 self.conf = None # No app / Invalid app
         else:
@@ -349,7 +349,7 @@ class YalpConfParser:
                 # add everything from include file 
                 for (key, value) in fromIncludeFile.items():
                     washedResult[key]=value
-            except Exception as err:
+            except Exception, err:
                 print "~ Failed to load included configuration %s: %s" % (includeFile, err)
         
         return washedResult

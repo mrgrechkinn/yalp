@@ -1,0 +1,10 @@
+0:yalp.CorePlugin
+100:yalp.data.parsing.TempFilePlugin
+200:yalp.data.validation.ValidationPlugin
+300:yalp.db.DBPlugin
+400:yalp.db.jpa.JPAPlugin
+450:yalp.db.Evolutions
+500:yalp.i18n.MessagesPlugin
+600:yalp.libs.WS
+700:yalp.jobs.JobsPlugin
+100000:yalp.plugins.ConfigurablePluginDisablingPlugin

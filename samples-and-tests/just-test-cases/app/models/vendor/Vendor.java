@@ -9,7 +9,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 
 import models.vendor.tag.Tag;
-import play.db.jpa.Model;
+import yalp.db.jpa.Model;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)

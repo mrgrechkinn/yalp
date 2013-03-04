@@ -9,15 +9,15 @@ import java.text.SimpleDateFormat;
 import models.MyBook;
 import models.Person;
 import org.apache.commons.io.IOUtils;
-import play.Logger;
-import play.data.binding.As;
-import play.i18n.Lang;
-import play.mvc.Controller;
-import play.utils.Utils;
+import yalp.Logger;
+import yalp.data.binding.As;
+import yalp.i18n.Lang;
+import yalp.mvc.Controller;
+import yalp.utils.Utils;
 
 public class DataBinding extends Controller {
     
-    @play.mvc.Before(unless = "myInputStream") static void lang(String lang) {
+    @yalp.mvc.Before(unless = "myInputStream") static void lang(String lang) {
         System.out.println(lang);
     }
 
@@ -87,7 +87,7 @@ public class DataBinding extends Controller {
         return person;
     }
     
-    public static void createFactory(@play.data.validation.Valid models.Factory factory) {
+    public static void createFactory(@yalp.data.validation.Valid models.Factory factory) {
         renderText(validation.hasErrors() + " -> " + factory.name + "," + factory.color);
     }
 

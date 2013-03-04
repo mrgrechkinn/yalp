@@ -4,8 +4,8 @@ import java.util.Map;
 
 import models.ComplexModel;
 
-import play.mvc.Controller;
-import play.utils.Utils;
+import yalp.mvc.Controller;
+import yalp.utils.Utils;
 
 public class CompositeMapBinding extends Controller {
 

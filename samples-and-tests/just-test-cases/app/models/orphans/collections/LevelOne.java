@@ -1,6 +1,6 @@
 package models.orphans.collections;
 
-import play.db.jpa.Model;
+import yalp.db.jpa.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 import org.junit.Test;
 
-import play.data.validation.IPv4AddressCheck;
-import play.data.validation.IPv6AddressCheck;
-import play.test.UnitTest;
+import yalp.data.validation.IPv4AddressCheck;
+import yalp.data.validation.IPv6AddressCheck;
+import yalp.test.UnitTest;
 
 public class IPValidationTest extends UnitTest {
 

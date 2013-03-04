@@ -1,4 +1,4 @@
-self: play -> crud $version
+self: yalp -> crud $version
 
 require:
-    - play
+    - yalp

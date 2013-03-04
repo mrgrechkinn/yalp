@@ -1,6 +1,6 @@
 package controllers;
 
-import play.mvc.Controller;
+import yalp.mvc.Controller;
 
 public class ErrorsTag extends Controller {
 

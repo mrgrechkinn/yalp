@@ -6,7 +6,7 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import play.db.jpa.GenericModel;
+import yalp.db.jpa.GenericModel;
 
 @Entity
 @IdClass(CompositeIdPk.class)

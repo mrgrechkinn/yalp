@@ -1,4 +1,4 @@
-self: play -> secure $version
+self: yalp -> secure $version
 
 require:
-    - play
+    - yalp

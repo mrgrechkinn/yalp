@@ -13,20 +13,20 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import play.Logger;
-import play.Play;
-import play.data.binding.Binder;
-import play.data.validation.MaxSize;
-import play.data.validation.Password;
-import play.data.validation.Required;
-import play.db.Model;
-import play.db.Model.Factory;
-import play.exceptions.TemplateNotFoundException;
-import play.i18n.Messages;
-import play.mvc.Before;
-import play.mvc.Controller;
-import play.mvc.Router;
-import play.utils.Java;
+import yalp.Logger;
+import yalp.Yalp;
+import yalp.data.binding.Binder;
+import yalp.data.validation.MaxSize;
+import yalp.data.validation.Password;
+import yalp.data.validation.Required;
+import yalp.db.Model;
+import yalp.db.Model.Factory;
+import yalp.exceptions.TemplateNotFoundException;
+import yalp.i18n.Messages;
+import yalp.mvc.Before;
+import yalp.mvc.Controller;
+import yalp.mvc.Router;
+import yalp.utils.Java;
 
 public abstract class CRUD extends Controller {
 
@@ -87,8 +87,8 @@ public abstract class CRUD extends Controller {
             renderBinary(attachment.get(), attachment.length());
         }
         // DEPRECATED
-        if(att instanceof play.db.jpa.FileAttachment) {
-            play.db.jpa.FileAttachment attachment = (play.db.jpa.FileAttachment)att;
+        if(att instanceof yalp.db.jpa.FileAttachment) {
+            yalp.db.jpa.FileAttachment attachment = (yalp.db.jpa.FileAttachment)att;
             if (attachment == null || !attachment.exists()) {
                 notFound();
             }
@@ -105,7 +105,7 @@ public abstract class CRUD extends Controller {
         Binder.bindBean(params.getRootParamNode(), "object", object);
         validation.valid(object);
         if (validation.hasErrors()) {
-            renderArgs.put("error", play.i18n.Messages.get("crud.hasErrors"));
+            renderArgs.put("error", yalp.i18n.Messages.get("crud.hasErrors"));
             try {
                 render(request.controller.replace(".", "/") + "/show.html", type, object);
             } catch (TemplateNotFoundException e) {
@@ -113,7 +113,7 @@ public abstract class CRUD extends Controller {
             }
         }
         object._save();
-        flash.success(play.i18n.Messages.get("crud.saved", type.modelName));
+        flash.success(yalp.i18n.Messages.get("crud.saved", type.modelName));
         if (params.get("_save") != null) {
             redirect(request.controller + ".list");
         }
@@ -142,7 +142,7 @@ public abstract class CRUD extends Controller {
         Binder.bindBean(params.getRootParamNode(), "object", object);
         validation.valid(object);
         if (validation.hasErrors()) {
-            renderArgs.put("error", play.i18n.Messages.get("crud.hasErrors"));
+            renderArgs.put("error", yalp.i18n.Messages.get("crud.hasErrors"));
             try {
                 render(request.controller.replace(".", "/") + "/blank.html", type, object);
             } catch (TemplateNotFoundException e) {
@@ -150,7 +150,7 @@ public abstract class CRUD extends Controller {
             }
         }
         object._save();
-        flash.success(play.i18n.Messages.get("crud.created", type.modelName));
+        flash.success(yalp.i18n.Messages.get("crud.created", type.modelName));
         if (params.get("_save") != null) {
             redirect(request.controller + ".list");
         }
@@ -168,10 +168,10 @@ public abstract class CRUD extends Controller {
         try {
             object._delete();
         } catch (Exception e) {
-            flash.error(play.i18n.Messages.get("crud.delete.error", type.modelName));
+            flash.error(yalp.i18n.Messages.get("crud.delete.error", type.modelName));
             redirect(request.controller + ".show", object._key());
         }
-        flash.success(play.i18n.Messages.get("crud.deleted", type.modelName));
+        flash.success(yalp.i18n.Messages.get("crud.deleted", type.modelName));
         redirect(request.controller + ".list");
     }
 
@@ -196,7 +196,7 @@ public abstract class CRUD extends Controller {
 
     // ~~~~~~~~~~~~~
     static int getPageSize() {
-        return Integer.parseInt(Play.configuration.getProperty("crud.pageSize", "30"));
+        return Integer.parseInt(Yalp.configuration.getProperty("crud.pageSize", "30"));
     }
 
     public static class ObjectType implements Comparable<ObjectType> {
@@ -218,7 +218,7 @@ public abstract class CRUD extends Controller {
 
         @SuppressWarnings("unchecked")
         public ObjectType(String modelClass) throws ClassNotFoundException {
-            this((Class<? extends Model>) Play.classloader.loadClass(modelClass));
+            this((Class<? extends Model>) Yalp.classloader.loadClass(modelClass));
         }
 
         public static ObjectType forClass(String modelClass) throws ClassNotFoundException {
@@ -259,7 +259,7 @@ public abstract class CRUD extends Controller {
             String name = controllerClass.getSimpleName().replace("$", "");
             name = "models." + name.substring(0, name.length() - 1);
             try {
-                return (Class<? extends Model>) Play.classloader.loadClass(name);
+                return (Class<? extends Model>) Yalp.classloader.loadClass(name);
             } catch (ClassNotFoundException e) {
                 return null;
             }
@@ -372,7 +372,7 @@ public abstract class CRUD extends Controller {
                 if (property.isMultiple) {
                     multiple = true;
                 }
-                if(Model.BinaryField.class.isAssignableFrom(field.getType()) || /** DEPRECATED **/ play.db.jpa.FileAttachment.class.isAssignableFrom(field.getType())) {
+                if(Model.BinaryField.class.isAssignableFrom(field.getType()) || /** DEPRECATED **/ yalp.db.jpa.FileAttachment.class.isAssignableFrom(field.getType())) {
                     type = "binary";
                 }
                 if (field.getType().isEnum()) {

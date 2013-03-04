@@ -1,9 +1,9 @@
 import org.junit.*;
-import play.test.*;
-import play.mvc.*;
-import play.mvc.Http.*;
+import yalp.test.*;
+import yalp.mvc.*;
+import yalp.mvc.Http.*;
 import models.*;
-import play.Play;
+import yalp.Yalp;
 
 public class ApplicationTest extends FunctionalTest {
 
@@ -12,7 +12,7 @@ public class ApplicationTest extends FunctionalTest {
         Response response = GET("/");
         assertIsOk(response);
         assertContentType("text/html", response);
-        assertCharset(play.Play.defaultWebEncoding, response);
+        assertCharset(yalp.Yalp.defaultWebEncoding, response);
     }
 
     @Test
@@ -23,7 +23,7 @@ public class ApplicationTest extends FunctionalTest {
     
     @Test
     public void testGettingUTF8FromConfig() {
-        assertEquals("欢迎", Play.configuration.getProperty("utf8value"));
+        assertEquals("欢迎", Yalp.configuration.getProperty("utf8value"));
     }
     
     @Test

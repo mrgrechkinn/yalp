@@ -1,4 +1,4 @@
-%{ pName = 'object.' + _name + '.' + play.db.Model.Manager.factoryFor(_field.property.relationType).keyName() }%
+%{ pName = 'object.' + _name + '.' + yalp.db.Model.Manager.factoryFor(_field.property.relationType).keyName() }%
 
 #{field 'object.' + _name}
     <label for="${field.id}">

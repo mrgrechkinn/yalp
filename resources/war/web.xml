@@ -4,24 +4,24 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
         version="2.4">
   
-  <display-name>Play! (%APPLICATION_NAME%)</display-name>
+  <display-name>Yalp (%APPLICATION_NAME%)</display-name>
   
   <context-param>
-    <param-name>play.id</param-name>
+    <param-name>yalp.id</param-name>
     <param-value>%PLAY_ID%</param-value>
   </context-param>
   
   <listener>
-      <listener-class>play.server.ServletWrapper</listener-class>
+      <listener-class>yalp.server.ServletWrapper</listener-class>
   </listener>
   
   <servlet>
-    <servlet-name>play</servlet-name>
-    <servlet-class>play.server.ServletWrapper</servlet-class>	
+    <servlet-name>yalp</servlet-name>
+    <servlet-class>yalp.server.ServletWrapper</servlet-class>	
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>play</servlet-name>
+    <servlet-name>yalp</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 

@@ -22,12 +22,12 @@
             <fileset dir="src">
                 <include name="**/*.properties"/>
                 <include name="**/*.xml"/>
-                <include name="**/play.plugins"/>
+                <include name="**/yalp.plugins"/>
             </fileset>
         </copy>
-        <jar destfile="lib/play-testrunner.jar" basedir="tmp/classes">
+        <jar destfile="lib/yalp-testrunner.jar" basedir="tmp/classes">
             <manifest>
-                <section name="Play">
+                <section name="Yalp">
                     <attribute name="Specification-Title" value="Test runner module"/>
                 </section>
             </manifest>

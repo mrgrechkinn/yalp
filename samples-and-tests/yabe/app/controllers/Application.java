@@ -1,10 +1,10 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
-import play.data.validation.*;
-import play.libs.*;
-import play.cache.*;
+import yalp.*;
+import yalp.mvc.*;
+import yalp.data.validation.*;
+import yalp.libs.*;
+import yalp.cache.*;
  
 import java.util.*;
 import models.*;
@@ -13,8 +13,8 @@ public class Application extends Controller {
     
     @Before
     static void addDefaults() {
-        renderArgs.put("blogTitle", Play.configuration.getProperty("blog.title"));
-        renderArgs.put("blogBaseline", Play.configuration.getProperty("blog.baseline"));
+        renderArgs.put("blogTitle", Yalp.configuration.getProperty("blog.title"));
+        renderArgs.put("blogBaseline", Yalp.configuration.getProperty("blog.baseline"));
     }
  
     public static void index() {
@@ -37,7 +37,7 @@ public class Application extends Controller {
         String randomID) 
     {
         Post post = Post.findById(postId);
-        if(!Play.id.equals("test")) {
+        if(!Yalp.id.equals("test")) {
             validation.equals(code, Cache.get(randomID)).message("Invalid code. Please type it again");
         }
         if(validation.hasErrors()) {

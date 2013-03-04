@@ -2,8 +2,8 @@ package controllers;
 
 import java.util.ArrayList;
 
-import play.cache.Cache;
-import play.mvc.Controller;
+import yalp.cache.Cache;
+import yalp.mvc.Controller;
 
 public class SeleniumExtensions extends Controller {
 

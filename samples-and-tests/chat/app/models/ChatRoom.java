@@ -2,8 +2,8 @@ package models;
 
 import java.util.*;
 
-import play.libs.*;
-import play.libs.F.*;
+import yalp.libs.*;
+import yalp.libs.F.*;
 
 public class ChatRoom {
     

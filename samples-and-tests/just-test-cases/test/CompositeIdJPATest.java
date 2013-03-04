@@ -3,11 +3,11 @@ import models.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import play.Logger;
-import play.db.jpa.JPA;
-import play.db.jpa.JPABase;
-import play.test.Fixtures;
-import play.test.UnitTest;
+import yalp.Logger;
+import yalp.db.jpa.JPA;
+import yalp.db.jpa.JPABase;
+import yalp.test.Fixtures;
+import yalp.test.UnitTest;
 
 import java.util.List;
 

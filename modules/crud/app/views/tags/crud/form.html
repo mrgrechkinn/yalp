@@ -41,7 +41,7 @@
     %{ } else { }%
 
         #{ifnot field}
-            %{ throw new play.exceptions.TagInternalException('Field not found -> ' + fieldName) }%
+            %{ throw new yalp.exceptions.TagInternalException('Field not found -> ' + fieldName) }%
         #{/ifnot}
 
         #{if field.type == 'text'}
@@ -67,7 +67,7 @@
 
         #{if field.type == 'date'}
             #{crud.dateField name:field.name, value:(currentObject ? currentObject[field.name] : null) /}
-            %{ am = messages.get('crud.help.dateformat',play.libs.I18N.getDateFormat()) }%
+            %{ am = messages.get('crud.help.dateformat',yalp.libs.I18N.getDateFormat()) }%
         #{/if}
 
         #{if field.type == 'relation'}
@@ -88,7 +88,7 @@
 
     <span class="crudHelp">
         &{am}
-            %{ play.data.validation.Validation.getValidators(currentType.entityClass, fieldName, 'object').each() { }%
+            %{ yalp.data.validation.Validation.getValidators(currentType.entityClass, fieldName, 'object').each() { }%
                 %{
                     switch (it.annotation.annotationType().name.substring(21)) {
                         case "Required":

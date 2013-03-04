@@ -1,6 +1,6 @@
 package controllers;
 
-import play.db.Model;
+import yalp.db.Model;
 import controllers.CRUD.ObjectType;
 import controllers.OptimisticLockingCRUD.CustomizableObjectType;
 import models.MyBook;

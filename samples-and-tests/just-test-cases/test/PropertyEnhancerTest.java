@@ -4,7 +4,7 @@ import models.PropertyEnhancerModel;
 
 import org.junit.Test;
 
-import play.test.UnitTest;
+import yalp.test.UnitTest;
 
 public class PropertyEnhancerTest extends UnitTest {
 

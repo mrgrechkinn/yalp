@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import play.Logger;
-import play.db.Model;
-import play.mvc.Http.Request;
+import yalp.Logger;
+import yalp.db.Model;
+import yalp.mvc.Http.Request;
 
 public class OptimisticLockingCRUD extends CRUD {
 

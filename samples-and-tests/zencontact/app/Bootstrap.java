@@ -1,7 +1,7 @@
 import java.util.*;
 
-import play.jobs.*;
-import play.test.*;
+import yalp.jobs.*;
+import yalp.test.*;
 
 import models.*;
 

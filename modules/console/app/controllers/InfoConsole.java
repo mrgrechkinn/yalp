@@ -1,8 +1,8 @@
 package controllers; 
 
-import play.mvc.*;
-import play.jobs.JobsPlugin;
-import play.*;
+import yalp.mvc.*;
+import yalp.jobs.JobsPlugin;
+import yalp.*;
 
 @With(Secure.class)
 @Check("isAdmin")

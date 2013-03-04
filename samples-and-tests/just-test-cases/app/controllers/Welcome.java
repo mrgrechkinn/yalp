@@ -1,7 +1,7 @@
 package controllers;
 
 import org.apache.commons.mail.EmailException;
-import play.mvc.*;
+import yalp.mvc.*;
 
 public class Welcome extends Mailer {
     

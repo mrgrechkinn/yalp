@@ -1,6 +1,6 @@
 package notifiers;
 
-import play.mvc.*;
+import yalp.mvc.*;
 
 public class Welcome extends Mailer {
     

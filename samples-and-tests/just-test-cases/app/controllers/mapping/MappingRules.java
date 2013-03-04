@@ -1,7 +1,7 @@
 package controllers.mapping;
 
-import play.*;
-import play.mvc.*;
+import yalp.*;
+import yalp.mvc.*;
 
 import java.util.*;
 

@@ -2,7 +2,7 @@ package controllers;
 
 import models.*;
 
-import play.mvc.*;
+import yalp.mvc.*;
 
 @CRUD.For(Category.class)
 public class Categories extends Administration {

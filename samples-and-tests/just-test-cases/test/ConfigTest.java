@@ -1,16 +1,16 @@
 
-import play.*;
+import yalp.*;
 import org.junit.Test;
-import play.test.UnitTest;
+import yalp.test.UnitTest;
 import java.io.File;
 
 public class ConfigTest extends UnitTest {
 
     @Test
     public void testIncludedConfig() {
-        assertEquals("a", Play.configuration.get("included_a"));
-        assertNull(Play.configuration.get("%test.included_b"));
-        assertEquals("b", Play.configuration.get("included_b"));
-        assertEquals(Play.frameworkPath, new File((String)Play.configuration.get("included_c")));
+        assertEquals("a", Yalp.configuration.get("included_a"));
+        assertNull(Yalp.configuration.get("%test.included_b"));
+        assertEquals("b", Yalp.configuration.get("included_b"));
+        assertEquals(Yalp.frameworkPath, new File((String)Yalp.configuration.get("included_c")));
     }
 }

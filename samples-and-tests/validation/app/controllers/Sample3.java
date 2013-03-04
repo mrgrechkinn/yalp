@@ -1,10 +1,10 @@
 package controllers;
 
 import models.*;
-import play.*;
-import play.mvc.*;
+import yalp.*;
+import yalp.mvc.*;
 import java.util.*;
-import play.data.validation.*;
+import yalp.data.validation.*;
 
 public class Sample3 extends Application {
 

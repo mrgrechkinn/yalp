@@ -9,9 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
-import play.data.validation.MaxSize;
-import play.data.validation.Required;
-import play.db.jpa.Model;
+import yalp.data.validation.MaxSize;
+import yalp.data.validation.Required;
+import yalp.db.jpa.Model;
 
 @Entity(name="VendorTag")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)

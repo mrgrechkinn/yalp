@@ -57,7 +57,7 @@
 +                        try {
 +                               Object o = me.getKey();
 +                               Class c = o.getClass();
-+                               Class jpaBase = Class.forName("play.db.jpa.JPABase");
++                               Class jpaBase = Class.forName("yalp.db.jpa.JPABase");
 +                               while(!c.equals(Object.class)) {
 +                                       if(c.equals(jpaBase)) {
 +                                               willBeSaved = (Boolean)(jpaBase.getDeclaredField("willBeSaved").get(o));

@@ -4,8 +4,8 @@ import groovy.lang.*;
 import java.util.*;
 import java.io.*;
 
-import play.templates.*;
-import play.templates.GroovyTemplate.*;
+import yalp.templates.*;
+import yalp.templates.GroovyTemplate.*;
 
 @FastTags.Namespace("my.tags")
 public class MyTags extends FastTags {

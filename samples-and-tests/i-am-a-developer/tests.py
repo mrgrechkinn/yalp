@@ -22,15 +22,15 @@ class IamADeveloper(unittest.TestCase):
 
         self.working_directory = bootstrapWorkingDirectory('i-am-testing-log-levels-here')
     
-        # play new job-app
+        # yalp new job-app
         step('Create a new project')
     
-        self.play = callPlay(self, ['new', '%s/loglevelsapp' % self.working_directory, '--name=LOGLEVELSAPP'])
-        self.assert_(waitFor(self.play, 'The new application will be created'))
-        self.assert_(waitFor(self.play, 'OK, the application is created'))
-        self.assert_(waitFor(self.play, 'Have fun!'))
+        self.yalp = callYalp(self, ['new', '%s/loglevelsapp' % self.working_directory, '--name=LOGLEVELSAPP'])
+        self.assert_(waitFor(self.yalp, 'The new application will be created'))
+        self.assert_(waitFor(self.yalp, 'OK, the application is created'))
+        self.assert_(waitFor(self.yalp, 'Have fun!'))
         
-        self.play.wait()
+        self.yalp.wait()
     
         app = '%s/loglevelsapp' % self.working_directory
             
@@ -41,9 +41,9 @@ class IamADeveloper(unittest.TestCase):
         # Run the newly created application
         step('Run our logger-application')
     
-        self.play = callPlay(self, ['run', app])
-        #wait for play to be ready
-        self.assert_(waitFor(self.play, 'Listening for HTTP on port 9000'))
+        self.yalp = callYalp(self, ['run', app])
+        #wait for yalp to be ready
+        self.assert_(waitFor(self.yalp, 'Listening for HTTP on port 9000'))
     
         step("Send request to trigger some logging")
 
@@ -52,11 +52,11 @@ class IamADeveloper(unittest.TestCase):
 
     
         step("check that only info log message is logged")
-        self.assert_(waitForWithFail(self.play, 'I am an info message', 'I am a debug message'))
+        self.assert_(waitForWithFail(self.yalp, 'I am an info message', 'I am a debug message'))
 
-        step("stop play")
-        killPlay()
-        self.play.wait()
+        step("stop yalp")
+        killYalp()
+        self.yalp.wait()
 
         #now we're going to manually configure log4j to log debug messages
         step('Writing log4j config file')
@@ -72,7 +72,7 @@ class IamADeveloper(unittest.TestCase):
         insert(app, "conf/log4j.xml", 7, '          <param name="ConversionPattern" value="%m%n"/>')
         insert(app, "conf/log4j.xml", 8, '      </layout>')
         insert(app, "conf/log4j.xml", 9, '  </appender>')
-        insert(app, "conf/log4j.xml", 10, ' <logger name="play">')
+        insert(app, "conf/log4j.xml", 10, ' <logger name="yalp">')
         insert(app, "conf/log4j.xml", 11, '     <level value="debug"/>')
         insert(app, "conf/log4j.xml", 12, ' </logger>')
         insert(app, "conf/log4j.xml", 13, ' <root>')
@@ -85,9 +85,9 @@ class IamADeveloper(unittest.TestCase):
         # Run the newly created application
         step('re-run our logger-application')
     
-        self.play = callPlay(self, ['run', app])
-        #wait for play to be ready
-        self.assert_(waitFor(self.play, 'Listening for HTTP on port 9000'))
+        self.yalp = callYalp(self, ['run', app])
+        #wait for yalp to be ready
+        self.assert_(waitFor(self.yalp, 'Listening for HTTP on port 9000'))
     
         step("Send request to trigger some logging")
 
@@ -96,12 +96,12 @@ class IamADeveloper(unittest.TestCase):
 
     
         step("check that both debug and info message is logged")
-        self.assert_(waitFor(self.play, 'I am a debug message'))        
-        self.assert_(waitFor(self.play, 'I am an info message'))
+        self.assert_(waitFor(self.yalp, 'I am a debug message'))        
+        self.assert_(waitFor(self.yalp, 'I am an info message'))
 
-        step("stop play")
-        killPlay()
-        self.play.wait()
+        step("stop yalp")
+        killYalp()
+        self.yalp.wait()
     
         step("done testing logging")
 
@@ -113,14 +113,14 @@ class IamADeveloper(unittest.TestCase):
 
         self.working_directory = bootstrapWorkingDirectory('i-am-creating-jobs-here')
     
-        # play new job-app
+        # yalp new job-app
         step('Create a new project')
     
-        self.play = callPlay(self, ['new', '%s/jobapp' % self.working_directory, '--name=JOBAPP'])
-        self.assert_(waitFor(self.play, 'The new application will be created'))
-        self.assert_(waitFor(self.play, 'OK, the application is created'))
-        self.assert_(waitFor(self.play, 'Have fun!'))
-        self.play.wait()
+        self.yalp = callYalp(self, ['new', '%s/jobapp' % self.working_directory, '--name=JOBAPP'])
+        self.assert_(waitFor(self.yalp, 'The new application will be created'))
+        self.assert_(waitFor(self.yalp, 'OK, the application is created'))
+        self.assert_(waitFor(self.yalp, 'Have fun!'))
+        self.yalp.wait()
     
         app = '%s/jobapp' % self.working_directory
             
@@ -129,8 +129,8 @@ class IamADeveloper(unittest.TestCase):
         createDir( app, 'app/jobs')
         create(app, 'app/jobs/Job1.java')
         insert(app, 'app/jobs/Job1.java', 1, "package jobs;")
-        insert(app, 'app/jobs/Job1.java', 2, "import play.jobs.*;")
-        insert(app, 'app/jobs/Job1.java', 3, "import play.*;")
+        insert(app, 'app/jobs/Job1.java', 2, "import yalp.jobs.*;")
+        insert(app, 'app/jobs/Job1.java', 3, "import yalp.*;")
         insert(app, 'app/jobs/Job1.java', 4, "@OnApplicationStart")
         insert(app, 'app/jobs/Job1.java', 5, "public class Job1 extends Job {")
         insert(app, 'app/jobs/Job1.java', 6, "  public void doJob() throws Exception{")
@@ -147,9 +147,9 @@ class IamADeveloper(unittest.TestCase):
         # Run the newly created application
         step('Run the newly created job-application')
     
-        self.play = callPlay(self, ['run', app])
-        #wait for play to be ready
-        self.assert_(waitFor(self.play, 'Listening for HTTP on port 9000'))
+        self.yalp = callYalp(self, ['run', app])
+        #wait for yalp to be ready
+        self.assert_(waitFor(self.yalp, 'Listening for HTTP on port 9000'))
     
         step("Send request to start app")
 
@@ -158,24 +158,24 @@ class IamADeveloper(unittest.TestCase):
 
     
         step("check that job completed before processing request")
-        self.assert_(waitFor(self.play, 'Job done'))
-        self.assert_(waitFor(self.play, 'Processing request'))
+        self.assert_(waitFor(self.yalp, 'Job done'))
+        self.assert_(waitFor(self.yalp, 'Processing request'))
 
-        step("stop play")
-        killPlay()
-        self.play.wait()
+        step("stop yalp")
+        killYalp()
+        self.yalp.wait()
             
         #now we change the job to be async
         step("Change job to async")
     
         edit(app, 'app/jobs/Job1.java', 4, "@OnApplicationStart(async=true)")        
 
-        # start play again
+        # start yalp again
         step('Run the job-application again')
     
-        self.play = callPlay(self, ['run', app])
-        #wait for play to be ready
-        self.assert_(waitFor(self.play, 'Listening for HTTP on port 9000'))
+        self.yalp = callYalp(self, ['run', app])
+        #wait for yalp to be ready
+        self.assert_(waitFor(self.yalp, 'Listening for HTTP on port 9000'))
     
         step("Send request to start app")
 
@@ -184,12 +184,12 @@ class IamADeveloper(unittest.TestCase):
 
     
         step("check that the request is processed before the job finishes")
-        self.assert_(waitFor(self.play, 'Processing request'))
-        self.assert_(waitFor(self.play, 'Job done'))
+        self.assert_(waitFor(self.yalp, 'Processing request'))
+        self.assert_(waitFor(self.yalp, 'Job done'))
 
-        step("stop play")
-        killPlay()
-        self.play.wait()
+        step("stop yalp")
+        killYalp()
+        self.yalp.wait()
     
         step("done testing jobapp")
     
@@ -201,14 +201,14 @@ class IamADeveloper(unittest.TestCase):
         
         self.working_directory = bootstrapWorkingDirectory('i-am-working-here')
         
-        # play new yop
+        # yalp new yop
         step('Create a new project')
         
-        self.play = callPlay(self, ['new', '%s/yop' % self.working_directory, '--name=YOP'])
-        self.assert_(waitFor(self.play, 'The new application will be created'))
-        self.assert_(waitFor(self.play, 'OK, the application is created'))
-        self.assert_(waitFor(self.play, 'Have fun!'))
-        self.play.wait()
+        self.yalp = callYalp(self, ['new', '%s/yop' % self.working_directory, '--name=YOP'])
+        self.assert_(waitFor(self.yalp, 'The new application will be created'))
+        self.assert_(waitFor(self.yalp, 'OK, the application is created'))
+        self.assert_(waitFor(self.yalp, 'Have fun!'))
+        self.yalp.wait()
         
         self.assert_(os.path.exists(os.path.join(self.working_directory, 'yop')))
         self.assert_(os.path.exists(os.path.join(self.working_directory, 'yop/app')))
@@ -231,8 +231,8 @@ class IamADeveloper(unittest.TestCase):
         # Run the newly created application
         step('Run the newly created application')
         
-        self.play = callPlay(self, ['run', app])
-        self.assert_(waitFor(self.play, 'Listening for HTTP on port 9000'))
+        self.yalp = callYalp(self, ['run', app])
+        self.assert_(waitFor(self.yalp, 'Listening for HTTP on port 9000'))
         
         # Start a browser
         step('Start a browser')
@@ -243,7 +243,7 @@ class IamADeveloper(unittest.TestCase):
         step('Open the home page')
         
         response = browser.open('http://localhost:9000/')
-        self.assert_(waitFor(self.play, "Application 'YOP' is now started !"))
+        self.assert_(waitFor(self.yalp, "Application 'YOP' is now started !"))
         self.assert_(browser.viewing_html())
         self.assert_(browser.title() == 'Your application is ready !')
         
@@ -256,7 +256,7 @@ class IamADeveloper(unittest.TestCase):
         browser.addheaders = [("Accept-Language", "en")]
         response = browser.open('http://localhost:9000/@documentation')
         self.assert_(browser.viewing_html())
-        self.assert_(browser.title() == 'Play manual - Documentation')
+        self.assert_(browser.title() == 'Yalp manual - Documentation')
         
         html = response.get_data()
         self.assert_(html.count('Getting started'))
@@ -292,10 +292,10 @@ class IamADeveloper(unittest.TestCase):
             self.assert_(html.count('insert ";" to complete BlockStatements'))
             self.assert_(html.count('In /app/controllers/Application.java (around line 13)'))
             self.assert_(html.count('       render()'))            
-            self.assert_(waitFor(self.play, 'ERROR ~'))
-            self.assert_(waitFor(self.play, 'Compilation error (In /app/controllers/Application.java around line 13)'))
-            self.assert_(waitFor(self.play, 'Syntax error, insert ";" to complete BlockStatements'))
-            self.assert_(waitFor(self.play, 'at Invocation.HTTP Request(Play!)'))
+            self.assert_(waitFor(self.yalp, 'ERROR ~'))
+            self.assert_(waitFor(self.yalp, 'Compilation error (In /app/controllers/Application.java around line 13)'))
+            self.assert_(waitFor(self.yalp, 'Syntax error, insert ";" to complete BlockStatements'))
+            self.assert_(waitFor(self.yalp, 'at Invocation.HTTP Request(Yalp)'))
 
         # Refresh again
         step('Refresh again')
@@ -311,10 +311,10 @@ class IamADeveloper(unittest.TestCase):
             self.assert_(html.count('insert ";" to complete BlockStatements'))
             self.assert_(html.count('In /app/controllers/Application.java (around line 13)'))
             self.assert_(html.count('       render()'))            
-            self.assert_(waitFor(self.play, 'ERROR ~'))
-            self.assert_(waitFor(self.play, 'Compilation error (In /app/controllers/Application.java around line 13)'))
-            self.assert_(waitFor(self.play, 'Syntax error, insert ";" to complete BlockStatements'))
-            self.assert_(waitFor(self.play, 'at Invocation.HTTP Request(Play!)'))
+            self.assert_(waitFor(self.yalp, 'ERROR ~'))
+            self.assert_(waitFor(self.yalp, 'Compilation error (In /app/controllers/Application.java around line 13)'))
+            self.assert_(waitFor(self.yalp, 'Syntax error, insert ";" to complete BlockStatements'))
+            self.assert_(waitFor(self.yalp, 'at Invocation.HTTP Request(Yalp)'))
         
         # Correct the error
         step('Correct the error')
@@ -369,9 +369,9 @@ class IamADeveloper(unittest.TestCase):
             html = ''.join(error.readlines()) 
             self.assert_(html.count('Template compilation error'))
             self.assert_(html.count('In /app/views/Application/index.html (around line 4)'))
-            self.assert_(waitFor(self.play, 'ERROR ~'))
-            self.assert_(waitFor(self.play, 'Template compilation error (In /app/views/Application/index.html around line 4)'))
-            self.assert_(waitFor(self.play, 'at Invocation.HTTP Request(Play!)'))
+            self.assert_(waitFor(self.yalp, 'ERROR ~'))
+            self.assert_(waitFor(self.yalp, 'Template compilation error (In /app/views/Application/index.html around line 4)'))
+            self.assert_(waitFor(self.yalp, 'at Invocation.HTTP Request(Yalp)'))
         
         # Refresh again
         step('Refresh again')
@@ -385,9 +385,9 @@ class IamADeveloper(unittest.TestCase):
             html = ''.join(error.readlines()) 
             self.assert_(html.count('Template compilation error'))
             self.assert_(html.count('In /app/views/Application/index.html (around line 4)'))
-            self.assert_(waitFor(self.play, 'ERROR ~'))
-            self.assert_(waitFor(self.play, 'Template compilation error (In /app/views/Application/index.html around line 4)'))
-            self.assert_(waitFor(self.play, 'at Invocation.HTTP Request(Play!)'))
+            self.assert_(waitFor(self.yalp, 'ERROR ~'))
+            self.assert_(waitFor(self.yalp, 'Template compilation error (In /app/views/Application/index.html around line 4)'))
+            self.assert_(waitFor(self.yalp, 'at Invocation.HTTP Request(Yalp)'))
             
         # Try a template runtime exception  
         step('Try a template runtime exception ')  
@@ -404,12 +404,12 @@ class IamADeveloper(unittest.TestCase):
             self.assert_(html.count('Template execution error '))
             self.assert_(html.count('In /app/views/Application/index.html (around line 4)'))
             self.assert_(html.count('Cannot get property \'name\' on null object'))
-            self.assert_(waitFor(self.play, 'ERROR ~'))
-            self.assert_(waitFor(self.play, 'Template execution error (In /app/views/Application/index.html around line 4)'))
-            self.assert_(waitFor(self.play, 'Execution error occured in template /app/views/Application/index.html.'))
-            self.assert_(waitFor(self.play, 'at Invocation.HTTP Request(Play!)'))
-            self.assert_(waitFor(self.play, 'at /app/views/Application/index.html.(line:4)'))
-            self.assert_(waitFor(self.play, '...'))
+            self.assert_(waitFor(self.yalp, 'ERROR ~'))
+            self.assert_(waitFor(self.yalp, 'Template execution error (In /app/views/Application/index.html around line 4)'))
+            self.assert_(waitFor(self.yalp, 'Execution error occured in template /app/views/Application/index.html.'))
+            self.assert_(waitFor(self.yalp, 'at Invocation.HTTP Request(Yalp)'))
+            self.assert_(waitFor(self.yalp, 'at /app/views/Application/index.html.(line:4)'))
+            self.assert_(waitFor(self.yalp, '...'))
 
         # Refresh again
         step('Refresh again')
@@ -424,12 +424,12 @@ class IamADeveloper(unittest.TestCase):
             self.assert_(html.count('Template execution error '))
             self.assert_(html.count('In /app/views/Application/index.html (around line 4)'))
             self.assert_(html.count('Cannot get property \'name\' on null object'))
-            self.assert_(waitFor(self.play, 'ERROR ~'))
-            self.assert_(waitFor(self.play, 'Template execution error (In /app/views/Application/index.html around line 4)'))
-            self.assert_(waitFor(self.play, 'Execution error occured in template /app/views/Application/index.html.'))
-            self.assert_(waitFor(self.play, 'at Invocation.HTTP Request(Play!)'))
-            self.assert_(waitFor(self.play, 'at /app/views/Application/index.html.(line:4)'))
-            self.assert_(waitFor(self.play, '...'))
+            self.assert_(waitFor(self.yalp, 'ERROR ~'))
+            self.assert_(waitFor(self.yalp, 'Template execution error (In /app/views/Application/index.html around line 4)'))
+            self.assert_(waitFor(self.yalp, 'Execution error occured in template /app/views/Application/index.html.'))
+            self.assert_(waitFor(self.yalp, 'at Invocation.HTTP Request(Yalp)'))
+            self.assert_(waitFor(self.yalp, 'at /app/views/Application/index.html.(line:4)'))
+            self.assert_(waitFor(self.yalp, '...'))
 
         # Fix it
         step('Fix it')        
@@ -456,11 +456,11 @@ class IamADeveloper(unittest.TestCase):
             self.assert_(html.count('Execution exception'))
             self.assert_(html.count('/ by zero'))
             self.assert_(html.count('In /app/controllers/Application.java (around line 13)'))
-            self.assert_(waitFor(self.play, 'ERROR ~'))
-            self.assert_(waitFor(self.play, 'Execution exception (In /app/controllers/Application.java around line 13)'))
-            self.assert_(waitFor(self.play, 'ArithmeticException occured : / by zero'))
-            self.assert_(waitFor(self.play, 'at controllers.Application.index(Application.java:13)'))
-            self.assert_(waitFor(self.play, '...'))
+            self.assert_(waitFor(self.yalp, 'ERROR ~'))
+            self.assert_(waitFor(self.yalp, 'Execution exception (In /app/controllers/Application.java around line 13)'))
+            self.assert_(waitFor(self.yalp, 'ArithmeticException occured : / by zero'))
+            self.assert_(waitFor(self.yalp, 'at controllers.Application.index(Application.java:13)'))
+            self.assert_(waitFor(self.yalp, '...'))
 
         # Refresh again
         step('Refresh again')
@@ -475,11 +475,11 @@ class IamADeveloper(unittest.TestCase):
             self.assert_(html.count('Execution exception'))
             self.assert_(html.count('/ by zero'))
             self.assert_(html.count('In /app/controllers/Application.java (around line 13)'))
-            self.assert_(waitFor(self.play, 'ERROR ~'))
-            self.assert_(waitFor(self.play, 'Execution exception (In /app/controllers/Application.java around line 13)'))
-            self.assert_(waitFor(self.play, 'ArithmeticException occured : / by zero'))
-            self.assert_(waitFor(self.play, 'at controllers.Application.index(Application.java:13)'))
-            self.assert_(waitFor(self.play, '...'))
+            self.assert_(waitFor(self.yalp, 'ERROR ~'))
+            self.assert_(waitFor(self.yalp, 'Execution exception (In /app/controllers/Application.java around line 13)'))
+            self.assert_(waitFor(self.yalp, 'ArithmeticException occured : / by zero'))
+            self.assert_(waitFor(self.yalp, 'at controllers.Application.index(Application.java:13)'))
+            self.assert_(waitFor(self.yalp, '...'))
 
         # Fix it
         step('Fix it')        
@@ -518,7 +518,7 @@ class IamADeveloper(unittest.TestCase):
         
         create(app, 'app/controllers/Hello.java')
         insert(app, 'app/controllers/Hello.java', 1, "package controllers;")
-        insert(app, 'app/controllers/Hello.java', 2, "import play.mvc.*;")
+        insert(app, 'app/controllers/Hello.java', 2, "import yalp.mvc.*;")
         insert(app, 'app/controllers/Hello.java', 3, "public class Hello extends Application {")
         insert(app, 'app/controllers/Hello.java', 4, "  public static void hello() {")
         insert(app, 'app/controllers/Hello.java', 5, '      renderText("Hello");')
@@ -593,9 +593,9 @@ class IamADeveloper(unittest.TestCase):
             self.assert_(html.count('Compilation error'))
             self.assert_(html.count('/app/controllers/Hello3.java</strong> could not be compiled'))
             self.assert_(html.count('The public type Hello2 must be defined in its own file'))
-            self.assert_(waitFor(self.play, 'ERROR ~'))
-            self.assert_(waitFor(self.play, 'Compilation error (In /app/controllers/Hello3.java around line 3)'))
-            self.assert_(waitFor(self.play, 'at Invocation.HTTP Request(Play!)'))
+            self.assert_(waitFor(self.yalp, 'ERROR ~'))
+            self.assert_(waitFor(self.yalp, 'Compilation error (In /app/controllers/Hello3.java around line 3)'))
+            self.assert_(waitFor(self.yalp, 'at Invocation.HTTP Request(Yalp)'))
             
         # Refresh again
         step('Refresh again')
@@ -610,9 +610,9 @@ class IamADeveloper(unittest.TestCase):
             self.assert_(html.count('Compilation error'))
             self.assert_(html.count('/app/controllers/Hello3.java</strong> could not be compiled'))
             self.assert_(html.count('The public type Hello2 must be defined in its own file'))
-            self.assert_(waitFor(self.play, 'ERROR ~'))
-            self.assert_(waitFor(self.play, 'Compilation error (In /app/controllers/Hello3.java around line 3)'))
-            self.assert_(waitFor(self.play, 'at Invocation.HTTP Request(Play!)'))
+            self.assert_(waitFor(self.yalp, 'ERROR ~'))
+            self.assert_(waitFor(self.yalp, 'Compilation error (In /app/controllers/Hello3.java around line 3)'))
+            self.assert_(waitFor(self.yalp, 'at Invocation.HTTP Request(Yalp)'))
             
         # Fix it
         step('Fix it')
@@ -624,13 +624,13 @@ class IamADeveloper(unittest.TestCase):
         self.assert_(html.count('Hello'))
 
         # Stop the application
-        step('Kill play')
+        step('Kill yalp')
         
-        killPlay()
-        self.play.wait()
+        killYalp()
+        self.yalp.wait()
 
     def tearDown(self):
-        killPlay()
+        killYalp()
 
 
 
@@ -646,11 +646,11 @@ def bootstrapWorkingDirectory( folder ):
     os.mkdir(working_directory)
     return working_directory
 
-def callPlay(self, args):
-    play_script = os.path.join(self.working_directory, '../../../play')
-    process_args = [play_script] + args
-    play_process = subprocess.Popen(process_args,stdout=subprocess.PIPE)
-    return play_process
+def callYalp(self, args):
+    yalp_script = os.path.join(self.working_directory, '../../../yalp')
+    process_args = [yalp_script] + args
+    yalp_process = subprocess.Popen(process_args,stdout=subprocess.PIPE)
+    return yalp_process
 
 #returns true when pattern is seen
 def waitFor(process, pattern):
@@ -681,10 +681,10 @@ timeoutOccured = False
 def timeout(process):
     global timeoutOccured 
     print '@@@@ TIMEOUT !'
-    killPlay()
+    killYalp()
     timeoutOccured = True
 
-def killPlay():
+def killYalp():
     try:
         urllib2.urlopen('http://localhost:9000/@kill')
     except:

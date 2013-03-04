@@ -1,9 +1,9 @@
 package models;
 
 import javax.persistence.Entity;
-import play.*;
-import play.db.jpa.*;
-import play.data.validation.*;
+import yalp.*;
+import yalp.db.jpa.*;
+import yalp.data.validation.*;
 
 import javax.persistence.*;
 import java.io.Serializable;

@@ -5,11 +5,11 @@ import models.Book;
 import org.junit.Before;
 import org.junit.Test;
 
-import play.data.validation.Error;
-import play.data.validation.Validation;
-import play.data.validation.Validation.ValidationResult;
-import play.test.Fixtures;
-import play.test.UnitTest;
+import yalp.data.validation.Error;
+import yalp.data.validation.Validation;
+import yalp.data.validation.Validation.ValidationResult;
+import yalp.test.Fixtures;
+import yalp.test.UnitTest;
 
 
 /**

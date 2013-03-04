@@ -1,6 +1,6 @@
 package controllers;
 
-import play.mvc.*;
+import yalp.mvc.*;
 
 public class Tags extends Administration {
 

@@ -1,7 +1,7 @@
 package controllers;
 
 import models.*;
-import play.mvc.*;
+import yalp.mvc.*;
 
 @CRUD.For(Company.class)
 public class Companies extends Administration {

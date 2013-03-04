@@ -1,23 +1,23 @@
 %{
     if(_delete == 'all') {
-        play.test.Fixtures.deleteAll()
+        yalp.test.Fixtures.deleteAll()
     } else if(_delete) {
-        play.test.Fixtures.delete(_delete)
+        yalp.test.Fixtures.delete(_delete)
     }
 }%
 
 %{
     if(_load) {
-        play.test.Fixtures.load(_load)
+        yalp.test.Fixtures.load(_load)
     }
 }%
 
 %{
     if(_arg && _arg instanceof String) {
         try {
-            play.Play.classloader.loadClass(_arg).newInstance()
+            yalp.Yalp.classloader.loadClass(_arg).newInstance()
         } catch(Exception e) {
-            throw new play.exceptions.TagInternalException('Cannot apply ' + _arg + ' fixture because of ' + e.getClass().getName() + ', ' + e.getMessage())
+            throw new yalp.exceptions.TagInternalException('Cannot apply ' + _arg + ' fixture because of ' + e.getClass().getName() + ', ' + e.getMessage())
         }
     }
 %}

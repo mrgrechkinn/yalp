@@ -1,6 +1,6 @@
 package notifiers;
 
-import play.mvc.*;
+import yalp.mvc.*;
 
 import javax.mail.internet.*;
 

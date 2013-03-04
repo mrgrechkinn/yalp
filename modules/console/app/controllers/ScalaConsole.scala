@@ -1,5 +1,5 @@
 import scala.collection.mutable._
-import play.scalasupport.core.OnTheFly
+import yalp.scalasupport.core.OnTheFly
 
 
 package object interpreted {
@@ -27,8 +27,8 @@ package env {
 
 package controllers {
     
-    import play._
-    import play.mvc._
+    import yalp._
+    import yalp.mvc._
 
     @With(Array(classOf[Secure]))
     @Check(Array("isAdmin"))

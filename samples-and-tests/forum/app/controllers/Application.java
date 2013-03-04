@@ -1,15 +1,15 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
-import play.data.validation.*;
+import yalp.*;
+import yalp.mvc.*;
+import yalp.data.validation.*;
 
 import models.*;
 import notifiers.*;
 
 public class Application extends Controller {
 
-    static Integer pageSize = Integer.parseInt(Play.configuration.getProperty("forum.pageSize", "10"));
+    static Integer pageSize = Integer.parseInt(Yalp.configuration.getProperty("forum.pageSize", "10"));
     
     // ~~~~~~~~~~~~ @Before interceptors
     

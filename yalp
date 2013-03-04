@@ -1,0 +1,172 @@
+#!/usr/bin/env python
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Yalp command line script www.yalpframework.com/
+
+import sys
+import os
+import os.path
+import re
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), 'framework', 'pym'))
+
+from yalp.cmdloader import CommandLoader
+from yalp.application import YalpApplication
+from yalp.utils import *
+
+
+# ~~~~~~~~~
+# Little utility to get command line arguments
+def get_opt(args, arg, env):
+    s = "--%s=" % arg
+    for a in args:
+        if a.find(s) == 0:
+            env[arg] = a[len(s):]
+            args.remove(a)
+            # print "~ get_opt: '%s' -> '%s'" % (arg, env[arg])
+            break
+    
+
+# ~~~~~~~~~
+# Main
+
+try:
+
+    yalp_env = dict()
+
+    # ~~~~~~~~~~~~~~~~~~~~~~ Where is the framework?
+    yalp_env["basedir"] = os.path.normpath(os.path.dirname(os.path.realpath(sys.argv[0])))
+
+    # ~~~~~~~~~~~~~~~~~~~~~~ What is the framework id?
+    yalp_env["id_file"] = os.path.join(yalp_env['basedir'], 'id')
+    if os.path.exists(yalp_env["id_file"]):
+        yalp_env["id"] = open(yalp_env["id_file"]).readline().strip()
+    else:
+        yalp_env["id"] = ''
+
+    showLogo = sys.argv.count("--silent") == 0
+
+    if showLogo:
+        # ~~~~~~~~~~~~~~~~~~~~~~ Display logo
+        print r"~ Yalp framework   "
+        print r"~"
+    else:
+        sys.argv.remove("--silent")
+
+    yalp_version_file = os.path.join(yalp_env["basedir"], 'framework', 'src', 'yalp', 'version')
+    if not os.path.exists(yalp_version_file):
+        print "~ Oops. %s file not found" % os.path.normpath(os.path.join(yalp_env["basedir"], 'framework', 'src', 'yalp', 'version'))
+        print "~ Is the framework compiled? "
+        print "~"
+        sys.exit(-1)
+
+    yalp_env["version"] = open(yalp_version_file).readline().strip()
+
+    if showLogo:
+        print "~ yalp! %s, http://www.yalpframework.com" % (yalp_env["version"])
+
+    # ~~~~~~~~~~~~~~~~~~~~~~ Where is the application?
+    application_path = None
+    remaining_args = []
+    if len(sys.argv) == 1:
+        application_path = os.getcwd()
+    if len(sys.argv) == 2:
+        application_path = os.getcwd()
+        remaining_args = sys.argv[2:]
+    if len(sys.argv) > 2:
+        if sys.argv[2].startswith('-'):
+            application_path = os.getcwd()
+            remaining_args = sys.argv[2:]
+        else:
+            application_path = os.path.normpath(os.path.abspath(sys.argv[2]))
+            remaining_args = sys.argv[3:]
+
+    ignoreMissing = False
+    if remaining_args.count('--force') == 1:
+        remaining_args.remove('--force')
+        ignoreMissing = True
+
+    # ~~~~~~~~~~~~~~~~~~~~~~ What is the command?
+    if len(sys.argv) > 1:
+        yalp_command = sys.argv[1]
+    else:
+        yalp_command = 'none'
+
+    # ~~~~~~~~~~~~~~~~~ Override pid_file
+    get_opt(remaining_args, "pid_file", yalp_env)
+
+    # ~~~~~~~~~~~~~~~~~ Override port
+    get_opt(remaining_args, "http.port", yalp_env)
+    get_opt(remaining_args, "https.port", yalp_env)
+
+    # ~~~~~~~~~~~~~~~~~ Override id
+    for a in remaining_args:
+        if a.find('--%') == 0:
+            yalp_env["id"] = a[3:]
+    if remaining_args.count('--%%%s' % yalp_env["id"]) == 1:
+        remaining_args.remove('--%%%s' % yalp_env["id"])
+
+    if yalp_command in ['test', 'auto-test', 'autotest'] :
+        # If framework-id is not a valid test-id, force it to 'test'
+        if not isTestFrameworkId( yalp_env["id"] ): 
+            yalp_env["id"] = 'test'
+
+    if showLogo:
+        if yalp_env["id"] is not '':
+            print "~ framework ID is %s" % yalp_env["id"]
+        print "~"
+
+    # ~~~~~~~~~~~~~~~~~ Checking for disable_check_jpda
+    disable_check_jpda = False
+    if remaining_args.count('-f') == 1:
+        disable_check_jpda = True
+        remaining_args.remove('-f')
+    yalp_env["disable_check_jpda"] = disable_check_jpda 
+
+    yalp_app = YalpApplication(application_path, yalp_env, ignoreMissing)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # ~~~~~~~~~~~~~~~~~~~~~~ The commands ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    cmdloader = CommandLoader(yalp_env["basedir"])
+
+    # ~~~~~~~~~~~~~~~~~ Resolve dependencies if needed
+    if remaining_args.count('--deps') == 1:
+        cmdloader.commands['dependencies'].execute(command='dependencies', app=yalp_app, args=['--sync'], env=yalp_env, cmdloader=cmdloader)
+        remaining_args.remove('--deps')
+
+    # Load module commands
+    if yalp_app:
+        for module in yalp_app.modules():
+            cmdloader.load_yalp_module(module)
+
+    for module in getWithModules(remaining_args, yalp_env):
+        cmdloader.load_yalp_module(module)
+
+    if yalp_command in cmdloader.commands:
+        for name in cmdloader.modules:
+            module = cmdloader.modules[name]
+            if 'before' in dir(module):
+                module.before(command=yalp_command, app=yalp_app, args=remaining_args, env=yalp_env)
+        status = cmdloader.commands[yalp_command].execute(command=yalp_command, app=yalp_app, args=remaining_args, env=yalp_env, cmdloader=cmdloader)
+        for name in cmdloader.modules:
+            module = cmdloader.modules[name]
+            if 'after' in dir(module):
+                module.after(command=yalp_command, app=yalp_app, args=remaining_args, env=yalp_env)
+        sys.exit(status)
+
+    # ~~~~~~~~~~~~~~~~~~~~~~ Invalid command
+    print "~ Usage: yalp cmd [app_path] [--options]"
+    print "~ "
+    print "~ with,  new      Create a new application"
+    print "~        run      Run the application in the current shell"
+    print "~        help     Show yalp help"
+    print "~"
+    if len(sys.argv) > 1:
+        print "~ Invalid command: %s" % sys.argv[1]
+        print "~"
+    sys.exit(-1)
+
+except KeyboardInterrupt:
+    print '~ ...'
+    sys.exit(0)

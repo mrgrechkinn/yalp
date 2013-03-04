@@ -1,6 +1,6 @@
 import org.junit.*;
-import play.test.*;
-import play.cache.*;
+import yalp.test.*;
+import yalp.cache.*;
 import java.util.*;
 
 import models.*;

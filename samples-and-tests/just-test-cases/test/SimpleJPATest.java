@@ -1,5 +1,5 @@
 import org.junit.*;
-import play.test.*;
+import yalp.test.*;
 import java.util.*;
 
 import models.*;

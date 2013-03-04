@@ -1,6 +1,6 @@
 package controllers.sample;
 
-import play.mvc.*;
+import yalp.mvc.*;
 
 public class Photo extends Controller {
     

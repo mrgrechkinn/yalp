@@ -1,7 +1,7 @@
 package controllers;
 
-import play.mvc.*;
-import play.data.validation.*;
+import yalp.mvc.*;
+import yalp.data.validation.*;
 
 import java.util.*;
 

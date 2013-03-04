@@ -1,11 +1,11 @@
 package models;
 
-import play.*;
-import play.db.jpa.*;
+import yalp.*;
+import yalp.db.jpa.*;
 import javax.persistence.*;
 import java.util.*;
 
-import play.data.validation.*;
+import yalp.data.validation.*;
 
 @Entity
 public class Address {

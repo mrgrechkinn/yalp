@@ -2,8 +2,8 @@ package controllers.admin;
 
 import models.*;
 import controllers.*;
-import play.*;
-import play.mvc.*;
+import yalp.*;
+import yalp.mvc.*;
 import java.util.*;
 
 public class Test extends Controller {

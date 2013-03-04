@@ -10,14 +10,14 @@ import models.CompositeIdPk;
 import org.junit.Before;
 import org.junit.Test;
 
-import play.Logger;
-import play.data.binding.Binder;
-import play.db.Model;
-import play.db.Model.Factory;
-import play.db.Model.Property;
-import play.db.jpa.JPA;
-import play.test.Fixtures;
-import play.test.UnitTest;
+import yalp.Logger;
+import yalp.data.binding.Binder;
+import yalp.db.Model;
+import yalp.db.Model.Factory;
+import yalp.db.Model.Property;
+import yalp.db.jpa.JPA;
+import yalp.test.Fixtures;
+import yalp.test.UnitTest;
 
 public class CompositeIdBinderTest extends UnitTest {
     

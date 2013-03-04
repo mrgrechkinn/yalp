@@ -1,9 +1,9 @@
 import org.junit.*;
 import java.util.*;
-import play.test.*;
+import yalp.test.*;
 import models.*;
 
-import play.libs.*;
+import yalp.libs.*;
 
 public class OpenIDTest extends UnitTest {
 

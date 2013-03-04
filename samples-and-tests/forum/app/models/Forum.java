@@ -3,8 +3,8 @@ package models;
 import javax.persistence.*;
 import java.util.*;
 
-import play.db.jpa.*;
-import play.data.validation.*;
+import yalp.db.jpa.*;
+import yalp.data.validation.*;
 
 @Entity
 public class Forum extends Model {

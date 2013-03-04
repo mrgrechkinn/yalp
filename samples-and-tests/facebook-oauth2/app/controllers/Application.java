@@ -1,11 +1,11 @@
 package controllers;
 
 import models.User;
-import play.Logger;
-import play.libs.OAuth2;
-import play.libs.WS;
-import play.mvc.Before;
-import play.mvc.Controller;
+import yalp.Logger;
+import yalp.libs.OAuth2;
+import yalp.libs.WS;
+import yalp.mvc.Before;
+import yalp.mvc.Controller;
 
 import com.google.gson.JsonObject;
 
@@ -58,7 +58,7 @@ public class Application extends Controller {
     }
 
     static String authURL() {
-        return play.mvc.Router.getFullUrl("Application.auth");
+        return yalp.mvc.Router.getFullUrl("Application.auth");
     }
 
     static User connected() {

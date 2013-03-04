@@ -1,6 +1,6 @@
 package jobs;
 
-import play.jobs.*;
+import yalp.jobs.*;
 import java.util.*;
 
 public class DoSomething extends Job<String> {

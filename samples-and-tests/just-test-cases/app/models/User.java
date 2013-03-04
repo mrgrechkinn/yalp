@@ -1,9 +1,9 @@
 package models;
 
-import play.data.binding.As;
-import play.data.binding.NoBinding;
-import play.data.validation.*;
-import play.db.jpa.*;
+import yalp.data.binding.As;
+import yalp.data.binding.NoBinding;
+import yalp.data.validation.*;
+import yalp.db.jpa.*;
 
 import javax.persistence.*;
 import java.util.*;

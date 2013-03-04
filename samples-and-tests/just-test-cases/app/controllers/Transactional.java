@@ -1,7 +1,7 @@
 package controllers;
 
-import play.mvc.*;
-import play.db.jpa.*;
+import yalp.mvc.*;
+import yalp.db.jpa.*;
 
 import models.*;
 
@@ -9,7 +9,7 @@ import models.*;
 public class Transactional extends Controller {
 
     // whatever we write here will not be committed
-    @play.db.jpa.Transactional(readOnly=true)
+    @yalp.db.jpa.Transactional(readOnly=true)
     public static void readOnlyTest() {
         Post post = new Post();
         post.name = "TransactionalTest";
@@ -46,7 +46,7 @@ public class Transactional extends Controller {
     }
 
 	//This should be excluded from any transactions.
-	@play.db.jpa.NoTransaction
+	@yalp.db.jpa.NoTransaction
 	public static void disabledTransactionTest() {
 		renderText("isInsideTransaction: " + JPA.isInsideTransaction());
 	}

@@ -84,23 +84,23 @@
 	}
 </style>
 
-#{if exception instanceof play.exceptions.PlayException}
+#{if exception instanceof yalp.exceptions.YalpException}
     <div id="header" class="block">
         <h1>
             ${exception.errorTitle} 
         </h1>
-        #{if play.Play.mode.name() == 'DEV'}
+        #{if yalp.Yalp.mode.name() == 'DEV'}
         <p>
             ${exception.errorDescription.raw()}
         </p>
         #{/if}
-        #{if play.Play.mode.name() == 'PROD'}
+        #{if yalp.Yalp.mode.name() == 'PROD'}
         <p>
-            Error details are not displayed when Play! is in PROD mode. Check server logs for detail.
+            Error details are not displayed when Yalp is in PROD mode. Check server logs for detail.
         </p>
         #{/if}
     </div>
-    #{if exception.sourceAvailable && exception.lineNumber && play.Play.mode.name() == 'DEV'}
+    #{if exception.sourceAvailable && exception.lineNumber && yalp.Yalp.mode.name() == 'DEV'}
     <div id="source" class="block">
         <h2>In ${exception.sourceFile} (around line ${exception.lineNumber})</h2>
         %{ 
@@ -108,12 +108,12 @@
             to = exception.lineNumber + 5  < exception.source.size() ? exception.lineNumber + 5 : exception.source.size()-1          
         }%
         #{list items:exception.source[from..to], as:'line'}
-            ${play.utils.Utils.open(exception.sourceFile, line_index+from) ? ('<a href="' + play.utils.Utils.open(exception.sourceFile, line_index+from) + '">').raw() : ''}
+            ${yalp.utils.Utils.open(exception.sourceFile, line_index+from) ? ('<a href="' + yalp.utils.Utils.open(exception.sourceFile, line_index+from) + '">').raw() : ''}
                 <div class="line ${exception.lineNumber == line_index+from ? 'error':''}">
                     <span class="lineNumber">${line_index+from}:</span>
                     <pre>&nbsp;${line.escape().toString().replace('&darr;', '<strong>&darr;</strong>').replace('\000', '<em>').replace('\001', '</em>').raw()}</pre>
                 </div>
-            ${play.utils.Utils.open(exception.sourceFile, line_index+from) ? '</a>'.raw() : ''}
+            ${yalp.utils.Utils.open(exception.sourceFile, line_index+from) ? '</a>'.raw() : ''}
          #{/list}
     </div>
     #{/if}

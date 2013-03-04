@@ -3,8 +3,8 @@
 <project name="Grizzly" default="build" basedir=".">
 
     <path id="project.classpath">
-        <pathelement path="${play.path}/framework/classes"/>
-        <fileset dir="${play.path}/framework/lib">
+        <pathelement path="${yalp.path}/framework/classes"/>
+        <fileset dir="${yalp.path}/framework/lib">
             <include name="*.jar"/>
         </fileset>
         <fileset dir="lib">
@@ -18,13 +18,13 @@
             <fileset dir="src">
                 <include name="**/*.properties"/>
                 <include name="**/*.xml"/>
-                <include name="**/play.plugins"/>
-                <include name="**/play.static"/>
+                <include name="**/yalp.plugins"/>
+                <include name="**/yalp.static"/>
             </fileset>
         </copy>
-        <jar destfile="lib/play-grizzly.jar" basedir="tmp/classes">
+        <jar destfile="lib/yalp-grizzly.jar" basedir="tmp/classes">
             <manifest>
-                <section name="Play">
+                <section name="Yalp">
                     <attribute name="Specification-Title" value="Grizzly"/>
                 </section>
             </manifest>

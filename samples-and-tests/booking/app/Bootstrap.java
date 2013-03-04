@@ -1,5 +1,5 @@
-import play.test.*;
-import play.jobs.*;
+import yalp.test.*;
+import yalp.jobs.*;
 import models.*;
 
 @OnApplicationStart

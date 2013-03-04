@@ -1,8 +1,8 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
-import play.libs.F.*;
+import yalp.*;
+import yalp.mvc.*;
+import yalp.libs.F.*;
 
 import java.util.*;
 import com.google.gson.reflect.*;

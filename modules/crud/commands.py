@@ -1,7 +1,7 @@
 # CRUD
 
 import getopt
-from play.utils import *
+from yalp.utils import *
 
 COMMANDS = ['crud:ov', 'crud:override']
 
@@ -13,7 +13,7 @@ HELP = {
 def execute(**kargs):
     app = kargs.get("app")
     remaining_args = kargs.get("args")
-    play_env = kargs.get("env")
+    yalp_env = kargs.get("env")
 
     try:
         optlist, args = getopt.getopt(remaining_args, 't:', ['css','layout','template='])

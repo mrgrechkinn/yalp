@@ -6,8 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import play.db.jpa.GenericModel;
-import play.db.jpa.Model;
+import yalp.db.jpa.GenericModel;
+import yalp.db.jpa.Model;
 
 @Entity
 public class ContactData extends GenericModel {

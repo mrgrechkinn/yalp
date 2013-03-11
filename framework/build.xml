@@ -235,10 +235,16 @@
 
     <target name="test" depends="clean,jar" description="run tests suite">
         <condition property="yalpExtension" value=".bat">
-            <and><os family="windows"/></and>
+            <os family="windows"/>
+        </condition>
+        <condition property="python-exec" value="../python/python.exe">
+            <os family="windows"/>
         </condition>
         <condition property="yalpExtension" value="">
-            <and><os family="unix"/></and>
+            <os family="unix"/>
+        </condition>
+        <condition property="python-exec" value="python">
+            <os family="unix"/>
         </condition>
 
         <echo message="Testing unittests" />
@@ -247,7 +253,7 @@
         
         <echo message="Testing development lifecycle (wait ...)" />
 
-        <exec executable="python" failonerror="true">
+        <exec executable="${python-exec}" failonerror="true">
             <arg value="${basedir}/../samples-and-tests/i-am-a-developer/tests.py" />
         </exec>
 

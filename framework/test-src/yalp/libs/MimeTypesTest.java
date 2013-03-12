@@ -1,17 +1,27 @@
 package yalp.libs;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
-
+import yalp.Yalp;
 import yalp.mvc.Http.Response;
+
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
 
 
 /**
  * Tests for {@link MimeTypes} class.
  */
 public class MimeTypesTest {
+
+    @Before
+    public void setup() {
+        Response resp = new Response();
+        Response.current.set(resp);
+        Yalp.configuration = new Properties();
+    }
+
     @Test
     public void contentTypeShouldReturnResponseCharsetWhenAvailable() throws Exception {
         String oldEncoding = Response.current().encoding;

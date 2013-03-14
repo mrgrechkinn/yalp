@@ -8,7 +8,7 @@
   
   <context-param>
     <param-name>yalp.id</param-name>
-    <param-value>%PLAY_ID%</param-value>
+    <param-value>%YALP_ID%</param-value>
   </context-param>
   
   <listener>

@@ -1,4 +1,4 @@
-# Here you can create play commands that are specific to the module, and extend existing commands
+# Here you can create yalp commands that are specific to the module, and extend existing commands
 
 MODULE = '%MODULE%'
 

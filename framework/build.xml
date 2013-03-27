@@ -85,9 +85,9 @@
                author="false"
                version="true"
                use="true"
-               windowtitle="Play! API">
+               windowtitle="Yalp API">
             <classpath refid="project.classpath"/>
-            <doctitle><![CDATA[<h1>Play! ${version}</h1>]]></doctitle>
+            <doctitle><![CDATA[<h1>Yalp ${version}</h1>]]></doctitle>
             <bottom><![CDATA[<a href="http://guillaume.bort.fr">Guillaume Bort</a> &amp; <a href="http://www.zenexity.fr">zenexity</a> - Distributed under <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2 licence</a>, without any warrantly]]></bottom>
             <tag name="todo" scope="all" description="To do:"/>
             <group title="Libs" packages="yalp.libs.*"/>
@@ -106,8 +106,8 @@
             <manifest>
                 <attribute name="Premain-Class" value="yalp.classloading.HotswapAgent"/>
                 <attribute name="Can-Redefine-Classes" value="true" />
-                <section name="Play">
-                    <attribute name="Specification-Title" value="Play! framework"/>
+                <section name="Yalp">
+                    <attribute name="Specification-Title" value="Yalp framework"/>
                     <attribute name="Specification-Version" value="${version}"/>
                     <attribute name="Specification-Vendor" value="zenexity"/>
                 </section>
@@ -116,7 +116,7 @@
     </target>
 
     <target name="support">
-        <zip destfile="../support/textmate.zip" comment="Textmate bundle for Play! - ${version}" update="false">
+        <zip destfile="../support/textmate.zip" comment="Textmate bundle for Yalp - ${version}" update="false">
             <zipfileset dir="../support/textmate" includes="**/**" />
         </zip>
     </target>
@@ -320,7 +320,7 @@
     </target>
 
     <target name="debug-test-single" depends="compile-tests" description="debug a single test">
-        <nbjpdastart addressproperty="jpda.address" name="Play! framework" transport="dt_socket">
+        <nbjpdastart addressproperty="jpda.address" name="Yalp framework" transport="dt_socket">
             <classpath refid="project.classpath"/>
         </nbjpdastart>
         <mkdir dir="tests-results" />
@@ -389,7 +389,7 @@
 
     <target name="package" depends="clean,version,jar,javadoc">
         <mkdir dir="dist" /> 
-        <zip destfile="dist/yalp-${version}.zip" comment="Play! ${version}" update="false">
+        <zip destfile="dist/yalp-${version}.zip" comment="Yalp ${version}" update="false">
             <zipfileset prefix="yalp-${version}" dir=".." includes="**/*" excludes="**/cobertura.ser,**/*.pyc,hs_err*,.*,.*/*,framework/dist/**,id,yalp,nbproject/**,**/.bzr/**,**/.git/**,*.bzrignore,support/textmate/**,framework/classes/**,framework/tests-results/**,samples-and-tests/**/test-result,samples-and-tests/**/i-am-working-here,samples-and-tests/**/data,samples-and-tests/**/logs,samples-and-tests/**/tmp,samples-and-tests/**/db,samples-and-tests/**/attachments,modules/**" />
             <zipfileset prefix="yalp-${version}" dir=".." includes="yalp" filemode="777" />
             <zipfileset prefix="yalp-${version}" dir=".." includes="modules/grizzly/**,modules/crud/**,modules/secure/**,modules/docviewer/**,modules/testrunner/**" excludes="**/*.pyc" />

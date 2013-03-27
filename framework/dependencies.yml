@@ -1,11 +1,11 @@
 
-# Play
+# Yalp
 self: yalp -> yalp $version
 
 # Don't follow transitive dependencies for this project
 transitiveDependencies: false
 
-# This core dependencies are required by Play framework
+# This core dependencies are required by Yalp framework
 require:    &allDependencies
     - antlr 2.7.7
     - c3p0 0.9.1.2

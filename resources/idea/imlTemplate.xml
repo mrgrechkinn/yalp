@@ -23,23 +23,23 @@
             </library>
         </orderEntry>
         <orderEntry type="module-library">
-            <library name="PlayFramework Dependencies">
+            <library name="YalpFramework Dependencies">
                 <CLASSES>
-                    <root url="file://%PLAYHOME%/framework/lib" />
+                    <root url="file://%YALPHOME%/framework/lib" />
                 </CLASSES>
                 <JAVADOC />
                 <SOURCES />
-                <jarDirectory url="file://%PLAYHOME%/framework/lib" recursive="false" />
+                <jarDirectory url="file://%YALPHOME%/framework/lib" recursive="false" />
             </library>
         </orderEntry>
         <orderEntry type="module-library">
             <library>
                 <CLASSES>
-                    <root url="jar://%PLAYHOME%/framework/play-%PLAYVERSION%.jar!/" />
+                    <root url="jar://%YALPHOME%/framework/yalp-%YALPVERSION%.jar!/" />
                 </CLASSES>
                 <JAVADOC />
                 <SOURCES>
-                    <root url="file://%PLAYHOME%/framework/src" />
+                    <root url="file://%YALPHOME%/framework/src" />
                 </SOURCES>
             </library>
         </orderEntry>

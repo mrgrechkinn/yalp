@@ -103,7 +103,7 @@
                 <package-root>app</package-root>
                 <package-root>test</package-root>
                 %MODULES%
-                <classpath mode="compile">%PLAY_CLASSPATH%</classpath>
+                <classpath mode="compile">%YALP_CLASSPATH%</classpath>
                 <built-to>nbproject/classes</built-to>  
                 <source-level>1.5</source-level>                 
             </compilation-unit>

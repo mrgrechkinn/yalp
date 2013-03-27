@@ -26,7 +26,7 @@ public class OrderSafePropertiesTest {
     }
 
     @Test
-    public void verifyCorrectOrder() throws Exception{
+    public void verifyCorrectOrder() throws Exception {
         InputStream in = getClass().getResourceAsStream("/yalp/utils/OrderSaferPropertiesTest.properties");
         assertThat(in).isNotNull();
         Properties p = new OrderSafeProperties();
@@ -36,10 +36,10 @@ public class OrderSafePropertiesTest {
         // check order using keyet
         int order = 0;
         for (Object _key : p.keySet()) {
-            String key = (String)_key;
-            if( !key.startsWith("_")) {
+            String key = (String) _key;
+            if (!key.startsWith("_")) {
 
-                String value = (String)p.get(key);
+                String value = (String) p.get(key);
 
                 int currentOrder = Integer.parseInt(value);
                 order++;
@@ -50,9 +50,9 @@ public class OrderSafePropertiesTest {
         // check order using entrySet
         order = 0;
         for (Map.Entry<Object, Object> e : p.entrySet()) {
-            String key = (String)e.getKey();
-            String value = (String)e.getValue();
-            if( !key.startsWith("_")) {
+            String key = (String) e.getKey();
+            String value = (String) e.getValue();
+            if (!key.startsWith("_")) {
 
                 int currentOrder = Integer.parseInt(value);
                 order++;
@@ -96,11 +96,11 @@ public class OrderSafePropertiesTest {
         assertThat(p.getProperty("_check_8")).isEqualTo("х");// Unicode Character 'CYRILLIC SMALL LETTER HA' (U+0445)
 
         // test from Lyubomir Ivanov
-        final String cyrillic_bulgarian_caps  = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЮЯ";
+        final String cyrillic_bulgarian_caps = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЮЯ";
         final String cyrillic_bulgarian_small = "абвгдежзийклмнопрстуфхцчшщъьюя";
-        final String cyrillic_bulgarian_old   = "ѣѢѫѪѭѬ";
-        final String cyrillic_russian         = "ЭЫэы";
-        final String cyrillic_serbian         = "ЉЊЂЋЏљњђћџ";
+        final String cyrillic_bulgarian_old = "ѣѢѫѪѭѬ";
+        final String cyrillic_russian = "ЭЫэы";
+        final String cyrillic_serbian = "ЉЊЂЋЏљњђћџ";
         assertThat(p.getProperty("_cyrillic_bulgarian_caps")).isEqualTo(cyrillic_bulgarian_caps);
         assertThat(p.getProperty("_cyrillic_bulgarian_small")).isEqualTo(cyrillic_bulgarian_small);
         assertThat(p.getProperty("_cyrillic_bulgarian_old")).isEqualTo(cyrillic_bulgarian_old);

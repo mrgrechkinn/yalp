@@ -23,13 +23,13 @@ public class ValidationTest {
 
         Validation.addError(field, errorMsg);
 
-        assertThat( Validation.error(field).message).isEqualTo(errorMsg);
+        assertThat(Validation.error(field).message).isEqualTo(errorMsg);
         assertThat(Validation.errors(field)).containsOnly(Validation.error(field));
 
         // ticket [#109] - add an error with null-key
         Validation.addError(null, errorMsg);
         // make sure this null key does not break stuff
-        assertThat( Validation.error(field).message).isEqualTo(errorMsg);
+        assertThat(Validation.error(field).message).isEqualTo(errorMsg);
         assertThat(Validation.errors(field)).containsOnly(Validation.error(field));
 
     }

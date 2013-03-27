@@ -21,12 +21,12 @@ public class GroovyTemplateTest {
         GroovyTemplate t = new GroovyTemplate("Template_123", groovySrc);
         new GroovyTemplateCompiler().compile(t);
 
-        Map<String, Object> args = new HashMap<String,Object>();
+        Map<String, Object> args = new HashMap<String, Object>();
         args.put("name", "Morten");
-        assertThat( t.render( args ) ).isEqualTo("hello world: Morten");
+        assertThat(t.render(args)).isEqualTo("hello world: Morten");
 
         //do it again
-        assertThat( t.render( args ) ).isEqualTo("hello world: Morten");
+        assertThat(t.render(args)).isEqualTo("hello world: Morten");
 
     }
 
@@ -36,21 +36,21 @@ public class GroovyTemplateTest {
         new YalpBuilder().build();
 
         StringBuilder longString = new StringBuilder();
-        for (int i=0;i<1000;i++) {
+        for (int i = 0; i < 1000; i++) {
             longString.append("11111111112222222222333333333344444444445555555555");
             longString.append("11111111112222222222333333333344444444445555555555");
         }
 
-        String groovySrc = "hello world"+longString+": ${name}";
+        String groovySrc = "hello world" + longString + ": ${name}";
         // make sure our test line is longer then maxPlainTextLength
-        assertThat(groovySrc.length()).isGreaterThan( GroovyTemplateCompiler.maxPlainTextLength + 100);
+        assertThat(groovySrc.length()).isGreaterThan(GroovyTemplateCompiler.maxPlainTextLength + 100);
 
         GroovyTemplate t = new GroovyTemplate("Template_123", groovySrc);
         new GroovyTemplateCompiler().compile(t);
 
-        Map<String, Object> args = new HashMap<String,Object>();
+        Map<String, Object> args = new HashMap<String, Object>();
         args.put("name", "Morten");
-        assertThat( t.render( args ) ).isEqualTo("hello world"+longString+": Morten");
+        assertThat(t.render(args)).isEqualTo("hello world" + longString + ": Morten");
 
     }
 
@@ -74,33 +74,33 @@ public class GroovyTemplateTest {
 
     private void internalVerifyCompilingExtremelyLongLinesWithSpecialCharAsLastCharBeforeBreak(char lastChar) {
         StringBuilder longString = new StringBuilder();
-        for (int i=0;i<1000;i++) {
+        for (int i = 0; i < 1000; i++) {
             longString.append("11111111112222222222333333333344444444445555555555");
             longString.append("11111111112222222222333333333344444444445555555555");
         }
 
         // now insert a special char on the last line before we split the plainText with new print
-        longString.insert(GroovyTemplateCompiler.maxPlainTextLength-1, lastChar);
+        longString.insert(GroovyTemplateCompiler.maxPlainTextLength - 1, lastChar);
 
-        String groovySrc = longString+": ${name}";
+        String groovySrc = longString + ": ${name}";
         // make sure our test line is longer then maxPlainTextLength
-        assertThat(groovySrc.length()).isGreaterThan( GroovyTemplateCompiler.maxPlainTextLength + 100);
+        assertThat(groovySrc.length()).isGreaterThan(GroovyTemplateCompiler.maxPlainTextLength + 100);
 
         GroovyTemplate t = new GroovyTemplate("Template_123", groovySrc);
         new GroovyTemplateCompiler().compile(t);
 
-        Map<String, Object> args = new HashMap<String,Object>();
+        Map<String, Object> args = new HashMap<String, Object>();
         args.put("name", "Morten");
-        assertThat( t.render( args ) ).isEqualTo(longString+": Morten");
+        assertThat(t.render(args)).isEqualTo(longString + ": Morten");
     }
-  
+
     // [#107] caused any tag broken with a CR to fail. (It would be compiled to list arg:items:....).
     @Test
     public void verifyCompilingWithCR() {
         final String source = "#{list items:1..3,\ras:'i'}${i}#{/list}";
         GroovyTemplate groovyTemplate = new GroovyTemplate("tag_broken_by_CR", source);
         new GroovyTemplateCompiler().compile(groovyTemplate);
-        assertEquals("123",groovyTemplate.render());
+        assertEquals("123", groovyTemplate.render());
     }
 
     @Test

@@ -1,12 +1,11 @@
 package yalp;
 /**
- * 
+ *
  */
 
 
 import java.io.File;
 import java.util.Properties;
-
 
 
 import org.apache.log4j.Level;
@@ -21,25 +20,26 @@ import static org.junit.Assert.*;
 
 /**
  * Test the Logger class. At the moment only a few methods.
- * @author niels
  *
+ * @author niels
  */
 public class LoggerTest {
 
     private static final String APPLICATION_LOG_PATH_PROPERTYNAME = "application.log.path";
-    
+
 //    private static String applicationLogPath;
-    
+
     private static Properties yalpConfig;
-    
+
     private static File applicationPath;
-    
+
     private static String id;
-    
+
     private static org.apache.log4j.Logger log4j;
-    
+
     /**
      * Safes the original configuration and log.
+     *
      * @throws java.lang.Exception
      */
     @BeforeClass
@@ -47,29 +47,30 @@ public class LoggerTest {
         yalpConfig = Yalp.configuration;
         applicationPath = Yalp.applicationPath;
         id = Yalp.id;
-        log4j = Logger.log4j;        
+        log4j = Logger.log4j;
     }
 
     /**
      * Restore  the original configuration and log.
+     *
      * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
         Yalp.configuration = yalpConfig;
         Yalp.applicationPath = applicationPath;
-        Yalp.id = id ;
+        Yalp.id = id;
         Logger.log4j = log4j;
         if (Yalp.configuration != null) {
-                Logger.init();
+            Logger.init();
         }
     }
-    
+
     @Before
     public void setUp() throws Exception {
         Yalp.configuration = new Properties();
         Yalp.applicationPath = new File(".");
-        Yalp.id="test";   
+        Yalp.id = "test";
     }
 
     @After
@@ -81,23 +82,23 @@ public class LoggerTest {
      * Test method for {@link yalp.Logger#init()}.
      */
     @Test
-    public void testInitWithProperties() {        
+    public void testInitWithProperties() {
         Yalp.configuration.put(APPLICATION_LOG_PATH_PROPERTYNAME, "/yalp/testlog4j.properties");
-        Logger.log4j=null;
+        Logger.log4j = null;
         Logger.init();
         org.apache.log4j.Logger log4jLogger = org.apache.log4j.Logger.getLogger("logtest.properties");
-        assertEquals(Level.ERROR,  log4jLogger.getLevel());
+        assertEquals(Level.ERROR, log4jLogger.getLevel());
     }
 
     /**
      * Test method for {@link yalp.Logger#init()}.
      */
     @Test
-    public void testInitWithXML() {        
+    public void testInitWithXML() {
         Yalp.configuration.put(APPLICATION_LOG_PATH_PROPERTYNAME, "/yalp/testlog4j.xml");
-        Logger.log4j=null;
+        Logger.log4j = null;
         Logger.init();
         org.apache.log4j.Logger log4jLogger = org.apache.log4j.Logger.getLogger("logtest.xml");
-        assertEquals(Level.ERROR,  log4jLogger.getLevel());
+        assertEquals(Level.ERROR, log4jLogger.getLevel());
     }
 }

@@ -28,9 +28,8 @@ public class MimeTypesTest {
         try {
             Response.current().encoding = "my-response-encoding";
             assertEquals("text/xml; charset=my-response-encoding",
-                         MimeTypes.getContentType("test.xml"));
-        }
-        finally {
+                    MimeTypes.getContentType("test.xml"));
+        } finally {
             Response.current().encoding = oldEncoding;
         }
     }
@@ -41,9 +40,8 @@ public class MimeTypesTest {
         try {
             Response.current.set(null);
             assertEquals("text/xml; charset=" + yalp.Yalp.defaultWebEncoding,
-                         MimeTypes.getContentType("test.xml"));
-        }
-        finally {
+                    MimeTypes.getContentType("test.xml"));
+        } finally {
             Response.current.set(originalResponse);
         }
     }

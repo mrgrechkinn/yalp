@@ -13,7 +13,7 @@ import java.util.Properties;
 
 /**
  * Builder-pattern-builder for Yalp-class..
- *
+ * <p/>
  * It's kind of odd since Yalp only uses statics,
  * But it basically inits the needed properties for Yalp-object to work in unittests
  */
@@ -21,21 +21,21 @@ public class YalpBuilder {
 
     public Properties configuration = new Properties();
 
-    public YalpBuilder withConfiguration(Properties config){
+    public YalpBuilder withConfiguration(Properties config) {
         this.configuration = config;
         return this;
     }
 
 
     @SuppressWarnings({"deprecation"})
-    public void build(){
-        
+    public void build() {
+
         Yalp.configuration = configuration;
         Yalp.classes = new ApplicationClasses();
         Yalp.javaPath = new ArrayList<VirtualFile>();
         Yalp.applicationPath = new File(".");
         Yalp.classloader = new ApplicationClassloader();
-        Yalp.plugins = Collections.unmodifiableList( new ArrayList<YalpPlugin>());
+        Yalp.plugins = Collections.unmodifiableList(new ArrayList<YalpPlugin>());
 
     }
 }

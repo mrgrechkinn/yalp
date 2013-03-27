@@ -2,6 +2,7 @@ package yalp.plugins;
 
 import java.util.Arrays;
 import java.util.Collection;
+
 import org.junit.Test;
 import yalp.CorePlugin;
 import yalp.Yalp;
@@ -56,11 +57,11 @@ public class PluginCollectionTest {
         new YalpBuilder().build();
 
         //create custom PluginCollection that fakes that TestPlugin is application plugin
-        PluginCollection pc = new PluginCollection(){
+        PluginCollection pc = new PluginCollection() {
             @Override
             protected boolean isLoadedByApplicationClassloader(YalpPlugin plugin) {
                 //return true only if This is our TestPlugin
-                return plugin.getClass().equals( TestPlugin.class);
+                return plugin.getClass().equals(TestPlugin.class);
             }
         };
         //make sure we load custom yalp.plugins-file
@@ -78,17 +79,17 @@ public class PluginCollectionTest {
     }
 
     @Test
-    public void verifyReloading() throws Exception{
+    public void verifyReloading() throws Exception {
         //verify that only application specific plugins gets reloaded
         new YalpBuilder().build();
 
 
         //create custom PluginCollection that fakes that TestPlugin is application plugin
-        PluginCollection pc = new PluginCollection(){
+        PluginCollection pc = new PluginCollection() {
             @Override
             protected boolean isLoadedByApplicationClassloader(YalpPlugin plugin) {
                 //return true only if This is our TestPlugin
-                return plugin.getClass().equals( TestPlugin.class);
+                return plugin.getClass().equals(TestPlugin.class);
             }
         };
         //make sure we load custom yalp.plugins-file
@@ -111,14 +112,14 @@ public class PluginCollectionTest {
 
         YalpPlugin testPlugin_second_instance = pc.getPluginInstance(TestPlugin.class);
 
-        assertThat(pc.getPluginInstance(CorePlugin.class)).isEqualTo( corePlugin_first_instance);
-        assertThat(testPlugin_second_instance).isNotEqualTo( testPlugin_first_instance);
+        assertThat(pc.getPluginInstance(CorePlugin.class)).isEqualTo(corePlugin_first_instance);
+        assertThat(testPlugin_second_instance).isNotEqualTo(testPlugin_first_instance);
 
     }
 
     @SuppressWarnings({"deprecation"})
     @Test
-    public void verifyUpdateYalpPluginsList(){
+    public void verifyUpdateYalpPluginsList() {
         new YalpBuilder().build();
 
         assertThat(Yalp.plugins).isEmpty();
@@ -126,28 +127,28 @@ public class PluginCollectionTest {
         PluginCollection pc = new PluginCollection();
         pc.loadPlugins();
 
-        assertThat(Yalp.plugins).containsExactly( pc.getEnabledPlugins().toArray());
+        assertThat(Yalp.plugins).containsExactly(pc.getEnabledPlugins().toArray());
 
 
     }
 
     @SuppressWarnings({"deprecation"})
     @Test
-    public void verifyThatDisabelingPluginsTheOldWayStillWorks(){
+    public void verifyThatDisabelingPluginsTheOldWayStillWorks() {
         PluginCollection pc = new PluginCollection();
 
 
         YalpPlugin legacyPlugin = new LegacyPlugin();
 
-        pc.addPlugin( legacyPlugin );
-        pc.addPlugin( new TestPlugin() );
+        pc.addPlugin(legacyPlugin);
+        pc.addPlugin(new TestPlugin());
 
-        pc.initializePlugin( legacyPlugin );
+        pc.initializePlugin(legacyPlugin);
 
-        assertThat( pc.getEnabledPlugins() ).containsExactly(legacyPlugin);
+        assertThat(pc.getEnabledPlugins()).containsExactly(legacyPlugin);
 
         //make sure Yalp.plugins-list is still correct
-        assertThat(Yalp.plugins).isEqualTo( pc.getEnabledPlugins() );
+        assertThat(Yalp.plugins).isEqualTo(pc.getEnabledPlugins());
 
     }
 
@@ -180,13 +181,13 @@ class LegacyPlugin extends YalpPlugin {
     public void onLoad() {
         //find TestPlugin in Yalp.plugins-list and remove it to disable it
         YalpPlugin pluginToRemove = null;
-        for( YalpPlugin pp : Yalp.plugins){
-            if( pp.getClass().equals( TestPlugin.class)){
+        for (YalpPlugin pp : Yalp.plugins) {
+            if (pp.getClass().equals(TestPlugin.class)) {
                 pluginToRemove = pp;
                 break;
             }
         }
-        Yalp.plugins.remove( pluginToRemove);
+        Yalp.plugins.remove(pluginToRemove);
     }
 
 }
@@ -217,7 +218,14 @@ class PluginWithTests2 extends YalpPlugin {
     }
 }
 
-class PluginUnit {}
-class PluginUnit2 {}
-class PluginFunc {}
-class PluginFunc2 {}
+class PluginUnit {
+}
+
+class PluginUnit2 {
+}
+
+class PluginFunc {
+}
+
+class PluginFunc2 {
+}

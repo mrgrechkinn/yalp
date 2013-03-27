@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.ivy.core.module.descriptor.Configuration;
 import org.apache.ivy.core.module.descriptor.DefaultDependencyDescriptor;
 import org.apache.ivy.core.module.descriptor.DefaultExcludeRule;
@@ -94,7 +95,7 @@ public class YamlParser extends AbstractModuleDescriptorParser {
             descriptor.setLastModified(rsrc.getLastModified());
 
             boolean transitiveDependencies = get(data, "transitiveDependencies", boolean.class, true);
-            
+
             if (data.containsKey("require")) {
                 if (data.get("require") instanceof List) {
 
@@ -116,13 +117,13 @@ public class YamlParser extends AbstractModuleDescriptorParser {
 
                         // Hack
                         depName = depName.replace("$version", System.getProperty("yalp.version"));
-                        if(depName.matches("yalp\\s+->\\s+yalp") || depName.equals("yalp")) {
+                        if (depName.matches("yalp\\s+->\\s+yalp") || depName.equals("yalp")) {
                             depName = "yalp -> yalp " + System.getProperty("yalp.version");
                         }
-                        if(depName.matches("yalp\\s+->\\s+crud") || depName.equals("crud")) {
+                        if (depName.matches("yalp\\s+->\\s+crud") || depName.equals("crud")) {
                             depName = "yalp -> crud " + System.getProperty("yalp.version");
                         }
-                        if(depName.matches("yalp\\s+->\\s+secure") || depName.equals("secure")) {
+                        if (depName.matches("yalp\\s+->\\s+secure") || depName.equals("secure")) {
                             depName = "yalp -> secure " + System.getProperty("yalp.version");
                         }
 
@@ -134,11 +135,11 @@ public class YamlParser extends AbstractModuleDescriptorParser {
                             }
                         }
                         HashMap extraAttributesMap = null;
-			if(m.groupCount() == 4 &&  m.group(4) != null && !m.group(4).trim().isEmpty()){
-			    // dependency has a classifier
-			    extraAttributesMap = new HashMap();
-			    extraAttributesMap.put("classifier", m.group(4).trim());
-			}
+                        if (m.groupCount() == 4 && m.group(4) != null && !m.group(4).trim().isEmpty()) {
+                            // dependency has a classifier
+                            extraAttributesMap = new HashMap();
+                            extraAttributesMap.put("classifier", m.group(4).trim());
+                        }
 
                         ModuleRevisionId depId = ModuleRevisionId.newInstance(m.group(1), m.group(2), m.group(3), extraAttributesMap);
 
@@ -212,7 +213,7 @@ public class YamlParser extends AbstractModuleDescriptorParser {
     }
 
     public void toIvyFile(InputStream in, Resource rsrc, File file, ModuleDescriptor md) throws ParseException, IOException {
-        ((DefaultModuleDescriptor)md).toIvyFile(file);
+        ((DefaultModuleDescriptor) md).toIvyFile(file);
     }
 
     @SuppressWarnings("unchecked")
@@ -220,7 +221,7 @@ public class YamlParser extends AbstractModuleDescriptorParser {
         if (data.containsKey(key)) {
             Object o = data.get(key);
             if (type.isAssignableFrom(o.getClass())) {
-                if(o instanceof String) {
+                if (o instanceof String) {
                     o = o.toString().replace("${yalp.path}", System.getProperty("yalp.path"));
                     o = o.toString().replace("${application.path}", System.getProperty("application.path"));
                 }

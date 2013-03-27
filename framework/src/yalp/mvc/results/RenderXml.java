@@ -36,7 +36,7 @@ public class RenderXml extends Result {
         try {
             setContentTypeIfNotSet(response, "text/xml");
             response.out.write(xml.getBytes(getEncoding()));
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new UnexpectedException(e);
         }
     }

@@ -35,8 +35,7 @@ public class SslHttpServerContextFactory {
             // Made sure yalp reads the properties
             // Look if we have key and cert files. If we do, we use our own keymanager
             if (Yalp.getFile(p.getProperty("certificate.key.file", "conf/host.key")).exists()
-                && Yalp.getFile(p.getProperty("certificate.file", "conf/host.cert")).exists())
-            {
+                    && Yalp.getFile(p.getProperty("certificate.file", "conf/host.cert")).exists()) {
                 Security.addProvider(new BouncyCastleProvider());
 
                 // Initialize the SSLContext to work with our key managers.
@@ -85,23 +84,23 @@ public class SslHttpServerContextFactory {
                 final Properties p = Yalp.configuration;
 
                 PEMReader keyReader = new PEMReader(new FileReader(Yalp.getFile(p.getProperty("certificate.key.file",
-                                                                                               "conf/host.key"))),
-                                                    new PasswordFinder() {
-                    public char[] getPassword() {
-                        return p.getProperty("certificate.password", "secret").toCharArray();
-                    }
-                });
+                        "conf/host.key"))),
+                        new PasswordFinder() {
+                            public char[] getPassword() {
+                                return p.getProperty("certificate.password", "secret").toCharArray();
+                            }
+                        });
                 key = ((KeyPair) keyReader.readObject()).getPrivate();
 
                 PEMReader reader = new PEMReader(new FileReader(Yalp.getFile(p.getProperty("certificate.file", "conf/host.cert"))));
 
-		X509Certificate cert;
-		Vector chainVector = new Vector();
+                X509Certificate cert;
+                Vector chainVector = new Vector();
 
-		while ((cert = (X509Certificate) reader.readObject()) != null) {
-		    chainVector.add(cert);
-		}
-		chain = (X509Certificate[])chainVector.toArray(new X509Certificate[1]);
+                while ((cert = (X509Certificate) reader.readObject()) != null) {
+                    chainVector.add(cert);
+                }
+                chain = (X509Certificate[]) chainVector.toArray(new X509Certificate[1]);
             } catch (Exception e) {
                 e.printStackTrace();
                 Logger.error(e, "");

@@ -557,14 +557,14 @@ public class ApacheMultipartParser extends DataParser {
                     // must resolve encoding
                     String _encoding = Request.current().encoding; // this is our default
                     String _contentType = fileItem.getContentType();
-                    if( _contentType != null ) {
+                    if (_contentType != null) {
                         HTTP.ContentTypeWithEncoding contentTypeEncoding = HTTP.parseContentType(_contentType);
-                        if( contentTypeEncoding.encoding != null ) {
+                        if (contentTypeEncoding.encoding != null) {
                             _encoding = contentTypeEncoding.encoding;
                         }
                     }
 
-                    putMapEntry(result, fileItem.getFieldName(), fileItem.getString( _encoding ));
+                    putMapEntry(result, fileItem.getFieldName(), fileItem.getString(_encoding));
                 } else {
                     @SuppressWarnings("unchecked") List<Upload> uploads = (List<Upload>) Request.current().args.get("__UPLOADS");
                     if (uploads == null) {
@@ -743,7 +743,7 @@ public class ApacheMultipartParser extends DataParser {
         final int len = headerPart.length();
         Map<String, String> headers = new HashMap<String, String>();
         int start = 0;
-        for (; ;) {
+        for (; ; ) {
             int end = parseEndOfLine(headerPart, start);
             if (start == end) {
                 break;
@@ -781,7 +781,7 @@ public class ApacheMultipartParser extends DataParser {
      */
     private int parseEndOfLine(String headerPart, int end) {
         int index = end;
-        for (; ;) {
+        for (; ; ) {
             int offset = headerPart.indexOf('\r', index);
             if (offset == -1 || offset + 1 >= headerPart.length()) {
                 throw new IllegalStateException("Expected headers to be terminated by an empty line.");
@@ -1046,7 +1046,7 @@ public class ApacheMultipartParser extends DataParser {
                 currentItem.close();
                 currentItem = null;
             }
-            for (; ;) {
+            for (; ; ) {
                 boolean nextPart;
                 if (skipPreamble) {
                     nextPart = multi.skipPreamble();

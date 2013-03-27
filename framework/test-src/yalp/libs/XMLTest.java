@@ -18,21 +18,21 @@ public class XMLTest {
 
     private static final String ORIGINAL_DOCUMENT =
             "<?xml version=\"1.0\"?>\n" +
-            "<feed xmlns=\"http://www.w3.org/2005/Atom\">" +
-              "<title>Awesome Blog</title>" +
-              "<link href=\"http://blog.example.com/\"/>" +
-            "</feed>";
+                    "<feed xmlns=\"http://www.w3.org/2005/Atom\">" +
+                    "<title>Awesome Blog</title>" +
+                    "<link href=\"http://blog.example.com/\"/>" +
+                    "</feed>";
     private Document document;
-    
+
     @Before
     public void setUp() throws Exception {
-        document = XML.getDocument(ORIGINAL_DOCUMENT); 
+        document = XML.getDocument(ORIGINAL_DOCUMENT);
     }
 
     private static String stripPreamble(String text) {
         return text.replaceFirst("<\\?[^?]+\\?>\\s*", "");
     }
-    
+
     @Test
     public void serializeShouldReturnWellFormedXml() throws Exception {
         String outputDocument = XML.serialize(document);

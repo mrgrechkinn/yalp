@@ -23,8 +23,8 @@ public class Unbinder {
         if (src == null) {
             return;
         }
-        if (src instanceof  Class) {
-            return ;
+        if (src instanceof Class) {
+            return;
         }
         unBind(result, src, src.getClass(), name, annotations);
     }
@@ -39,7 +39,7 @@ public class Unbinder {
         if (isDirect(srcClazz) || src == null) {
             if (!result.containsKey(name)) {
                 result.put(name, src != null ? src.toString() : null);
-            } 
+            }
         } else if (src.getClass().isArray()) {
             Class<?> clazz = src.getClass().getComponentType();
             int size = Array.getLength(src);

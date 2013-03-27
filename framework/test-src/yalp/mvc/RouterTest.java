@@ -33,7 +33,7 @@ public class RouterTest {
                 null
         );
 
-        Http.Request.current.set( request );
+        Http.Request.current.set(request);
         assertThat(Router.getBaseUrl()).isEqualTo("http://localhost");
 
         // test without current request

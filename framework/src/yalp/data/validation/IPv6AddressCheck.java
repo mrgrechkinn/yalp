@@ -19,7 +19,7 @@ public class IPv6AddressCheck extends AbstractAnnotationCheck<IPv6Address> {
     }
 
     public boolean isSatisfied(Object validatedObject, Object value, OValContext context, Validator validator)
-    throws OValException {
+            throws OValException {
         if (value == null || value.toString().length() == 0) {
             return true;
         }

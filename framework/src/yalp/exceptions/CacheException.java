@@ -2,6 +2,7 @@ package yalp.exceptions;
 
 import java.util.Arrays;
 import java.util.List;
+
 import yalp.classloading.ApplicationClasses.ApplicationClass;
 import yalp.Yalp;
 
@@ -9,15 +10,15 @@ import yalp.Yalp;
  * Cache related exception
  */
 public class CacheException extends YalpException {
-    
+
     String sourceFile;
     List<String> source;
-    Integer line;    
+    Integer line;
 
     public CacheException(String message, Throwable cause) {
         super(message, cause);
         StackTraceElement element = getInterestingStrackTraceElement(cause);
-        if(element != null) {
+        if (element != null) {
             ApplicationClass applicationClass = Yalp.classes.getApplicationClass(element.getClassName());
             if (applicationClass.javaFile != null)
                 sourceFile = applicationClass.javaFile.relativePath();
@@ -30,13 +31,13 @@ public class CacheException extends YalpException {
     @Override
     public String getErrorTitle() {
         return "Cache error";
-    } 
+    }
 
     @Override
     public String getErrorDescription() {
         return getMessage();
     }
-    
+
     public String getSourceFile() {
         return sourceFile;
     }

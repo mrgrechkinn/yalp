@@ -40,7 +40,7 @@ public class DBPlugin extends YalpPlugin {
     public boolean rawInvocation(Request request, Response response) throws Exception {
         if (Yalp.mode.isDev() && request.path.equals("/@db")) {
             response.status = Http.StatusCode.MOVED;
-            String serverOptions[] = new String[] { };
+            String serverOptions[] = new String[]{};
 
             // For H2 embeded database, we'll also start the Web console
             if (h2Server != null) {
@@ -53,9 +53,9 @@ public class DBPlugin extends YalpPlugin {
             }
 
             if (!domain.equals("localhost")) {
-                serverOptions = new String[] {"-webAllowOthers"};
+                serverOptions = new String[]{"-webAllowOthers"};
             }
-            
+
             h2Server = org.h2.tools.Server.createWebServer(serverOptions);
             h2Server.start();
 
@@ -76,7 +76,7 @@ public class DBPlugin extends YalpPlugin {
                     DB.destroy();
                 }
 
-	        boolean isJndiDatasource = false;
+                boolean isJndiDatasource = false;
                 String datasourceName = p.getProperty("db", "");
                 // Identify datasource JNDI lookup name by 'jndi:' or 'java:' prefix 
                 if (datasourceName.startsWith("jndi:")) {
@@ -129,13 +129,13 @@ public class DBPlugin extends YalpPlugin {
                     ds.setMaxIdleTimeExcessConnections(Integer.parseInt(p.getProperty("db.pool.maxIdleTimeExcessConnections", "0")));
                     ds.setIdleConnectionTestPeriod(10);
                     ds.setTestConnectionOnCheckin(true);
-                    
+
                     // This check is not required, but here to make it clear that nothing changes for people
                     // that don't set this configuration property. It may be safely removed.
-                    if(p.getProperty("db.isolation") != null) {
+                    if (p.getProperty("db.isolation") != null) {
                         ds.setConnectionCustomizerClassName(yalp.db.DBPlugin.YalpConnectionCustomizer.class.getName());
                     }
-                    
+
                     DB.datasource = ds;
                     url = ds.getJdbcUrl();
                     Connection c = null;
@@ -223,7 +223,7 @@ public class DBPlugin extends YalpPlugin {
         }
         boolean isJndiDatasource = false;
         String datasourceName = p.getProperty("db", "");
-             
+
         if ((isJndiDatasource || datasourceName.startsWith("java:")) && p.getProperty("db.url") == null) {
             if (DB.datasource == null) {
                 return true;
@@ -250,7 +250,7 @@ public class DBPlugin extends YalpPlugin {
                 p.put("db.pass", password);
             }
         }
-        
+
         m = new jregex.Pattern("^postgres:(//)?(({user}[a-zA-Z0-9_]+)(:({pwd}[^@]+))?@)?(({host}[^/]+)/)?({name}[^\\s]+)$").matcher(p.getProperty("db", ""));
         if (m.matches()) {
             String user = m.group("user");
@@ -267,7 +267,7 @@ public class DBPlugin extends YalpPlugin {
             }
         }
 
-        if(p.getProperty("db.url") != null && p.getProperty("db.url").startsWith("jdbc:h2:mem:")) {
+        if (p.getProperty("db.url") != null && p.getProperty("db.url").startsWith("jdbc:h2:mem:")) {
             p.put("db.driver", "org.h2.Driver");
             p.put("db.user", "sa");
             p.put("db.pass", "");
@@ -276,7 +276,7 @@ public class DBPlugin extends YalpPlugin {
         if ((p.getProperty("db.driver") == null) || (p.getProperty("db.url") == null)) {
             return false;
         }
-        
+
         if (DB.datasource == null) {
             return true;
         } else {
@@ -367,9 +367,14 @@ public class DBPlugin extends YalpPlugin {
             }
         }
 
-        public void onDestroy(Connection c, String parentDataSourceIdentityToken) {}
-        public void onCheckOut(Connection c, String parentDataSourceIdentityToken) {}
-        public void onCheckIn(Connection c, String parentDataSourceIdentityToken) {}
+        public void onDestroy(Connection c, String parentDataSourceIdentityToken) {
+        }
+
+        public void onCheckOut(Connection c, String parentDataSourceIdentityToken) {
+        }
+
+        public void onCheckIn(Connection c, String parentDataSourceIdentityToken) {
+        }
 
         /**
          * Get the isolation level from either the isolationLevels map, or by

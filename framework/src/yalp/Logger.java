@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.PatternLayout;
@@ -97,6 +98,7 @@ public class Logger {
 
     /**
      * Force logger to a new level.
+     *
      * @param level TRACE,DEBUG,INFO,WARN,ERROR,FATAL
      */
     public static void setUp(String level) {
@@ -167,7 +169,6 @@ public class Logger {
     }
 
     /**
-     *
      * @param level string representation of Logging-levels as used in log4j
      * @return true if specified logging-level is enabled
      */
@@ -189,8 +190,9 @@ public class Logger {
 
     /**
      * Log with TRACE level
+     *
      * @param message The message pattern
-     * @param args Pattern arguments
+     * @param args    Pattern arguments
      */
     public static void trace(String message, Object... args) {
         if (forceJuli || log4j == null) {
@@ -214,8 +216,9 @@ public class Logger {
 
     /**
      * Log with DEBUG level
+     *
      * @param message The message pattern
-     * @param args Pattern arguments
+     * @param args    Pattern arguments
      */
     public static void debug(String message, Object... args) {
         if (forceJuli || log4j == null) {
@@ -239,9 +242,10 @@ public class Logger {
 
     /**
      * Log with DEBUG level
-     * @param e the exception to log
+     *
+     * @param e       the exception to log
      * @param message The message pattern
-     * @param args Pattern arguments
+     * @param args    Pattern arguments
      */
     public static void debug(Throwable e, String message, Object... args) {
         if (forceJuli || log4j == null) {
@@ -269,8 +273,9 @@ public class Logger {
 
     /**
      * Log with INFO level
+     *
      * @param message The message pattern
-     * @param args Pattern arguments
+     * @param args    Pattern arguments
      */
     public static void info(String message, Object... args) {
         if (forceJuli || log4j == null) {
@@ -296,9 +301,10 @@ public class Logger {
 
     /**
      * Log with INFO level
-     * @param e the exception to log
+     *
+     * @param e       the exception to log
      * @param message The message pattern
-     * @param args Pattern arguments
+     * @param args    Pattern arguments
      */
     public static void info(Throwable e, String message, Object... args) {
         if (forceJuli || log4j == null) {
@@ -326,8 +332,9 @@ public class Logger {
 
     /**
      * Log with WARN level
+     *
      * @param message The message pattern
-     * @param args Pattern arguments
+     * @param args    Pattern arguments
      */
     public static void warn(String message, Object... args) {
         if (forceJuli || log4j == null) {
@@ -351,9 +358,10 @@ public class Logger {
 
     /**
      * Log with WARN level
-     * @param e the exception to log
+     *
+     * @param e       the exception to log
      * @param message The message pattern
-     * @param args Pattern arguments
+     * @param args    Pattern arguments
      */
     public static void warn(Throwable e, String message, Object... args) {
         if (forceJuli || log4j == null) {
@@ -381,8 +389,9 @@ public class Logger {
 
     /**
      * Log with ERROR level
+     *
      * @param message The message pattern
-     * @param args Pattern arguments
+     * @param args    Pattern arguments
      */
     public static void error(String message, Object... args) {
         if (forceJuli || log4j == null) {
@@ -406,9 +415,10 @@ public class Logger {
 
     /**
      * Log with ERROR level
-     * @param e the exception to log
+     *
+     * @param e       the exception to log
      * @param message The message pattern
-     * @param args Pattern arguments
+     * @param args    Pattern arguments
      */
     public static void error(Throwable e, String message, Object... args) {
         if (forceJuli || log4j == null) {
@@ -436,8 +446,9 @@ public class Logger {
 
     /**
      * Log with FATAL level
+     *
      * @param message The message pattern
-     * @param args Pattern arguments
+     * @param args    Pattern arguments
      */
     public static void fatal(String message, Object... args) {
         if (forceJuli || log4j == null) {
@@ -461,9 +472,10 @@ public class Logger {
 
     /**
      * Log with FATAL level
-     * @param e the exception to log
+     *
+     * @param e       the exception to log
      * @param message The message pattern
-     * @param args Pattern arguments
+     * @param args    Pattern arguments
      */
     public static void fatal(Throwable e, String message, Object... args) {
         if (forceJuli || log4j == null) {
@@ -578,7 +590,7 @@ public class Logger {
     }
 
     /**
-     * Try to format messages using java Formatter. 
+     * Try to format messages using java Formatter.
      * Fall back to the plain message if error.
      */
     static String format(String msg, Object... args) {
@@ -627,6 +639,7 @@ public class Logger {
 
     /**
      * Examine stack trace to get caller
+     *
      * @param level method stack depth
      * @return who called the logger
      */

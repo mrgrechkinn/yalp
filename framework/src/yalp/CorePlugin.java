@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.jamonapi.MonitorFactory;
 import com.jamonapi.utils.Misc;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -67,9 +68,9 @@ public class CorePlugin extends YalpPlugin {
     }
 
     /**
-     * Intercept /@status and check that the Authorization header is valid. 
+     * Intercept /@status and check that the Authorization header is valid.
      * Then ask each plugin for a status dump and send it over the HTTP response.
-     *
+     * <p/>
      * You can ask the /@status using the authorization header and putting your status secret key in it.
      * Prior to that you would be required to start yalp with  a -DstatusKey=yourkey
      */
@@ -84,7 +85,7 @@ public class CorePlugin extends YalpPlugin {
             }
         }
         if (request.path.equals("/@status") || request.path.equals("/@status.json")) {
-            if(!Yalp.started) {
+            if (!Yalp.started) {
                 response.print("Application is not started");
                 response.status = 503;
                 return true;
@@ -284,12 +285,12 @@ public class CorePlugin extends YalpPlugin {
     @Override
     public void enhance(ApplicationClass applicationClass) throws Exception {
         Class<?>[] enhancers = new Class[]{
-            ContinuationEnhancer.class,
-            SigEnhancer.class,
-            ControllersEnhancer.class,
-            MailerEnhancer.class,
-            PropertiesEnhancer.class,
-            LocalvariablesNamesEnhancer.class
+                ContinuationEnhancer.class,
+                SigEnhancer.class,
+                ControllersEnhancer.class,
+                MailerEnhancer.class,
+                PropertiesEnhancer.class,
+                LocalvariablesNamesEnhancer.class
         };
         for (Class<?> enhancer : enhancers) {
             try {

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import net.sf.oval.ConstraintViolation;
 import net.sf.oval.context.MethodParameterContext;
 import net.sf.oval.guard.Guard;
@@ -54,7 +55,7 @@ public class ValidationPlugin extends YalpPlugin {
         // If this is happening it is no point in doing anything here, since
         // we overwrite it later on.
         if (isAwakingFromAwait()) {
-            return ;
+            return;
         }
 
         try {
@@ -120,6 +121,7 @@ public class ValidationPlugin extends YalpPlugin {
             return violations;
         }
     }
+
     static Pattern errorsParser = Pattern.compile("\u0000([^:]*):([^\u0000]*)\u0000");
 
     static Validation restore() {
@@ -150,7 +152,7 @@ public class ValidationPlugin extends YalpPlugin {
         }
         if (Validation.errors().isEmpty()) {
             // Only send "delete cookie" header when the cookie was present in the request
-            if(Http.Request.current().cookies.containsKey(Scope.COOKIE_PREFIX + "_ERRORS") || !Scope.SESSION_SEND_ONLY_IF_CHANGED) {
+            if (Http.Request.current().cookies.containsKey(Scope.COOKIE_PREFIX + "_ERRORS") || !Scope.SESSION_SEND_ONLY_IF_CHANGED) {
                 Http.Response.current().setCookie(Scope.COOKIE_PREFIX + "_ERRORS", "", "0s");
             }
             return;

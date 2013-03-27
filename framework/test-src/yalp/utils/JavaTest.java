@@ -65,13 +65,13 @@ public class JavaTest {
         assertNull(Java.findActionMethod("finallyMethod", ActionClass.class));
 
         Method m = Java.findActionMethod("actionMethod", ActionClass.class);
-        assertNotNull( m );
-        assertEquals("actionMethod", m.invoke( new ActionClass()));
+        assertNotNull(m);
+        assertEquals("actionMethod", m.invoke(new ActionClass()));
 
         //test that it works with subclassing
         m = Java.findActionMethod("actionMethod", ActionClassChild.class);
-        assertNotNull( m );
-        assertEquals("actionMethod", m.invoke( new ActionClassChild()));
+        assertNotNull(m);
+        assertEquals("actionMethod", m.invoke(new ActionClassChild()));
 
     }
 }

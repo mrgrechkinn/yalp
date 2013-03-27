@@ -2,6 +2,7 @@ package yalp.data.validation;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import net.sf.oval.Validator;
 import net.sf.oval.configuration.annotation.AbstractAnnotationCheck;
 import net.sf.oval.context.OValContext;
@@ -47,5 +48,5 @@ public class MinCheck extends AbstractAnnotationCheck<Min> {
         messageVariables.put("min", Double.toString(min));
         return messageVariables;
     }
-   
+
 }

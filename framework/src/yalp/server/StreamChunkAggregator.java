@@ -22,7 +22,8 @@ public class StreamChunkAggregator extends SimpleChannelUpstreamHandler {
     /**
      * Creates a new instance.
      */
-    public StreamChunkAggregator() { }
+    public StreamChunkAggregator() {
+    }
 
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
@@ -72,7 +73,7 @@ public class StreamChunkAggregator extends SimpleChannelUpstreamHandler {
                     currentMessage.setContent(new FileChannelBuffer(localFile));
                     this.out = null;
                     this.currentMessage = null;
-		    this.file.delete();
+                    this.file.delete();
                     this.file = null;
                     Channels.fireMessageReceived(ctx, currentMessage, e.getRemoteAddress());
                 }

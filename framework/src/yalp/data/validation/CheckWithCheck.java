@@ -23,9 +23,9 @@ public class CheckWithCheck extends AbstractAnnotationCheck<CheckWith> {
         try {
             Constructor<?> constructor = checkWith.value().getDeclaredConstructor();
             constructor.setAccessible(true);
-            check = (Check)constructor.newInstance();
+            check = (Check) constructor.newInstance();
             check.checkWithCheck = this;
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new UnexpectedException(e);
         }
     }

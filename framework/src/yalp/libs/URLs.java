@@ -1,6 +1,7 @@
 package yalp.libs;
 
 import java.net.URLEncoder;
+
 import yalp.exceptions.UnexpectedException;
 
 public class URLs {

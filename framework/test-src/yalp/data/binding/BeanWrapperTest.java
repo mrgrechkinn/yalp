@@ -6,6 +6,7 @@ import yalp.data.validation.ValidationBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import static org.fest.assertions.Assertions.assertThat;
 
 public class BeanWrapperTest {
@@ -62,7 +63,7 @@ public class BeanWrapperTest {
         assertThat(b.b).isEqualTo("b1");
         assertThat(b.i).isEqualTo(2);
 
-        b = (Bean)new BeanWrapper(Bean.class).bind("b", null, m, "", null);
+        b = (Bean) new BeanWrapper(Bean.class).bind("b", null, m, "", null);
         assertThat(b.a).isEqualTo("a1");
         assertThat(b.b).isEqualTo("b1");
         assertThat(b.i).isEqualTo(2);

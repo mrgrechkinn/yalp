@@ -29,6 +29,7 @@ public class YesSSLSocketFactory extends SSLSocketFactory {
             return new X509Certificate[0];
         }
     }
+
     private SSLSocketFactory factory;
 
     public YesSSLSocketFactory() {

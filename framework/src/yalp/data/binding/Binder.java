@@ -189,7 +189,7 @@ public abstract class Binder {
             }
 
             Object directBindResult = internalDirectBind(paramNode.getOriginalKey(), bindingAnnotations.annotations, paramNode.getFirstValue(clazz), clazz, type);
-            
+
             if (directBindResult != DIRECTBINDING_NO_RESULT) {
                 // we found a value/result when direct binding
                 return directBindResult;
@@ -199,10 +199,10 @@ public abstract class Binder {
             if (clazz.isArray()) {
                 return bindArray(clazz, paramNode, bindingAnnotations);
             }
-			
-			if (!paramNode.getAllChildren().isEmpty()) {
-	        	return internalBindBean(clazz, paramNode, bindingAnnotations);
-	        }
+
+            if (!paramNode.getAllChildren().isEmpty()) {
+                return internalBindBean(clazz, paramNode, bindingAnnotations);
+            }
 
             return null; // give up
         } catch (Exception e) {
@@ -407,9 +407,9 @@ public abstract class Binder {
                     if (annotation.annotationType().equals(As.class)) {
                         As as = ((As) annotation);
                         final String separator = as.value()[0];
-			if (separator != null && !separator.isEmpty()){
-                        	values = values[0].split(separator);
-			}
+                        if (separator != null && !separator.isEmpty()) {
+                            values = values[0].split(separator);
+                        }
                     }
                 }
             }
@@ -527,7 +527,7 @@ public abstract class Binder {
     public static Object directBind(String name, Annotation[] annotations, String value, Class<?> clazz, Type type) throws Exception {
         // calls the direct binding and returns null if no value could be resolved..
         Object r = internalDirectBind(name, annotations, value, clazz, type);
-        if ( r == DIRECTBINDING_NO_RESULT) {
+        if (r == DIRECTBINDING_NO_RESULT) {
             return null;
         } else {
             return r;

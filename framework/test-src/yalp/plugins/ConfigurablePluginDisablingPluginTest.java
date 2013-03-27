@@ -28,7 +28,7 @@ import static org.fest.assertions.Assertions.assertThat;
 public class ConfigurablePluginDisablingPluginTest {
 
     @Before
-    public void before(){
+    public void before() {
         //each test must begin with empty memory..
         ConfigurablePluginDisablingPlugin.previousDisabledPlugins.clear();
     }
@@ -42,10 +42,10 @@ public class ConfigurablePluginDisablingPluginTest {
 
         PluginCollection pc = new PluginCollection();
         TestPlugin p = new TestPlugin();
-        pc.addPlugin( p );
+        pc.addPlugin(p);
 
         internalTest(config, pc, Arrays.asList(p));
-        
+
     }
 
     private void internalTest(Properties config, PluginCollection pc, List<? extends YalpPlugin> correctPluginListAfter) {
@@ -63,9 +63,9 @@ public class ConfigurablePluginDisablingPluginTest {
 
         PluginCollection pc = new PluginCollection();
         TestPlugin p = new TestPlugin();
-        pc.addPlugin( p );
+        pc.addPlugin(p);
         TestPlugin2 p2 = new TestPlugin2();
-        pc.addPlugin( p2 );
+        pc.addPlugin(p2);
 
 
         Properties config = new Properties();
@@ -82,9 +82,9 @@ public class ConfigurablePluginDisablingPluginTest {
 
         PluginCollection pc = new PluginCollection();
         TestPlugin p = new TestPlugin();
-        pc.addPlugin( p );
+        pc.addPlugin(p);
         TestPlugin2 p2 = new TestPlugin2();
-        pc.addPlugin( p2 );
+        pc.addPlugin(p2);
 
 
         Properties config = new Properties();
@@ -102,16 +102,16 @@ public class ConfigurablePluginDisablingPluginTest {
 
         PluginCollection pc = new PluginCollection();
         TestPlugin p = new TestPlugin();
-        pc.addPlugin( p );
+        pc.addPlugin(p);
         TestPlugin2 p2 = new TestPlugin2();
-        pc.addPlugin( p2 );
+        pc.addPlugin(p2);
 
 
         Properties config = new Properties();
         config.put("some.setting", "some value");
         config.put("plugins.disable", "yalp.plugins.TestPlugin_XX");
 
-        internalTest(config, pc, Arrays.asList(p,p2));
+        internalTest(config, pc, Arrays.asList(p, p2));
 
     }
 
@@ -121,9 +121,9 @@ public class ConfigurablePluginDisablingPluginTest {
 
         PluginCollection pc = new PluginCollection();
         TestPlugin p = new TestPlugin();
-        pc.addPlugin( p );
+        pc.addPlugin(p);
         TestPlugin2 p2 = new TestPlugin2();
-        pc.addPlugin( p2 );
+        pc.addPlugin(p2);
 
 
         Properties config = new Properties();
@@ -136,19 +136,19 @@ public class ConfigurablePluginDisablingPluginTest {
         config = new Properties();
         config.put("some.setting", "some value");
 
-        internalTest(config, pc, Arrays.asList(p,p2));
+        internalTest(config, pc, Arrays.asList(p, p2));
 
     }
 
     @Test
-    public void verify_that_the_plugin_gets_loaded(){
+    public void verify_that_the_plugin_gets_loaded() {
         PluginCollection pc = new PluginCollection();
 
         new YalpBuilder().build();
         pc.loadPlugins();
         YalpPlugin pi = pc.getPluginInstance(ConfigurablePluginDisablingPlugin.class);
         assertThat(pi).isInstanceOf(ConfigurablePluginDisablingPlugin.class);
-        assertThat(pc.getEnabledPlugins()).contains( pi );
+        assertThat(pc.getEnabledPlugins()).contains(pi);
     }
 
 

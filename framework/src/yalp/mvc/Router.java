@@ -226,6 +226,7 @@ public class Router {
             }
         }
     }
+
     /**
      * All the loaded routes.
      */
@@ -333,7 +334,7 @@ public class Router {
             String appBaseUrl = Yalp.configuration.getProperty("application.baseUrl", "application.baseUrl");
             if (appBaseUrl.endsWith("/")) {
                 // remove the trailing slash
-                appBaseUrl = appBaseUrl.substring(0, appBaseUrl.length()-1);
+                appBaseUrl = appBaseUrl.substring(0, appBaseUrl.length() - 1);
             }
             return appBaseUrl;
 
@@ -376,9 +377,9 @@ public class Router {
                         String base = getBaseUrl();
                         if (!StringUtils.isEmpty(route.host)) {
                             // Compute the host
-                          int port = Http.Request.current() == null ? 80 : Http.Request.current().get().port;
-                          String host = (port != 80 && port != 443) ? route.host + ":" + port : route.host;
-                          to = (isSecure ? "https://" : "http://") + host + to;
+                            int port = Http.Request.current() == null ? 80 : Http.Request.current().get().port;
+                            String host = (port != 80 && port != 443) ? route.host + ":" + port : route.host;
+                            to = (isSecure ? "https://" : "http://") + host + to;
                         } else {
                             to = base + to;
                         }
@@ -486,16 +487,16 @@ public class Router {
                                     List<Object> vals = (List<Object>) value;
                                     path = path.replaceAll("\\{(<[^>]+>)?" + key + "\\}", vals.get(0).toString()).replace("$", "\\$");
                                 } else {
-									try {
-                                    	path = path.replaceAll("\\{(<[^>]+>)?" + key + "\\}", URLEncoder.encode(value.toString(), encoding).replace("$", "\\$").replace("%3A", ":").replace("%40", "@"));
-                                    } catch(UnsupportedEncodingException e) {
-										path = path.replaceAll("\\{(<[^>]+>)?" + key + "\\}", value.toString().replace("$", "\\$").replace("%3A", ":").replace("%40", "@"));
-									}
-									try {
-										host = host.replaceAll("\\{(<[^>]+>)?" + key + "\\}", URLEncoder.encode(value.toString(), encoding).replace("$", "\\$").replace("%3A", ":").replace("%40", "@"));
-   								 	} catch(UnsupportedEncodingException e) {
-										host = host.replaceAll("\\{(<[^>]+>)?" + key + "\\}", value.toString().replace("$", "\\$").replace("%3A", ":").replace("%40", "@"));
-									}
+                                    try {
+                                        path = path.replaceAll("\\{(<[^>]+>)?" + key + "\\}", URLEncoder.encode(value.toString(), encoding).replace("$", "\\$").replace("%3A", ":").replace("%40", "@"));
+                                    } catch (UnsupportedEncodingException e) {
+                                        path = path.replaceAll("\\{(<[^>]+>)?" + key + "\\}", value.toString().replace("$", "\\$").replace("%3A", ":").replace("%40", "@"));
+                                    }
+                                    try {
+                                        host = host.replaceAll("\\{(<[^>]+>)?" + key + "\\}", URLEncoder.encode(value.toString(), encoding).replace("$", "\\$").replace("%3A", ":").replace("%40", "@"));
+                                    } catch (UnsupportedEncodingException e) {
+                                        host = host.replaceAll("\\{(<[^>]+>)?" + key + "\\}", value.toString().replace("$", "\\$").replace("%3A", ":").replace("%40", "@"));
+                                    }
                                 }
                             } else if (route.staticArgs.containsKey(key)) {
                                 // Do nothing -> The key is static
@@ -868,7 +869,7 @@ public class Router {
                             // FIXME: Careful with the arguments that are not matching as they are part of the hostname
                             // Defaultvalue indicates it is a one of these urls. This is a trick and should be changed.
                             if (arg.defaultValue == null) {
-                               localArgs.put(arg.name, Utils.urlDecodePath(matcher.group(arg.name)));
+                                localArgs.put(arg.name, Utils.urlDecodePath(matcher.group(arg.name)));
                             }
                         }
                         if (hostArg != null && domain != null) {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -27,7 +28,7 @@ public class FileUpload implements Upload {
         File tmp = TempFilePlugin.createTempFolder();
         defaultFile = new File(tmp, FilenameUtils.getName(fileItem.getFieldName()) + File.separator + FilenameUtils.getName(fileItem.getName()));
         try {
-            if(!defaultFile.getCanonicalPath().startsWith(tmp.getCanonicalPath())) {
+            if (!defaultFile.getCanonicalPath().startsWith(tmp.getCanonicalPath())) {
                 throw new IOException("Temp file try to override existing file?");
             }
             defaultFile.getParentFile().mkdirs();
@@ -40,7 +41,7 @@ public class FileUpload implements Upload {
     public File asFile() {
         return defaultFile;
     }
-    
+
     public File asFile(File file) {
         try {
             Files.copy(defaultFile, file);
@@ -49,7 +50,7 @@ public class FileUpload implements Upload {
             throw new UnexpectedException(ex);
         }
     }
-    
+
     public File asFile(String name) {
         return asFile(new File(name));
     }
@@ -65,7 +66,7 @@ public class FileUpload implements Upload {
             throw new UnexpectedException(ex);
         }
     }
-    
+
     public String getContentType() {
         return fileItem.getContentType();
     }
@@ -81,7 +82,7 @@ public class FileUpload implements Upload {
     public Long getSize() {
         return defaultFile.length();
     }
-    
+
     public boolean isInMemory() {
         return fileItem.isInMemory();
     }

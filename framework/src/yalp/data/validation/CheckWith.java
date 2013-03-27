@@ -4,6 +4,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 import net.sf.oval.configuration.annotation.Constraint;
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -12,6 +13,7 @@ import net.sf.oval.configuration.annotation.Constraint;
 public @interface CheckWith {
 
     Class<? extends Check> value();
+
     String message() default CheckWithCheck.mes;
 }
 

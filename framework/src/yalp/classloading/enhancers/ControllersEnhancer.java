@@ -5,6 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Stack;
+
 import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtField;
@@ -20,7 +21,7 @@ import yalp.classloading.ApplicationClasses.ApplicationClass;
 import yalp.exceptions.UnexpectedException;
 
 /**
- * Enhance controllers classes. 
+ * Enhance controllers classes.
  */
 public class ControllersEnhancer extends Enhancer {
 
@@ -92,9 +93,9 @@ public class ControllersEnhancer extends Enhancer {
                     try {
                         ctMethod.insertBefore(
                                 "if(yalp.mvc.Controller._currentReverse.get() != null) {"
-                                + "yalp.mvc.Controller.redirect(\"" + ctClass.getName().replace("$", "") + "." + ctMethod.getName() + "\", $args);"
-                                + generateValidReturnStatement(ctMethod.getReturnType())
-                                + "}");
+                                        + "yalp.mvc.Controller.redirect(\"" + ctClass.getName().replace("$", "") + "." + ctMethod.getName() + "\", $args);"
+                                        + generateValidReturnStatement(ctMethod.getReturnType())
+                                        + "}");
 
                         ctMethod.insertBefore(
                                 "((java.util.Stack)yalp.classloading.enhancers.ControllersEnhancer.currentAction.get()).push(\"" + ctClass.getName().replace("$", "") + "." + ctMethod.getName() + "\");");
@@ -115,9 +116,9 @@ public class ControllersEnhancer extends Enhancer {
                     try {
                         ctMethod.insertBefore(
                                 "if(!yalp.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.isActionCallAllowed()) {"
-                                + "yalp.mvc.Controller.redirect(\"" + ctClass.getName().replace("$", "") + "." + ctMethod.getName() + "\", $args);"
-                                + generateValidReturnStatement(ctMethod.getReturnType()) + "}"
-                                + "yalp.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.stopActionCall();");
+                                        + "yalp.mvc.Controller.redirect(\"" + ctClass.getName().replace("$", "") + "." + ctMethod.getName() + "\", $args);"
+                                        + generateValidReturnStatement(ctMethod.getReturnType()) + "}"
+                                        + "yalp.classloading.enhancers.ControllersEnhancer.ControllerInstrumentation.stopActionCall();");
 
                     } catch (Exception e) {
                         Logger.error(e, "Error in ControllersEnhancer. %s.%s has not been properly enhanced (auto-redirect).", applicationClass.name, ctMethod.getName());
@@ -194,6 +195,7 @@ public class ControllersEnhancer extends Enhancer {
         public static void stopActionCall() {
             allow.set(false);
         }
+
         static ThreadLocal<Boolean> allow = new ThreadLocal<Boolean>();
     }
 

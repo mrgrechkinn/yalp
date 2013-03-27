@@ -59,7 +59,7 @@ public class FastTags {
     }
 
     public static void _jsAction(Map<?, ?> args, Closure body, PrintWriter out, ExecutableTemplate template, int fromLine) {
-		out.println("function(options) {var pattern = '" + args.get("arg").toString().replace("&amp;", "&") + "'; for(key in options) { pattern = pattern.replace(':'+key, options[key] || ''); } return pattern }");
+        out.println("function(options) {var pattern = '" + args.get("arg").toString().replace("&amp;", "&") + "'; for(key in options) { pattern = pattern.replace(':'+key, options[key] || ''); } return pattern }");
     }
 
     public static void _jsRoute(Map<?, ?> args, Closure body, PrintWriter out, ExecutableTemplate template, int fromLine) {
@@ -67,7 +67,7 @@ public class FastTags {
         if (!(arg instanceof ActionDefinition)) {
             throw new TemplateExecutionException(template.template, fromLine, "Wrong parameter type, try #{jsRoute @Application.index() /}", new TagInternalException("Wrong parameter type"));
         }
-        final ActionDefinition action = (ActionDefinition)arg;
+        final ActionDefinition action = (ActionDefinition) arg;
         out.print("{");
         if (action.args.isEmpty()) {
             out.print("url: function() { return '" + action.url.replace("&amp;", "&") + "'; },");
@@ -93,9 +93,10 @@ public class FastTags {
 
     /**
      * Generates a html form element linked to a controller action
-     * @param args tag attributes
-     * @param body tag inner body
-     * @param out the output writer
+     *
+     * @param args     tag attributes
+     * @param body     tag inner body
+     * @param out      the output writer
      * @param template enclosing template
      * @param fromLine template line number where the tag is defined
      */
@@ -114,56 +115,57 @@ public class FastTags {
         if (args.containsKey("method")) {
             actionDef.method = args.get("method").toString();
         }
-	    String name = null;
-	    if (args.containsKey("name")) {
+        String name = null;
+        if (args.containsKey("name")) {
             name = args.get("name").toString();
         }
         String id = args.containsKey("id") ? " id=\"" + args.get("id") + "\"" : "";
         String clz = args.containsKey("class") ? " class=\"" + args.get("class") + "\"" : "";
- 
+
         if (!("GET".equals(actionDef.method) || "POST".equals(actionDef.method))) {
             String separator = actionDef.url.indexOf('?') != -1 ? "&" : "?";
             actionDef.url += separator + "x-http-method-override=" + actionDef.method.toUpperCase();
             actionDef.method = "POST";
         }
         String encoding = Http.Response.current().encoding;
-        out.print("<form action=\"" + actionDef.url + "\" method=\"" + actionDef.method.toLowerCase() + "\" accept-charset=\""+encoding+"\" enctype=\"" + enctype + "\" " + serialize(args, "action", "method", "accept-charset", "enctype") + (name != null?"name=\"" + name + "\"":"") + id + clz + ">");
+        out.print("<form action=\"" + actionDef.url + "\" method=\"" + actionDef.method.toLowerCase() + "\" accept-charset=\"" + encoding + "\" enctype=\"" + enctype + "\" " + serialize(args, "action", "method", "accept-charset", "enctype") + (name != null ? "name=\"" + name + "\"" : "") + id + clz + ">");
         if (!("GET".equals(actionDef.method))) {
             _authenticityToken(args, body, out, template, fromLine);
         }
         out.println(JavaExtensions.toString(body));
         out.print("</form>");
     }
-    
+
     /**
-     * The field tag is a helper, based on the spirit of Don't Repeat Yourself. 
-     * @param args tag attributes
-     * @param body tag inner body
-     * @param out the output writer
+     * The field tag is a helper, based on the spirit of Don't Repeat Yourself.
+     *
+     * @param args     tag attributes
+     * @param body     tag inner body
+     * @param out      the output writer
      * @param template enclosing template
      * @param fromLine template line number where the tag is defined
      */
     public static void _field(Map<?, ?> args, Closure body, PrintWriter out, ExecutableTemplate template, int fromLine) {
-        Map<String,Object> field = new HashMap<String,Object>();
+        Map<String, Object> field = new HashMap<String, Object>();
         String _arg = args.get("arg").toString();
         field.put("name", _arg);
-        field.put("id", _arg.replace('.','_'));
+        field.put("id", _arg.replace('.', '_'));
         field.put("flash", Flash.current().get(_arg));
         field.put("flashArray", field.get("flash") != null && !StringUtils.isEmpty(field.get("flash").toString()) ? field.get("flash").toString().split(",") : new String[0]);
         field.put("error", Validation.error(_arg));
         field.put("errorClass", field.get("error") != null ? "hasError" : "");
         String[] pieces = _arg.split("\\.");
         Object obj = body.getProperty(pieces[0]);
-        if(obj != null){
-            if(pieces.length > 1){
-                try{
-                	String path = _arg.substring(_arg.indexOf(".") + 1);
-                	Object value = PropertyUtils.getProperty(obj, path);
-              		field.put("value", value);
-                }catch(Exception e){
-                	// if there is a problem reading the field we dont set any value
+        if (obj != null) {
+            if (pieces.length > 1) {
+                try {
+                    String path = _arg.substring(_arg.indexOf(".") + 1);
+                    Object value = PropertyUtils.getProperty(obj, path);
+                    field.put("value", value);
+                } catch (Exception e) {
+                    // if there is a problem reading the field we dont set any value
                 }
-            }else{
+            } else {
                 field.put("value", obj);
             }
         }
@@ -173,9 +175,10 @@ public class FastTags {
 
     /**
      * Generates a html link to a controller action
-     * @param args tag attributes
-     * @param body tag inner body
-     * @param out the output writer
+     *
+     * @param args     tag attributes
+     * @param body     tag inner body
+     * @param out      the output writer
      * @param template enclosing template
      * @param fromLine template line number where the tag is defined
      */
@@ -191,7 +194,7 @@ public class FastTags {
                 actionDef.method = "POST";
             }
             String id = Codec.UUID();
-            out.print("<form method=\"POST\" id=\"" + id + "\" " +(args.containsKey("target") ? "target=\"" + args.get("target") + "\"" : "")+ " style=\"display:none\" action=\"" + actionDef.url + "\">");
+            out.print("<form method=\"POST\" id=\"" + id + "\" " + (args.containsKey("target") ? "target=\"" + args.get("target") + "\"" : "") + " style=\"display:none\" action=\"" + actionDef.url + "\">");
             _authenticityToken(args, body, out, template, fromLine);
             out.print("</form>");
             out.print("<a href=\"javascript:document.getElementById('" + id + "').submit();\" " + serialize(args, "href") + ">");

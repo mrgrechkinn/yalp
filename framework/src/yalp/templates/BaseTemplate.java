@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import yalp.Logger;
 import yalp.Yalp;
 import yalp.classloading.BytecodeCache;
@@ -94,6 +95,7 @@ public abstract class BaseTemplate extends Template {
     }
 
     abstract Throwable cleanStackTrace(Throwable e);
+
     public static ThreadLocal<BaseTemplate> layout = new ThreadLocal<BaseTemplate>();
     public static ThreadLocal<Map<Object, Object>> layoutData = new ThreadLocal<Map<Object, Object>>();
     public static ThreadLocal<BaseTemplate> currentTemplate = new ThreadLocal<BaseTemplate>();

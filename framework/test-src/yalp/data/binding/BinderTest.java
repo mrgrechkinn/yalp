@@ -47,7 +47,6 @@ public class BinderTest {
         data1.b = 13;
 
 
-
         Map<String, Object> r = new HashMap<String, Object>();
         Data1.myStatic = 1;
 
@@ -55,7 +54,7 @@ public class BinderTest {
         // make sure we only have info about the properties we want..
         assertThat(r.keySet()).containsOnly("data1.a", "data1.b");
 
-        Map<String, String[]> r2 = fromUnbindMap2BindMap( r);
+        Map<String, String[]> r2 = fromUnbindMap2BindMap(r);
 
         Data1.myStatic = 2;
         RootParamNode root = ParamNode.convert(r2);
@@ -72,7 +71,7 @@ public class BinderTest {
         data2.a = "aaa";
         data2.b = false;
         data2.c = 12;
-        
+
         Data1 data1_1 = new Data1();
         data1_1.a = "aAaA";
         data1_1.b = 13;
@@ -80,12 +79,11 @@ public class BinderTest {
         Data1 data1_2 = new Data1();
         data1_2.a = "bBbB";
         data1_2.b = 14;
-        
+
         data2.data1 = data1_1;
         data2.datas = new ArrayList<Data1>(2);
         data2.datas.add(data1_1);
         data2.datas.add(data1_2);
-
 
 
         Map<String, Object> r = new HashMap<String, Object>();
@@ -97,22 +95,22 @@ public class BinderTest {
     }
 
 
-     @Test
+    @Test
     public void verifyBindingOfStringMaps() throws Exception {
         Map<String, String[]> params = new HashMap<String, String[]>();
 
-        Map<String, String> specialCaseMap = new HashMap<String,String>();
-        params.put("specialCaseMap.a", new String[] {"AA"});
-        params.put("specialCaseMap.b", new String[] {"BB"});
+        Map<String, String> specialCaseMap = new HashMap<String, String>();
+        params.put("specialCaseMap.a", new String[]{"AA"});
+        params.put("specialCaseMap.b", new String[]{"BB"});
 
         Data3 data3;
 
-        params.put("data3.a", new String[] {"aAaA"});
-        params.put("data3.map[abc]", new String[] {"ABC"});
-        params.put("data3.map[def]", new String[] {"DEF"});
+        params.put("data3.a", new String[]{"aAaA"});
+        params.put("data3.map[abc]", new String[]{"ABC"});
+        params.put("data3.map[def]", new String[]{"DEF"});
 
         RootParamNode rootParamNode = ParamNode.convert(params);
-        specialCaseMap = (Map<String, String>)Binder.bind(rootParamNode, "specialCaseMap", specialCaseMap.getClass(), specialCaseMap.getClass(), noAnnotations);
+        specialCaseMap = (Map<String, String>) Binder.bind(rootParamNode, "specialCaseMap", specialCaseMap.getClass(), specialCaseMap.getClass(), noAnnotations);
 
         assertThat(specialCaseMap.size()).isEqualTo(2);
         assertThat(specialCaseMap.get("a")).isEqualTo("AA");
@@ -126,48 +124,48 @@ public class BinderTest {
         assertThat(data3.map.get("def")).isEqualTo("DEF");
     }
 
-     @Test
-	    public void verify_binding_of_simple_bean_collections() throws Exception {
+    @Test
+    public void verify_binding_of_simple_bean_collections() throws Exception {
 
-	        Map<String, String[]> params = new HashMap<String, String[]>();
+        Map<String, String[]> params = new HashMap<String, String[]>();
 
-	        Data2 data2;
-	        List<Data2> lst = new ArrayList<Data2>();
-			// build the parameters
-	        params.put("data2[0].a", new String[] { "a0" });
-	        params.put("data2[1].a", new String[] { "a1" });
-	        params.put("data2[2].a", new String[] { "a2" });
-	        params.put("data2[3].a", new String[] { "a3" });
-	        params.put("data2[4].a", new String[] { "a4" });
-	        params.put("data2[5].a", new String[] { "a5" });
-	        params.put("data2[6].a", new String[] { "a6" });
-	        params.put("data2[7].a", new String[] { "a7" });
-	        params.put("data2[8].a", new String[] { "a8" });
-	        params.put("data2[9].a", new String[] { "a9" });
-	        params.put("data2[10].a", new String[] { "a10" });
-	        params.put("data2[12].a", new String[] { "a12" });
+        Data2 data2;
+        List<Data2> lst = new ArrayList<Data2>();
+        // build the parameters
+        params.put("data2[0].a", new String[]{"a0"});
+        params.put("data2[1].a", new String[]{"a1"});
+        params.put("data2[2].a", new String[]{"a2"});
+        params.put("data2[3].a", new String[]{"a3"});
+        params.put("data2[4].a", new String[]{"a4"});
+        params.put("data2[5].a", new String[]{"a5"});
+        params.put("data2[6].a", new String[]{"a6"});
+        params.put("data2[7].a", new String[]{"a7"});
+        params.put("data2[8].a", new String[]{"a8"});
+        params.put("data2[9].a", new String[]{"a9"});
+        params.put("data2[10].a", new String[]{"a10"});
+        params.put("data2[12].a", new String[]{"a12"});
 
-	        RootParamNode rootParamNode = ParamNode.convert(params);
+        RootParamNode rootParamNode = ParamNode.convert(params);
 
-	        lst = (List<Data2>) Binder.bind(rootParamNode, "data2", lst.getClass(), GenericListProvider.class.getDeclaredFields()[0].getGenericType(),
-	                noAnnotations);
-			//check the size and the order
-	        assertThat(lst.size()).isEqualTo(13);
-	        assertThat(lst.get(0).a).isEqualTo("a0");
-	        assertThat(lst.get(1).a).isEqualTo("a1");
-	        assertThat(lst.get(9).a).isEqualTo("a9");
-	        assertThat(lst.get(10).a).isEqualTo("a10");
-	        assertThat(lst.get(10).a).isEqualTo("a10");
-	        assertThat(lst.get(11)).isNull(); //check for null item
-	        assertThat(lst.get(12).a).isEqualTo("a12");
+        lst = (List<Data2>) Binder.bind(rootParamNode, "data2", lst.getClass(), GenericListProvider.class.getDeclaredFields()[0].getGenericType(),
+                noAnnotations);
+        //check the size and the order
+        assertThat(lst.size()).isEqualTo(13);
+        assertThat(lst.get(0).a).isEqualTo("a0");
+        assertThat(lst.get(1).a).isEqualTo("a1");
+        assertThat(lst.get(9).a).isEqualTo("a9");
+        assertThat(lst.get(10).a).isEqualTo("a10");
+        assertThat(lst.get(10).a).isEqualTo("a10");
+        assertThat(lst.get(11)).isNull(); //check for null item
+        assertThat(lst.get(12).a).isEqualTo("a12");
     }
 
     @Test
     @SuppressWarnings("deprecation")
     public void verify_binding_of_root_parameters() throws Exception {
         Map<String, String[]> params = new HashMap<String, String[]>();
-        params.put("a", new String[] {"foo"});
-        params.put("b", new String[] {"2"});
+        params.put("a", new String[]{"foo"});
+        params.put("b", new String[]{"2"});
 
         RootParamNode rootParamNode = ParamNode.convert(params);
         Data1 data1 = new Data1();
@@ -191,8 +189,8 @@ public class BinderTest {
         new ValidationPlugin().beforeInvocation();
 
         Map<String, String[]> params = new HashMap<String, String[]>();
-        params.put("a", new String[] {"foo"});
-        params.put("b", new String[] {"bar"});
+        params.put("a", new String[]{"foo"});
+        params.put("b", new String[]{"bar"});
 
         RootParamNode rootParamNode = ParamNode.convert(params);
         Data1 data1 = new Data1();
@@ -210,6 +208,7 @@ public class BinderTest {
 
     /**
      * Transforms map from Unbinder to Binder
+     *
      * @param r map filled by Unbinder
      * @return map used as input to Binder
      */
@@ -218,11 +217,11 @@ public class BinderTest {
         for (Map.Entry<String, Object> e : r.entrySet()) {
             String key = e.getKey();
             Object v = e.getValue();
-            System.out.println(key + " " + v + " " ) ;
+            System.out.println(key + " " + v + " ");
             if (v instanceof String) {
-                r2.put(key, new String[]{(String)v});
+                r2.put(key, new String[]{(String) v});
             } else if (v instanceof String[]) {
-                r2.put(key, (String[])v);
+                r2.put(key, (String[]) v);
             } else {
                 throw new RuntimeException("error");
             }

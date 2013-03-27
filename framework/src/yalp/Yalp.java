@@ -53,6 +53,7 @@ public class Yalp {
             return this == PROD;
         }
     }
+
     /**
      * Is the application initialized
      */
@@ -208,7 +209,7 @@ public class Yalp {
         String logLevel = configuration.getProperty("application.log", "INFO");
 
         //only override log-level if Logger was not configured manually
-        if( !Logger.configuredManually) {
+        if (!Logger.configuredManually) {
             Logger.setUp(logLevel);
         }
         Logger.recordCaller = Boolean.parseBoolean(configuration.getProperty("application.log.recordCaller", "false"));
@@ -242,13 +243,13 @@ public class Yalp {
         }
 
         // Mode
-		try {
-        	mode = Mode.valueOf(configuration.getProperty("application.mode", "DEV").toUpperCase());
-		} catch (IllegalArgumentException e) {
-			Logger.error("Illegal mode '%s', use either prod or dev", configuration.getProperty("application.mode"));
-			fatalServerErrorOccurred();
-		}
-		if (usePrecompiled || forceProd) {
+        try {
+            mode = Mode.valueOf(configuration.getProperty("application.mode", "DEV").toUpperCase());
+        } catch (IllegalArgumentException e) {
+            Logger.error("Illegal mode '%s', use either prod or dev", configuration.getProperty("application.mode"));
+            fatalServerErrorOccurred();
+        }
+        if (usePrecompiled || forceProd) {
             mode = Mode.PROD;
         }
 
@@ -292,7 +293,7 @@ public class Yalp {
 
         // Default cookie domain
         Http.Cookie.defaultDomain = configuration.getProperty("application.defaultCookieDomain", null);
-        if (Http.Cookie.defaultDomain!=null) {
+        if (Http.Cookie.defaultDomain != null) {
             Logger.info("Using default cookie domain: " + Http.Cookie.defaultDomain);
         }
 
@@ -350,7 +351,7 @@ public class Yalp {
         extractHttpPort();
         // Plugins
         pluginCollection.onConfigurationRead();
-     }
+    }
 
     private static void extractHttpPort() {
         final String javaCommand = System.getProperty("sun.java.command", "");
@@ -362,25 +363,25 @@ public class Yalp {
 
 
     private static Properties readOneConfigurationFile(String filename) {
-        Properties propsFromFile=null;
+        Properties propsFromFile = null;
 
         VirtualFile appRoot = VirtualFile.open(applicationPath);
-        
+
         VirtualFile conf = appRoot.child("conf/" + filename);
         if (confs.contains(conf)) {
             throw new RuntimeException("Detected recursive @include usage. Have seen the file " + filename + " before");
         }
-        
+
         try {
             propsFromFile = IO.readUtf8Properties(conf.inputstream());
         } catch (RuntimeException e) {
             if (e.getCause() instanceof IOException) {
-                Logger.fatal("Cannot read "+filename);
+                Logger.fatal("Cannot read " + filename);
                 fatalServerErrorOccurred();
             }
         }
         confs.add(conf);
-        
+
         // OK, check for instance specifics configuration
         Properties newConfiguration = new OrderSafeProperties();
         Pattern pattern = Pattern.compile("^%([a-zA-Z0-9_\\-]+)\\.(.*)$");
@@ -434,7 +435,7 @@ public class Yalp {
             if (key.toString().startsWith("@include.")) {
                 try {
                     String filenameToInclude = propsFromFile.getProperty(key.toString());
-                    toInclude.putAll( readOneConfigurationFile(filenameToInclude) );
+                    toInclude.putAll(readOneConfigurationFile(filenameToInclude));
                 } catch (Exception ex) {
                     Logger.warn("Missing include: %s", key);
                 }
@@ -456,7 +457,7 @@ public class Yalp {
                 stop();
             }
 
-            if( standaloneYalpServer) {
+            if (standaloneYalpServer) {
                 // Can only register shutdown-hook if running as standalone server
                 if (!shutdownHookEnabled) {
                     //registers shutdown hook - Now there's a good chance that we can notify
@@ -486,7 +487,7 @@ public class Yalp {
             // Configure logs
             String logLevel = configuration.getProperty("application.log", "INFO");
             //only override log-level if Logger was not configured manually
-            if( !Logger.configuredManually) {
+            if (!Logger.configuredManually) {
                 Logger.setUp(logLevel);
             }
             Logger.recordCaller = Boolean.parseBoolean(configuration.getProperty("application.log.recordCaller", "false"));
@@ -508,13 +509,13 @@ public class Yalp {
 
             // Default web encoding
             String _defaultWebEncoding = configuration.getProperty("application.web_encoding");
-            if( _defaultWebEncoding != null ) {
+            if (_defaultWebEncoding != null) {
                 Logger.info("Using custom default web encoding: " + _defaultWebEncoding);
                 defaultWebEncoding = _defaultWebEncoding;
                 // Must update current response also, since the request/response triggering
                 // this configuration-loading in dev-mode have already been
                 // set up with the previous encoding
-                if( Http.Response.current() != null ) {
+                if (Http.Response.current() != null) {
                     Http.Response.current().encoding = _defaultWebEncoding;
                 }
             }
@@ -556,11 +557,17 @@ public class Yalp {
 
         } catch (YalpException e) {
             started = false;
-            try { Cache.stop(); } catch (Exception ignored) {}
+            try {
+                Cache.stop();
+            } catch (Exception ignored) {
+            }
             throw e;
         } catch (Exception e) {
             started = false;
-            try { Cache.stop(); } catch (Exception ignored) {}
+            try {
+                Cache.stop();
+            } catch (Exception ignored) {
+            }
             throw new UnexpectedException(e);
         }
     }
@@ -629,11 +636,11 @@ public class Yalp {
         }
         try {
             pluginCollection.beforeDetectingChanges();
-            if(!pluginCollection.detectClassesChange()) {
+            if (!pluginCollection.detectClassesChange()) {
                 classloader.detectChanges();
             }
             Router.detectChanges(ctxPath);
-            for(VirtualFile conf : confs) {
+            for (VirtualFile conf : confs) {
                 if (conf.lastModified() > startedAt) {
                     start();
                     return;
@@ -653,9 +660,8 @@ public class Yalp {
 
     @SuppressWarnings("unchecked")
     public static <T> T plugin(Class<T> clazz) {
-        return (T)pluginCollection.getPluginInstance((Class<? extends YalpPlugin>)clazz);
+        return (T) pluginCollection.getPluginInstance((Class<? extends YalpPlugin>) clazz);
     }
-
 
 
     /**
@@ -710,42 +716,42 @@ public class Yalp {
         }
 
         // Load modules from modules/ directory, but get the order from the dependencies.yml file
-		// .listFiles() returns items in an OS dependant sequence, which is bad
-		// See #781
-		// the yaml parser wants yalp.version as an environment variable
-		System.setProperty("yalp.version", Yalp.version);
-		DependenciesManager dm = new DependenciesManager(applicationPath, frameworkPath, null);
+        // .listFiles() returns items in an OS dependant sequence, which is bad
+        // See #781
+        // the yaml parser wants yalp.version as an environment variable
+        System.setProperty("yalp.version", Yalp.version);
+        DependenciesManager dm = new DependenciesManager(applicationPath, frameworkPath, null);
 
-		File localModules = Yalp.getFile("modules");
-		List<String> modules = new ArrayList<String>();
-		if (localModules.exists() && localModules.isDirectory()) {
-			try {
-				modules = dm.retrieveModules();
-			} catch (Exception e) {
-				throw new UnexpectedException("There was a problem parsing dependencies.yml");
-				
-			}
-			for (Iterator iter = modules.iterator(); iter.hasNext();) {
-				String moduleName = (String) iter.next();
+        File localModules = Yalp.getFile("modules");
+        List<String> modules = new ArrayList<String>();
+        if (localModules.exists() && localModules.isDirectory()) {
+            try {
+                modules = dm.retrieveModules();
+            } catch (Exception e) {
+                throw new UnexpectedException("There was a problem parsing dependencies.yml");
 
-				File module = new File(localModules, moduleName);
+            }
+            for (Iterator iter = modules.iterator(); iter.hasNext(); ) {
+                String moduleName = (String) iter.next();
 
-				if (moduleName.contains("-")) {
-					moduleName = moduleName.substring(0, moduleName.indexOf("-"));
-				}
+                File module = new File(localModules, moduleName);
 
-				if (module.isDirectory()) {
-					addModule(moduleName, module);
-				} else {
-					File modulePath = new File(IO.readContentAsString(module).trim());
-					if (!modulePath.exists() || !modulePath.isDirectory()) {
-						Logger.error("Module %s will not be loaded because %s does not exist", moduleName, modulePath.getAbsolutePath());
-					} else {
-						addModule(moduleName, modulePath);
-					}
-				}
-			}
-		}
+                if (moduleName.contains("-")) {
+                    moduleName = moduleName.substring(0, moduleName.indexOf("-"));
+                }
+
+                if (module.isDirectory()) {
+                    addModule(moduleName, module);
+                } else {
+                    File modulePath = new File(IO.readContentAsString(module).trim());
+                    if (!modulePath.exists() || !modulePath.isDirectory()) {
+                        Logger.error("Module %s will not be loaded because %s does not exist", moduleName, modulePath.getAbsolutePath());
+                    } else {
+                        addModule(moduleName, modulePath);
+                    }
+                }
+            }
+        }
 
         // Auto add special modules
         if (Yalp.runingInTestMode()) {
@@ -802,15 +808,16 @@ public class Yalp {
     /**
      * Returns true if application is runing in test-mode.
      * Test-mode is resolved from the framework id.
-     *
+     * <p/>
      * Your app is running in test-mode if the framwork id (Yalp.id)
      * is 'test' or 'test-?.*'
+     *
      * @return true if testmode
      */
-    public static boolean runingInTestMode(){
+    public static boolean runingInTestMode() {
         return id.matches("test|test-?.*");
     }
-    
+
 
     /**
      * Call this method when there has been a fatal error that Yalp cannot recover from

@@ -3,6 +3,7 @@ package yalp.exceptions;
 
 import java.util.Arrays;
 import java.util.List;
+
 import yalp.Yalp;
 import yalp.classloading.ApplicationClasses.ApplicationClass;
 
@@ -10,19 +11,19 @@ import yalp.classloading.ApplicationClasses.ApplicationClass;
  * Error while sending an email
  */
 public class MailException extends YalpException implements SourceAttachment {
-    
+
     String sourceFile;
     List<String> source;
-    Integer line;    
-    
+    Integer line;
+
     public MailException(String message) {
         super(message, null);
     }
-    
+
     public MailException(String message, Throwable cause) {
         super(message, cause);
         StackTraceElement element = getInterestingStrackTraceElement(cause);
-        if(element != null) {
+        if (element != null) {
             ApplicationClass applicationClass = Yalp.classes.getApplicationClass(element.getClassName());
             sourceFile = applicationClass.javaFile.relativePath();
             source = Arrays.asList(applicationClass.javaSource.split("\n"));

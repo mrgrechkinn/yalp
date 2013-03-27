@@ -39,7 +39,7 @@ public class TestEngine {
         List<Class> classes = Yalp.classloader.getAssignableClasses(Assert.class);
         Collection<Class> pluginClasses = Yalp.pluginCollection.getUnitTests();
         classes.addAll(pluginClasses);
-        for (ListIterator<Class> it = classes.listIterator(); it.hasNext();) {
+        for (ListIterator<Class> it = classes.listIterator(); it.hasNext(); ) {
             Class c = it.next();
             if (Modifier.isAbstract(c.getModifiers())) {
                 it.remove();
@@ -57,7 +57,7 @@ public class TestEngine {
         List<Class> classes = Yalp.classloader.getAssignableClasses(FunctionalTest.class);
         Collection<Class> pluginClasses = Yalp.pluginCollection.getFunctionalTests();
         classes.addAll(pluginClasses);
-        for (ListIterator<Class> it = classes.listIterator(); it.hasNext();) {
+        for (ListIterator<Class> it = classes.listIterator(); it.hasNext(); ) {
             if (Modifier.isAbstract(it.next().getModifiers())) {
                 it.remove();
             }
@@ -191,13 +191,13 @@ public class TestEngine {
             time = result.time + time;
             this.results.add(result);
             if (result.passed) {
-              success++;
+                success++;
             } else {
-              if (result.error.startsWith("Failure")) {
-                failures++;
-              } else {
-                errors++;
-              }
+                if (result.error.startsWith("Failure")) {
+                    failures++;
+                } else {
+                    errors++;
+                }
             }
         }
     }

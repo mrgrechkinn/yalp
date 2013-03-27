@@ -18,6 +18,7 @@ import yalp.Yalp.Mode;
 import yalp.libs.IO;
 import yalp.server.ssl.SslHttpServerPipelineFactory;
 import yalp.vfs.VirtualFile;
+
 import java.util.Map;
 import java.util.HashMap;
 
@@ -140,7 +141,7 @@ public class Server {
                 return a.substring(s.length());
             }
         }
-        return defaultValue; 
+        return defaultValue;
     }
 
     private static void writePID(File root) {

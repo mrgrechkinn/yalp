@@ -26,7 +26,7 @@ import yalp.exceptions.ConfigurationException;
 
 /**
  * Memcached implementation (using http://code.google.com/p/spymemcached/)
- *
+ * <p/>
  * expiration is specified in seconds
  */
 public class MemcachedImpl implements CacheImpl {
@@ -38,7 +38,7 @@ public class MemcachedImpl implements CacheImpl {
     SerializingTranscoder tc;
 
     public static MemcachedImpl getInstance() throws IOException {
-      return getInstance(false);
+        return getInstance(false);
     }
 
     public static MemcachedImpl getInstance(boolean forceClientInit) throws IOException {
@@ -91,7 +91,7 @@ public class MemcachedImpl implements CacheImpl {
 
     public void initClient() throws IOException {
         System.setProperty("net.spy.log.LoggerImpl", "net.spy.memcached.compat.log.Log4JLogger");
-        
+
         List<InetSocketAddress> addrs;
         if (Yalp.configuration.containsKey("memcached.host")) {
             addrs = AddrUtil.getAddresses(Yalp.configuration.getProperty("memcached.host"));
@@ -106,22 +106,22 @@ public class MemcachedImpl implements CacheImpl {
         } else {
             throw new ConfigurationException("Bad configuration for memcached: missing host(s)");
         }
-        
+
         if (Yalp.configuration.containsKey("memcached.user")) {
             String memcacheUser = Yalp.configuration.getProperty("memcached.user");
             String memcachePassword = Yalp.configuration.getProperty("memcached.password");
             if (memcachePassword == null) {
                 throw new ConfigurationException("Bad configuration for memcached: missing password");
             }
-            
+
             // Use plain SASL to connect to memcached
             AuthDescriptor ad = new AuthDescriptor(new String[]{"PLAIN"},
-                                    new PlainCallbackHandler(memcacheUser, memcachePassword));
+                    new PlainCallbackHandler(memcacheUser, memcachePassword));
             ConnectionFactory cf = new ConnectionFactoryBuilder()
-                                        .setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
-                                        .setAuthDescriptor(ad)
-                                        .build();
-            
+                    .setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
+                    .setAuthDescriptor(ad)
+                    .build();
+
             client = new MemcachedClient(cf, addrs);
         } else {
             client = new MemcachedClient(addrs);

@@ -19,7 +19,7 @@ public class PhoneCheck extends AbstractAnnotationCheck<Phone> {
     }
 
     public boolean isSatisfied(Object validatedObject, Object value, OValContext context, Validator validator)
-    throws OValException {
+            throws OValException {
         if (value == null || value.toString().length() == 0) {
             return true;
         }

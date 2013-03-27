@@ -13,7 +13,7 @@ import net.sf.oval.configuration.annotation.Constraint;
  * $1: field name
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.PARAMETER })
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Constraint(checkWith = IPv4AddressCheck.class)
 public @interface IPv4Address {
     String message() default IPv4AddressCheck.mes;

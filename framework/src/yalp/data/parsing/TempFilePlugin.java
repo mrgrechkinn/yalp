@@ -10,23 +10,25 @@ import yalp.Yalp;
 import yalp.YalpPlugin;
 
 /**
- *  Creates temporary folders for file parsing, and deletes
- *  it after request completion.
+ * Creates temporary folders for file parsing, and deletes
+ * it after request completion.
  */
 public class TempFilePlugin extends YalpPlugin {
 
     private static DecimalFormat format = new DecimalFormat("##########");
-    
+
 
     static {
         format.setMinimumIntegerDigits(10);
         format.setGroupingUsed(false);
     }
+
     private static long count = 0;
 
     private static synchronized long getCountLocal() {
         return count++;
     }
+
     public static ThreadLocal<File> tempFolder = new ThreadLocal<File>();
 
     public static File createTempFolder() {

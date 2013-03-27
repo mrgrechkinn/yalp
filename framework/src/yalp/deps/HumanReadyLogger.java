@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.ivy.plugins.repository.TransferEvent;
 import org.apache.ivy.plugins.repository.TransferListener;
@@ -172,7 +173,7 @@ public class HumanReadyLogger implements MessageLogger, TransferListener {
         //System.out.println(te.getResource().getContentLength());
         if (downloading != null) {
             length += te.getLength();
-            System.out.print("\r~ \t" + downloading.replace("...", "") + progressBar[progress] + " " + String.format("%-20s", FileUtils.byteCountToDisplaySize(length) + (te.isTotalLengthSet() ? "/" + FileUtils.byteCountToDisplaySize(te.getTotalLength()): "")) + "\r");
+            System.out.print("\r~ \t" + downloading.replace("...", "") + progressBar[progress] + " " + String.format("%-20s", FileUtils.byteCountToDisplaySize(length) + (te.isTotalLengthSet() ? "/" + FileUtils.byteCountToDisplaySize(te.getTotalLength()) : "")) + "\r");
             if (System.currentTimeMillis() - lastTime > 500) {
                 lastTime = System.currentTimeMillis();
                 progress++;

@@ -399,7 +399,7 @@ public class JavaExtensions {
 
     /**
      * concatenate items of a collection as a string separated with <tt>separator</tt>
-     *  items toString() method should be implemented to provide a string representation
+     * items toString() method should be implemented to provide a string representation
      */
     public static String join(Collection items, String separator) {
         if (items == null) {

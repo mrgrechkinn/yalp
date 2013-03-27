@@ -38,7 +38,7 @@ public class SessionTest {
 
             // Set the new value
             field.setBoolean(null, value);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -107,7 +107,7 @@ public class SessionTest {
 
     @After
     public void restoreDefault() {
-        final boolean SESSION_SEND_ONLY_IF_CHANGED = Yalp.configuration.getProperty("application.session.sendOnlyIfChanged", "false").toLowerCase().equals("true"); 
+        final boolean SESSION_SEND_ONLY_IF_CHANGED = Yalp.configuration.getProperty("application.session.sendOnlyIfChanged", "false").toLowerCase().equals("true");
         setSendOnlyIfChangedConstant(SESSION_SEND_ONLY_IF_CHANGED);
     }
 }

@@ -9,7 +9,7 @@ import yalp.exceptions.UnexpectedException;
 import yalp.mvc.Mailer;
 
 /**
- * Enhance mailers classes. 
+ * Enhance mailers classes.
  */
 public class MailerEnhancer extends Enhancer {
 

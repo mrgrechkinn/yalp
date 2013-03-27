@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
 import yalp.db.DB;
 
 public class JdbcHelper {
@@ -11,7 +12,7 @@ public class JdbcHelper {
     private JdbcHelper() {
     }
 
-    public static ResultSet execute(String sql, Object ... params) throws SQLException {
+    public static ResultSet execute(String sql, Object... params) throws SQLException {
         PreparedStatement pst = DB.getConnection().prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         int index = 0;
         for (Object param : params) {

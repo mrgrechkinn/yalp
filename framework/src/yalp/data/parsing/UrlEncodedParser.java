@@ -23,18 +23,18 @@ public class UrlEncodedParser extends DataParser {
 
     // Sets the maximum count of accepted POST params - protection against Hash collision DOS attacks
     private static final int maxParams = Integer.parseInt(Yalp.configuration.getProperty("http.maxParams", "1000")); // 0 == no limit
-    
+
     boolean forQueryString = false;
-    
+
     public static Map<String, String[]> parse(String urlEncoded) {
         try {
             final String encoding = Http.Request.current().encoding;
-            return new UrlEncodedParser().parse(new ByteArrayInputStream(urlEncoded.getBytes( encoding )));
+            return new UrlEncodedParser().parse(new ByteArrayInputStream(urlEncoded.getBytes(encoding)));
         } catch (UnsupportedEncodingException ex) {
             throw new UnexpectedException(ex);
         }
     }
-    
+
     public static Map<String, String[]> parseQueryString(InputStream is) {
         UrlEncodedParser parser = new UrlEncodedParser();
         parser.forQueryString = true;
@@ -50,8 +50,8 @@ public class UrlEncodedParser extends DataParser {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
             int bytesRead;
-            while ( (bytesRead = is.read(buffer)) > 0 ) {
-                os.write( buffer, 0, bytesRead);
+            while ((bytesRead = is.read(buffer)) > 0) {
+                os.write(buffer, 0, bytesRead);
             }
 
             String data = new String(os.toByteArray(), encoding);
@@ -77,7 +77,7 @@ public class UrlEncodedParser extends DataParser {
 
             // to prevent the Yalp-server from being vulnerable to POST hash collision DOS-attack (Denial of Service through hash table multi-collisions),
             // we should by default not parse the params into HashMap if the count exceeds a maximum limit
-            if(maxParams != 0 && keyValues.length > maxParams) {
+            if (maxParams != 0 && keyValues.length > maxParams) {
                 Logger.warn("Number of request parameters %d is higher than maximum of %d, aborting. Can be configured using 'http.maxParams'", keyValues.length, maxParams);
                 throw new Status(413); //413 Request Entity Too Large
             }
@@ -85,15 +85,15 @@ public class UrlEncodedParser extends DataParser {
             for (String keyValue : keyValues) {
                 // split this key-value on the first '='
                 int i = keyValue.indexOf('=');
-                String key=null;
-                String value=null;
-                if ( i > 0) {
-                    key = keyValue.substring(0,i);
-                    value = keyValue.substring(i+1);
+                String key = null;
+                String value = null;
+                if (i > 0) {
+                    key = keyValue.substring(0, i);
+                    value = keyValue.substring(i + 1);
                 } else {
                     key = keyValue;
                 }
-                if (key.length()>0) {
+                if (key.length() > 0) {
                     Utils.Maps.mergeValueInMap(params, key, value);
                 }
             }
@@ -137,8 +137,8 @@ public class UrlEncodedParser extends DataParser {
             }
 
             // add the complete body as a parameters
-            if(!forQueryString) {
-                decodedParams.put("body", new String[] {data});
+            if (!forQueryString) {
+                decodedParams.put("body", new String[]{data});
             }
 
             return decodedParams;

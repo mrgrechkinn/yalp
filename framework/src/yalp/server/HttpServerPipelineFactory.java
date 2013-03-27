@@ -8,6 +8,7 @@ import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.jboss.netty.channel.ChannelHandler;
 import yalp.Yalp;
 import yalp.Logger;
+
 import java.util.Map;
 import java.util.HashMap;
 
@@ -30,10 +31,10 @@ public class HttpServerPipelineFactory implements ChannelPipelineFactory {
                 String name = getName(handler.trim());
                 ChannelHandler instance = getInstance(handler);
                 if (instance != null) {
-                    pipeline.addLast(name, instance); 
+                    pipeline.addLast(name, instance);
                     Server.pipelines.put(name, instance);
                 }
-            } catch(Throwable e) {
+            } catch (Throwable e) {
                 Logger.error(" error adding " + handler, e);
             }
 
@@ -43,10 +44,10 @@ public class HttpServerPipelineFactory implements ChannelPipelineFactory {
         String handler = handlers[handlers.length - 1];
         ChannelHandler instance = getInstance(handler);
         if (instance != null) {
-            pipeline.addLast("handler", instance); 
+            pipeline.addLast("handler", instance);
             Server.pipelines.put("handler", instance);
         }
-       
+
         return pipeline;
     }
 
@@ -64,7 +65,7 @@ public class HttpServerPipelineFactory implements ChannelPipelineFactory {
             classes.put(name, clazz);
         }
         if (ChannelHandler.class.isAssignableFrom(clazz))
-            return (ChannelHandler)clazz.newInstance(); 
+            return (ChannelHandler) clazz.newInstance();
         return null;
     }
 }

@@ -1,6 +1,7 @@
 package yalp.test;
 
 import java.io.File;
+
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.junit.rules.MethodRule;
 import org.junit.runner.Description;
@@ -22,7 +23,7 @@ public class YalpJUnitRunner extends Runner implements Filterable {
     public static final String invocationType = "JUnitTest";
 
     public static boolean useCustomRunner = false;
-    
+
     // *******************
     JUnit4 jUnit4;
 
@@ -42,7 +43,7 @@ public class YalpJUnitRunner extends Runner implements Filterable {
 
     private static String getYalpId() {
         String yalpId = System.getProperty("yalp.id", "test");
-        if(! (yalpId.startsWith("test-") && yalpId.length() >= 6)) {
+        if (!(yalpId.startsWith("test-") && yalpId.length() >= 6)) {
             yalpId = "test";
         }
         return yalpId;
@@ -57,18 +58,17 @@ public class YalpJUnitRunner extends Runner implements Filterable {
     public void run(final RunNotifier notifier) {
         jUnit4.run(notifier);
     }
-    
+
     @Override
     public void filter(Filter toFilter) throws NoTestsRemainException {
-    	jUnit4.filter(toFilter);
-    	
+        jUnit4.filter(toFilter);
+
     }
 
     // *********************
     public enum StartYalp implements MethodRule {
 
         INVOKE_THE_TEST_IN_YALP_CONTEXT {
-
             public Statement apply(final Statement base, FrameworkMethod method, Object target) {
 
                 return new Statement() {
@@ -105,7 +105,6 @@ public class YalpJUnitRunner extends Runner implements Filterable {
             }
         },
         JUST_RUN_THE_TEST {
-
             public Statement apply(final Statement base, FrameworkMethod method, Object target) {
                 return new Statement() {
 

@@ -1,6 +1,7 @@
 package yalp.templates;
 
 import java.util.Stack;
+
 import yalp.Logger;
 import yalp.vfs.VirtualFile;
 import yalp.exceptions.TemplateCompilationException;
@@ -54,7 +55,7 @@ public abstract class TemplateCompiler {
 
         // Parse
         loop:
-        for (;;) {
+        for (; ; ) {
 
             if (doNextScan) {
                 state = parser.nextToken();

@@ -48,16 +48,16 @@ public class JobsPlugin extends YalpPlugin {
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         if (!scheduledJobs.isEmpty()) {
             out.println();
-            out.println("Scheduled jobs ("+scheduledJobs.size()+"):");
+            out.println("Scheduled jobs (" + scheduledJobs.size() + "):");
             out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~");
             for (Job job : scheduledJobs) {
                 out.print(job.getClass().getName());
                 if (job.getClass().isAnnotationPresent(OnApplicationStart.class) && !(job.getClass().isAnnotationPresent(On.class) || job.getClass().isAnnotationPresent(Every.class))) {
                     OnApplicationStart appStartAnnotation = job.getClass().getAnnotation(OnApplicationStart.class);
-                    out.print(" run at application start" + (appStartAnnotation.async()?" (async)" : "") + ".");
+                    out.print(" run at application start" + (appStartAnnotation.async() ? " (async)" : "") + ".");
                 }
 
-                if( job.getClass().isAnnotationPresent(On.class)) {
+                if (job.getClass().isAnnotationPresent(On.class)) {
 
                     String cron = job.getClass().getAnnotation(On.class).value();
                     if (cron != null && cron.startsWith("cron.")) {
@@ -70,7 +70,7 @@ public class JobsPlugin extends YalpPlugin {
                 }
                 if (job.lastRun > 0) {
                     out.print(" (last run at " + df.format(new Date(job.lastRun)));
-                    if(job.wasError) {
+                    if (job.wasError) {
                         out.print(" with error)");
                     } else {
                         out.print(")");
@@ -86,8 +86,8 @@ public class JobsPlugin extends YalpPlugin {
             out.println("Waiting jobs:");
             out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             for (Object o : executor.getQueue()) {
-                ScheduledFuture task = (ScheduledFuture)o;
-                out.println(Java.extractUnderlyingCallable((FutureTask)task) + " will run in " + task.getDelay(TimeUnit.SECONDS) + " seconds");        
+                ScheduledFuture task = (ScheduledFuture) o;
+                out.println(Java.extractUnderlyingCallable((FutureTask) task) + " will run in " + task.getDelay(TimeUnit.SECONDS) + " seconds");
             }
         }
         return sw.toString();
@@ -108,14 +108,14 @@ public class JobsPlugin extends YalpPlugin {
             if (clazz.isAnnotationPresent(OnApplicationStart.class)) {
                 //check if we're going to run the job sync or async
                 OnApplicationStart appStartAnnotation = clazz.getAnnotation(OnApplicationStart.class);
-                if( !appStartAnnotation.async()) {
+                if (!appStartAnnotation.async()) {
                     //run job sync
                     try {
                         Job<?> job = ((Job<?>) clazz.newInstance());
                         scheduledJobs.add(job);
                         job.run();
-                        if(job.wasError) {
-                            if(job.lastException != null) {
+                        if (job.wasError) {
+                            if (job.lastException != null) {
                                 throw job.lastException;
                             }
                             throw new RuntimeException("@OnApplicationStart Job has failed");
@@ -137,7 +137,7 @@ public class JobsPlugin extends YalpPlugin {
                         scheduledJobs.add(job);
                         //start running job now in the background
                         @SuppressWarnings("unchecked")
-                        Callable<Job> callable = (Callable<Job>)job;
+                        Callable<Job> callable = (Callable<Job>) job;
                         executor.submit(callable);
                     } catch (InstantiationException ex) {
                         throw new UnexpectedException("Cannot instanciate Job " + clazz.getName());
@@ -169,7 +169,7 @@ public class JobsPlugin extends YalpPlugin {
                         value = Yalp.configuration.getProperty(value);
                     }
                     value = Expression.evaluate(value, value).toString();
-                    if(!"never".equalsIgnoreCase(value)){
+                    if (!"never".equalsIgnoreCase(value)) {
                         executor.scheduleWithFixedDelay(job, Time.parseDuration(value), Time.parseDuration(value), TimeUnit.SECONDS);
                     }
                 } catch (InstantiationException ex) {
@@ -216,7 +216,7 @@ public class JobsPlugin extends YalpPlugin {
                 nextDate = cronExp.getNextValidTimeAfter(nextInvalid);
             }
             job.nextPlannedExecution = nextDate;
-            executor.schedule((Callable<V>)job, nextDate.getTime() - now.getTime(), TimeUnit.MILLISECONDS);
+            executor.schedule((Callable<V>) job, nextDate.getTime() - now.getTime(), TimeUnit.MILLISECONDS);
             job.executor = executor;
         } catch (Exception ex) {
             throw new UnexpectedException(ex);
@@ -225,9 +225,9 @@ public class JobsPlugin extends YalpPlugin {
 
     @Override
     public void onApplicationStop() {
-        
+
         List<Class> jobs = Yalp.classloader.getAssignableClasses(Job.class);
-        
+
         for (final Class clazz : jobs) {
             // @OnApplicationStop
             if (clazz.isAnnotationPresent(OnApplicationStop.class)) {
@@ -253,7 +253,7 @@ public class JobsPlugin extends YalpPlugin {
                 }
             }
         }
-        
+
         executor.shutdownNow();
         executor.getQueue().clear();
     }

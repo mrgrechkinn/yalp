@@ -59,7 +59,7 @@ public class JPAPlugin extends YalpPlugin {
                     StringBuilder q = new StringBuilder().append("from ").append(clazz.getName()).append(" o where");
                     int keyIdx = 1;
                     for (String keyName : keyNames) {
-                            q.append(" o.").append(keyName).append(" = ?").append(keyIdx++).append(" and ");
+                        q.append(" o.").append(keyName).append(" = ?").append(keyIdx++).append(" and ");
                     }
                     if (q.length() > 4) {
                         q = q.delete(q.length() - 4, q.length());
@@ -69,8 +69,8 @@ public class JPAPlugin extends YalpPlugin {
                     Class[] pk = new JPAModelLoader(clazz).keyTypes();
                     int j = 0;
                     for (ParamNode id : ids) {
-                        if (id.getValues() == null || id.getValues().length == 0 || id.getFirstValue(null)== null || id.getFirstValue(null).trim().length() <= 0 ) {
-                             // We have no ids, it is a new entity
+                        if (id.getValues() == null || id.getValues().length == 0 || id.getFirstValue(null) == null || id.getFirstValue(null).trim().length() <= 0) {
+                            // We have no ids, it is a new entity
                             return GenericModel.create(rootParamNode, name, clazz, annotations);
                         }
                         query.setParameter(j + 1, Binder.directBind(id.getOriginalKey(), annotations, id.getValues()[0], pk[j++], null));
@@ -152,13 +152,13 @@ public class JPAPlugin extends YalpPlugin {
                 public boolean onCollectionUpdate(Object collection, Serializable key) throws CallbackException {
                     if (collection instanceof PersistentCollection) {
                         Object o = ((PersistentCollection) collection).getOwner();
-                       	if (o instanceof JPABase) {
-							if (entities.get() != null) {
-	                           	return ((JPABase) o).willBeSaved || ((JPABase) entities.get()).willBeSaved;
-							} else {
-								return ((JPABase) o).willBeSaved;
-							}
-	                    }
+                        if (o instanceof JPABase) {
+                            if (entities.get() != null) {
+                                return ((JPABase) o).willBeSaved || ((JPABase) entities.get()).willBeSaved;
+                            } else {
+                                return ((JPABase) o).willBeSaved;
+                            }
+                        }
                     } else {
                         System.out.println("HOO: Case not handled !!!");
                     }
@@ -169,30 +169,30 @@ public class JPAPlugin extends YalpPlugin {
                 public boolean onCollectionRecreate(Object collection, Serializable key) throws CallbackException {
                     if (collection instanceof PersistentCollection) {
                         Object o = ((PersistentCollection) collection).getOwner();
-  		           	 	if (o instanceof JPABase) {
-							if (entities.get() != null) {
-	                           	return ((JPABase) o).willBeSaved || ((JPABase) entities.get()).willBeSaved;
-							} else {
-								return ((JPABase) o).willBeSaved;
-							}
-	                     } 
-	 				} else {
-			           	System.out.println("HOO: Case not handled !!!");
-			        }
-                    
+                        if (o instanceof JPABase) {
+                            if (entities.get() != null) {
+                                return ((JPABase) o).willBeSaved || ((JPABase) entities.get()).willBeSaved;
+                            } else {
+                                return ((JPABase) o).willBeSaved;
+                            }
+                        }
+                    } else {
+                        System.out.println("HOO: Case not handled !!!");
+                    }
+
                     return super.onCollectionRecreate(collection, key);
                 }
 
                 @Override
                 public boolean onCollectionRemove(Object collection, Serializable key) throws CallbackException {
-				 	if (collection instanceof PersistentCollection) {
+                    if (collection instanceof PersistentCollection) {
                         Object o = ((PersistentCollection) collection).getOwner();
-			            if (o instanceof JPABase) {
-							if (entities.get() != null) {
-                            	return ((JPABase) o).willBeSaved || ((JPABase) entities.get()).willBeSaved;
-							} else {
-								return ((JPABase) o).willBeSaved;
-							}
+                        if (o instanceof JPABase) {
+                            if (entities.get() != null) {
+                                return ((JPABase) o).willBeSaved || ((JPABase) entities.get()).willBeSaved;
+                            } else {
+                                return ((JPABase) o).willBeSaved;
+                            }
                         }
                     } else {
                         System.out.println("HOO: Case not handled !!!");
@@ -200,20 +200,20 @@ public class JPAPlugin extends YalpPlugin {
                     return super.onCollectionRemove(collection, key);
                 }
 
-				protected ThreadLocal<Object> entities = new ThreadLocal<Object>();
-				
-				@Override
-			 	public boolean onSave(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types)  {
-					entities.set(entity);
-					return super.onSave(entity, id, state, propertyNames, types);
-				}
-						
-				@Override
-				public void afterTransactionCompletion(org.hibernate.Transaction tx) {
-					entities.remove();
-				}
-				
-			});
+                protected ThreadLocal<Object> entities = new ThreadLocal<Object>();
+
+                @Override
+                public boolean onSave(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
+                    entities.set(entity);
+                    return super.onSave(entity, id, state, propertyNames, types);
+                }
+
+                @Override
+                public void afterTransactionCompletion(org.hibernate.Transaction tx) {
+                    entities.remove();
+                }
+
+            });
             if (Yalp.configuration.getProperty("jpa.debugSQL", "false").equals("true")) {
                 org.apache.log4j.Logger.getLogger("org.hibernate.SQL").setLevel(Level.ALL);
             } else {
@@ -331,10 +331,10 @@ public class JPAPlugin extends YalpPlugin {
     @Override
     public void beforeInvocation() {
 
-        if(InvocationContext.current().getAnnotation(NoTransaction.class) != null ) {
+        if (InvocationContext.current().getAnnotation(NoTransaction.class) != null) {
             //Called method or class is annotated with @NoTransaction telling us that
             //we should not start a transaction
-            return ;
+            return;
         }
 
         boolean readOnly = false;
@@ -363,7 +363,7 @@ public class JPAPlugin extends YalpPlugin {
     /**
      * initialize the JPA context and starts a JPA transaction
      *
-     * @param readonly true for a readonly transaction
+     * @param readonly   true for a readonly transaction
      * @param autoCommit true to automatically commit the DB transaction after each JPA statement
      */
     public static void startTx(boolean readonly) {
@@ -380,7 +380,8 @@ public class JPAPlugin extends YalpPlugin {
     }
 
     /**
-     * clear current JPA context and transaction 
+     * clear current JPA context and transaction
+     *
      * @param rollback shall current transaction be committed (false) or cancelled (true)
      */
     public static void closeTx(boolean rollback) {
@@ -393,7 +394,7 @@ public class JPAPlugin extends YalpPlugin {
                 // Be sure to set the connection is non-autoCommit mode as some driver will complain about COMMIT statement
                 try {
                     DB.getConnection().setAutoCommit(false);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     Logger.error(e, "Why the driver complains here?");
                 }
                 // Commit the transaction
@@ -593,10 +594,10 @@ public class JPAPlugin extends YalpPlugin {
 
 
         private void initProperties() {
-            synchronized(this){
-                if(properties != null)
+            synchronized (this) {
+                if (properties != null)
                     return;
-                properties = new HashMap<String,Model.Property>();
+                properties = new HashMap<String, Model.Property>();
                 Set<Field> fields = getModelFields(clazz);
                 for (Field f : fields) {
                     if (Modifier.isTransient(f.getModifiers())) {
@@ -618,37 +619,37 @@ public class JPAPlugin extends YalpPlugin {
             Class<?> idClass = getCompositeKeyClass();
             Object id = idClass.newInstance();
             PropertyDescriptor[] idProperties = PropertyUtils.getPropertyDescriptors(idClass);
-            if(idProperties == null || idProperties.length == 0)
-                throw new UnexpectedException("Composite id has no properties: "+idClass.getName());
+            if (idProperties == null || idProperties.length == 0)
+                throw new UnexpectedException("Composite id has no properties: " + idClass.getName());
             for (PropertyDescriptor idProperty : idProperties) {
                 // do we have a field for this?
                 String idPropertyName = idProperty.getName();
                 // skip the "class" property...
-                if(idPropertyName.equals("class"))
+                if (idPropertyName.equals("class"))
                     continue;
                 Model.Property modelProperty = this.properties.get(idPropertyName);
-                if(modelProperty == null)
-                    throw new UnexpectedException("Composite id property missing: "+clazz.getName()+"."+idPropertyName
-                            +" (defined in IdClass "+idClass.getName()+")");
+                if (modelProperty == null)
+                    throw new UnexpectedException("Composite id property missing: " + clazz.getName() + "." + idPropertyName
+                            + " (defined in IdClass " + idClass.getName() + ")");
                 // sanity check
                 Object value = modelProperty.field.get(model);
 
-                if(modelProperty.isMultiple)
-                    throw new UnexpectedException("Composite id property cannot be multiple: "+clazz.getName()+"."+idPropertyName);
+                if (modelProperty.isMultiple)
+                    throw new UnexpectedException("Composite id property cannot be multiple: " + clazz.getName() + "." + idPropertyName);
                 // now is this property a relation? if yes then we must use its ID in the key (as per specs)
-                    if(modelProperty.isRelation){
+                if (modelProperty.isRelation) {
                     // get its id
-                    if(!Model.class.isAssignableFrom(modelProperty.type))
+                    if (!Model.class.isAssignableFrom(modelProperty.type))
                         throw new UnexpectedException("Composite id property entity has to be a subclass of Model: "
-                                +clazz.getName()+"."+idPropertyName);
+                                + clazz.getName() + "." + idPropertyName);
                     // we already checked that cast above
                     @SuppressWarnings("unchecked")
                     Model.Factory factory = Model.Manager.factoryFor((Class<? extends Model>) modelProperty.type);
-                    if(factory == null)
+                    if (factory == null)
                         throw new UnexpectedException("Failed to find factory for Composite id property entity: "
-                                +clazz.getName()+"."+idPropertyName);
+                                + clazz.getName() + "." + idPropertyName);
                     // we already checked that cast above
-                    if(value != null)
+                    if (value != null)
                         value = factory.keyValue((Model) value);
                 }
                 // now affect the composite id with this id
@@ -656,7 +657,6 @@ public class JPAPlugin extends YalpPlugin {
             }
             return id;
         }
-
 
 
         public Object keyValue(Model m) {
@@ -692,12 +692,12 @@ public class JPAPlugin extends YalpPlugin {
             }
         }
 
-        public static Set<Field> getModelFields(Class<?> clazz){
+        public static Set<Field> getModelFields(Class<?> clazz) {
             Set<Field> fields = new LinkedHashSet<Field>();
             Class<?> tclazz = clazz;
             while (!tclazz.equals(Object.class)) {
                 // Only add fields for mapped types
-                if(tclazz.isAnnotationPresent(Entity.class)
+                if (tclazz.isAnnotationPresent(Entity.class)
                         || tclazz.isAnnotationPresent(MappedSuperclass.class))
                     Collections.addAll(fields, tclazz.getDeclaredFields());
                 tclazz = tclazz.getSuperclass();
@@ -839,9 +839,9 @@ public class JPAPlugin extends YalpPlugin {
             }
             if (field.isAnnotationPresent(Id.class) || field.isAnnotationPresent(EmbeddedId.class)) {
                 // Look if the target is an embeddable class
-                if (field.getType().isAnnotationPresent(Embeddable.class) || field.getType().isAnnotationPresent(IdClass.class) ) {
+                if (field.getType().isAnnotationPresent(Embeddable.class) || field.getType().isAnnotationPresent(IdClass.class)) {
                     modelProperty.isRelation = true;
-                    modelProperty.relationType =  field.getType();
+                    modelProperty.relationType = field.getType();
                 }
             }
             return modelProperty;

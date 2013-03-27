@@ -23,33 +23,33 @@ public class MessagesPlugin extends YalpPlugin {
         try {
             FileInputStream is = new FileInputStream(new File(Yalp.frameworkPath, "resources/messages"));
             Messages.defaults.putAll(IO.readUtf8Properties(is));
-        } catch(Exception e) {
+        } catch (Exception e) {
             Logger.warn("Defaults messsages file missing");
         }
-        for(VirtualFile module : Yalp.modules.values()) {
+        for (VirtualFile module : Yalp.modules.values()) {
             VirtualFile messages = module.child("conf/messages");
-            if(messages != null && messages.exists()) {
-                Messages.defaults.putAll(read(messages)); 
+            if (messages != null && messages.exists()) {
+                Messages.defaults.putAll(read(messages));
             }
         }
         VirtualFile appDM = Yalp.getVirtualFile("conf/messages");
-        if(appDM != null && appDM.exists()) {
+        if (appDM != null && appDM.exists()) {
             Messages.defaults.putAll(read(appDM));
         }
         for (String locale : Yalp.langs) {
             Properties properties = new Properties();
-            for(VirtualFile module : Yalp.modules.values()) {
+            for (VirtualFile module : Yalp.modules.values()) {
                 VirtualFile messages = module.child("conf/messages." + locale);
-                if(messages != null && messages.exists()) {
-                    properties.putAll(read(messages)); 
+                if (messages != null && messages.exists()) {
+                    properties.putAll(read(messages));
                 }
             }
             VirtualFile appM = Yalp.getVirtualFile("conf/messages." + locale);
-            if(appM != null && appM.exists()) {
+            if (appM != null && appM.exists()) {
                 properties.putAll(read(appM));
             } else {
                 Logger.warn("Messages file missing for locale %s", locale);
-            }     
+            }
             Messages.locales.put(locale, properties);
         }
         lastLoading = System.currentTimeMillis();
@@ -64,23 +64,23 @@ public class MessagesPlugin extends YalpPlugin {
 
     @Override
     public void detectChange() {
-        if (Yalp.getVirtualFile("conf/messages")!=null && Yalp.getVirtualFile("conf/messages").lastModified() > lastLoading) {
+        if (Yalp.getVirtualFile("conf/messages") != null && Yalp.getVirtualFile("conf/messages").lastModified() > lastLoading) {
             onApplicationStart();
             return;
         }
-        for(VirtualFile module : Yalp.modules.values()) {
-            if(module.child("conf/messages") != null && module.child("conf/messages").exists() && module.child("conf/messages").lastModified() > lastLoading) {
+        for (VirtualFile module : Yalp.modules.values()) {
+            if (module.child("conf/messages") != null && module.child("conf/messages").exists() && module.child("conf/messages").lastModified() > lastLoading) {
                 onApplicationStart();
                 return;
             }
         }
         for (String locale : Yalp.langs) {
-            if (Yalp.getVirtualFile("conf/messages." + locale)!=null && Yalp.getVirtualFile("conf/messages." + locale).lastModified() > lastLoading) {
+            if (Yalp.getVirtualFile("conf/messages." + locale) != null && Yalp.getVirtualFile("conf/messages." + locale).lastModified() > lastLoading) {
                 onApplicationStart();
                 return;
             }
-            for(VirtualFile module : Yalp.modules.values()) {
-                if(module.child("conf/messages."+locale) != null && module.child("conf/messages."+locale).exists() && module.child("conf/messages."+locale).lastModified() > lastLoading) {
+            for (VirtualFile module : Yalp.modules.values()) {
+                if (module.child("conf/messages." + locale) != null && module.child("conf/messages." + locale).exists() && module.child("conf/messages." + locale).lastModified() > lastLoading) {
                     onApplicationStart();
                     return;
                 }

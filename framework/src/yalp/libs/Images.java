@@ -18,6 +18,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.FileImageOutputStream;
+
 import jj.play.ns.nl.captcha.backgrounds.BackgroundProducer;
 import jj.play.ns.nl.captcha.backgrounds.FlatColorBackgroundProducer;
 import jj.play.ns.nl.captcha.backgrounds.GradiatedBackgroundProducer;
@@ -37,22 +38,24 @@ public class Images {
 
     /**
      * Resize an image
+     *
      * @param originalImage The image file
-     * @param to The destination file
-     * @param w The new width (or -1 to proportionally resize)
-     * @param h The new height (or -1 to proportionally resize)
+     * @param to            The destination file
+     * @param w             The new width (or -1 to proportionally resize)
+     * @param h             The new height (or -1 to proportionally resize)
      */
     public static void resize(File originalImage, File to, int w, int h) {
-      resize(originalImage, to, w, h, false);
+        resize(originalImage, to, w, h, false);
     }
-    
+
     /**
      * Resize an image
+     *
      * @param originalImage The image file
-     * @param to The destination file
-     * @param w The new width (or -1 to proportionally resize) or the maxWidth if keepRatio is true
-     * @param h The new height (or -1 to proportionally resize) or the maxHeight if keepRatio is true
-     * @param keepRatio : if true, resize will keep the original image ratio and use w and h as max dimensions
+     * @param to            The destination file
+     * @param w             The new width (or -1 to proportionally resize) or the maxWidth if keepRatio is true
+     * @param h             The new height (or -1 to proportionally resize) or the maxHeight if keepRatio is true
+     * @param keepRatio     : if true, resize will keep the original image ratio and use w and h as max dimensions
      */
     public static void resize(File originalImage, File to, int w, int h, boolean keepRatio) {
         try {
@@ -60,10 +63,10 @@ public class Images {
             int owidth = source.getWidth();
             int oheight = source.getHeight();
             double ratio = (double) owidth / oheight;
-            
+
             int maxWidth = w;
             int maxHeight = h;
-            
+
             if (w < 0 && h < 0) {
                 w = owidth;
                 h = oheight;
@@ -74,14 +77,14 @@ public class Images {
             if (w > 0 && h < 0) {
                 h = (int) (w / ratio);
             }
-            
-            if(keepRatio) {
+
+            if (keepRatio) {
                 h = (int) (w / ratio);
-                if(h > maxHeight) {
+                if (h > maxHeight) {
                     h = maxHeight;
                     w = (int) (h * ratio);
                 }
-                if(w > maxWidth) {
+                if (w > maxWidth) {
                     w = maxWidth;
                     h = (int) (w / ratio);
                 }
@@ -119,12 +122,13 @@ public class Images {
 
     /**
      * Crop an image
+     *
      * @param originalImage The image file
-     * @param to The destination file
-     * @param x1 The new x origin
-     * @param y1 The new y origin
-     * @param x2 The new x end
-     * @param y2 The new y end
+     * @param to            The destination file
+     * @param x1            The new x origin
+     * @param y1            The new y origin
+     * @param x2            The new x end
+     * @param y2            The new y end
      */
     public static void crop(File originalImage, File to, int x1, int y1, int x2, int y2) {
         try {
@@ -161,6 +165,7 @@ public class Images {
 
     /**
      * Encode an image to base64 using a data: URI
+     *
      * @param image The image file
      * @return The base64 encoded value
      * @throws java.io.IOException
@@ -291,6 +296,7 @@ public class Images {
             background = new SquigglesBackgroundProducer();
             return this;
         }        // ~~ rendering
+
         ByteArrayInputStream bais = null;
 
         @Override

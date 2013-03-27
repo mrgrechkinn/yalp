@@ -5,6 +5,7 @@ import java.util.Map;
 /**
  * A cache implementation.
  * expiration is specified in seconds
+ *
  * @see yalp.cache.Cache
  */
 public interface CacheImpl {

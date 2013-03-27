@@ -2,6 +2,7 @@ package yalp.libs;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import yalp.Yalp;
 import yalp.i18n.Lang;
@@ -150,6 +151,7 @@ public class I18N {
 
     /**
      * Retrieve currency symbol for a currency
+     *
      * @param currency (JPY,USD,EUR,GBP,...)
      * @return ($, €, ...)
      */

@@ -27,7 +27,7 @@ public class WebSocketInvoker {
 
             ActionInvoker.invoke(request, null);
 
-        }catch (YalpException e) {
+        } catch (YalpException e) {
             throw e;
         } catch (Exception e) {
             throw new UnexpectedException(e);

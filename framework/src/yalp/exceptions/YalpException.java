@@ -1,6 +1,7 @@
 package yalp.exceptions;
 
 import java.util.concurrent.atomic.AtomicLong;
+
 import yalp.Yalp;
 
 /**

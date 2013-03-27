@@ -2,6 +2,7 @@ package yalp.exceptions;
 
 import java.util.Arrays;
 import java.util.List;
+
 import yalp.classloading.ApplicationClasses.ApplicationClass;
 import yalp.templates.Template;
 
@@ -19,14 +20,14 @@ public class TemplateNotFoundException extends YalpException implements SourceAt
         super("Template not found : " + path);
         this.path = path;
     }
-    
+
     public TemplateNotFoundException(String path, ApplicationClass applicationClass, Integer line) {
         this(path);
         this.sourceFile = applicationClass.javaFile.relativePath();
         this.source = Arrays.asList(applicationClass.javaSource.split("\n"));
         this.line = line;
     }
-    
+
     public TemplateNotFoundException(String path, Template template, Integer line) {
         this(path);
         this.sourceFile = template.name;

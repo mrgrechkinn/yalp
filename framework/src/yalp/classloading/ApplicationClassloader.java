@@ -35,7 +35,7 @@ import yalp.exceptions.UnexpectedException;
 import yalp.libs.IO;
 
 /**
- * The application classLoader. 
+ * The application classLoader.
  * Load the classes from the application Java sources files.
  */
 public class ApplicationClassloader extends ClassLoader {
@@ -54,7 +54,7 @@ public class ApplicationClassloader extends ClassLoader {
      */
     public ProtectionDomain protectionDomain;
 
-    private final Object lock = new Object(); 
+    private final Object lock = new Object();
 
     public ApplicationClassloader() {
         super(ApplicationClassloader.class.getClassLoader());
@@ -84,8 +84,8 @@ public class ApplicationClassloader extends ClassLoader {
             return c;
         }
 
-        synchronized( lock ) {
-             // First check if it's an application Class
+        synchronized (lock) {
+            // First check if it's an application Class
             Class<?> applicationClass = loadApplicationClass(name);
             if (applicationClass != null) {
                 if (resolve) {
@@ -103,7 +103,7 @@ public class ApplicationClassloader extends ClassLoader {
 
         if (ApplicationClass.isClass(name)) {
             Class maybeAlreadyLoaded = findLoadedClass(name);
-            if(maybeAlreadyLoaded != null) {
+            if (maybeAlreadyLoaded != null) {
                 return maybeAlreadyLoaded;
             }
         }
@@ -381,6 +381,7 @@ public class ApplicationClassloader extends ClassLoader {
             throw new RuntimeException("Path has changed");
         }
     }
+
     /**
      * Used to track change of the application sources path
      */
@@ -392,6 +393,7 @@ public class ApplicationClassloader extends ClassLoader {
 
     /**
      * Try to load all .java files found.
+     *
      * @return The list of well defined Class
      */
     public List<Class> getAllClasses() {
@@ -413,7 +415,7 @@ public class ApplicationClassloader extends ClassLoader {
 
             } else {
 
-                if(!Yalp.pluginCollection.compileSources()) {
+                if (!Yalp.pluginCollection.compileSources()) {
 
                     List<ApplicationClass> all = new ArrayList<ApplicationClass>();
 
@@ -422,7 +424,7 @@ public class ApplicationClassloader extends ClassLoader {
                     }
                     List<String> classNames = new ArrayList<String>();
                     for (int i = 0; i < all.size(); i++) {
-                            ApplicationClass applicationClass = all.get(i);
+                        ApplicationClass applicationClass = all.get(i);
                         if (applicationClass != null && !applicationClass.compiled && applicationClass.isClass()) {
                             classNames.add(all.get(i).name);
                         }
@@ -449,10 +451,12 @@ public class ApplicationClassloader extends ClassLoader {
         }
         return allClasses;
     }
+
     List<Class> allClasses = null;
 
     /**
      * Retrieve all application classes assignable to this class.
+     *
      * @param clazz The superclass, or the interface.
      * @return A list of class
      */
@@ -467,6 +471,7 @@ public class ApplicationClassloader extends ClassLoader {
 
     /**
      * Find a class in a case insensitive way
+     *
      * @param name The class name.
      * @return a class
      */
@@ -485,6 +490,7 @@ public class ApplicationClassloader extends ClassLoader {
 
     /**
      * Retrieve all application classes with a specific annotation.
+     *
      * @param clazz The annotation class.
      * @return A list of class
      */

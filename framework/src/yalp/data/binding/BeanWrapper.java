@@ -19,7 +19,7 @@ public class BeanWrapper {
 
     private Class<?> beanClass;
 
-    /** 
+    /**
      * a cache for our properties and setters
      */
     private Map<String, Property> wrappers = new HashMap<String, Property>();
@@ -39,7 +39,7 @@ public class BeanWrapper {
         }
 
         registerSetters(forClass, isScala);
-        if(isScala) {
+        if (isScala) {
             registerAllFields(forClass);
         } else {
             registerFields(forClass);
@@ -235,10 +235,10 @@ public class BeanWrapper {
     }
 
     public Object bind(String name, Type type, Map<String, String[]> params, String prefix, Object instance, Annotation[] annotations) throws Exception {
-        RootParamNode paramNode = RootParamNode.convert( params);
+        RootParamNode paramNode = RootParamNode.convert(params);
         // when looking at the old code in BeanBinder and Binder.bindInternal, I
         // think it is correct to use 'name+prefix'
-        Binder.bindBean( paramNode.getChild(name+prefix), instance, annotations);
+        Binder.bindBean(paramNode.getChild(name + prefix), instance, annotations);
         return instance;
     }
 }

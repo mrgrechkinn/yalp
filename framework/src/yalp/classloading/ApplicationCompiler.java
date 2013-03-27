@@ -51,16 +51,16 @@ public class ApplicationCompiler {
         this.settings.put(CompilerOptions.OPTION_Encoding, "UTF-8");
         this.settings.put(CompilerOptions.OPTION_LocalVariableAttribute, CompilerOptions.GENERATE);
         String javaVersion = CompilerOptions.VERSION_1_5;
-        if(System.getProperty("java.version").startsWith("1.6")) {
+        if (System.getProperty("java.version").startsWith("1.6")) {
             javaVersion = CompilerOptions.VERSION_1_6;
         } else if (System.getProperty("java.version").startsWith("1.7")) {
             javaVersion = CompilerOptions.VERSION_1_7;
         }
-        if("1.5".equals(Yalp.configuration.get("java.source"))) {
+        if ("1.5".equals(Yalp.configuration.get("java.source"))) {
             javaVersion = CompilerOptions.VERSION_1_5;
-        } else if("1.6".equals(Yalp.configuration.get("java.source"))) {
+        } else if ("1.6".equals(Yalp.configuration.get("java.source"))) {
             javaVersion = CompilerOptions.VERSION_1_6;
-        } else if("1.7".equals(Yalp.configuration.get("java.source"))) {
+        } else if ("1.7".equals(Yalp.configuration.get("java.source"))) {
             javaVersion = CompilerOptions.VERSION_1_7;
         }
         this.settings.put(CompilerOptions.OPTION_Source, javaVersion);
@@ -235,7 +235,7 @@ public class ApplicationCompiler {
             public void acceptResult(CompilationResult result) {
                 // If error
                 if (result.hasErrors()) {
-                    for (IProblem problem: result.getErrors()) {
+                    for (IProblem problem : result.getErrors()) {
                         String className = new String(problem.getOriginatingFileName()).replace("/", ".");
                         className = className.substring(0, className.length() - 5);
                         String message = problem.getMessage();

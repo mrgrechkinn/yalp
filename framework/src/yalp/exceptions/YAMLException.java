@@ -2,6 +2,7 @@ package yalp.exceptions;
 
 import java.util.Arrays;
 import java.util.List;
+
 import org.yaml.snakeyaml.scanner.ScannerException;
 import yalp.vfs.VirtualFile;
 

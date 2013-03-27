@@ -2,6 +2,7 @@ package yalp.data.validation;
 
 import java.util.Collection;
 import java.util.List;
+
 import net.sf.oval.ConstraintViolation;
 import net.sf.oval.Validator;
 import net.sf.oval.configuration.annotation.AbstractAnnotationCheck;
@@ -40,18 +41,18 @@ public class ValidCheck extends AbstractAnnotationCheck<Required> {
         if (superKey != null) {
             key = superKey + "." + key;
         }
-        if(value instanceof Collection) {
-            Collection valueCollection = (Collection)value;
+        if (value instanceof Collection) {
+            Collection valueCollection = (Collection) value;
             boolean everythingIsValid = true;
             int index = 0;
-            for(Object item : valueCollection) {
-                if(!validateObject(key + "[" + (index) + "]", item)) {
+            for (Object item : valueCollection) {
+                if (!validateObject(key + "[" + (index) + "]", item)) {
                     Validation.current().errors.add(new Error(key + "[" + (index) + "]", mes, new String[0]));
                     everythingIsValid = false;
                 }
                 index++;
             }
-            if(!everythingIsValid) {
+            if (!everythingIsValid) {
                 return false;
             } else {
                 return true;
@@ -79,5 +80,5 @@ public class ValidCheck extends AbstractAnnotationCheck<Required> {
             return false;
         }
     }
-    
+
 }

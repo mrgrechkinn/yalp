@@ -25,7 +25,7 @@ public class JPQL {
     public long count(String entity, String query, Object[] params) {
         return Long.parseLong(
                 bindParameters(em().createQuery(
-                createCountQuery(entity, entity, query, params)), params).getSingleResult().toString());
+                        createCountQuery(entity, entity, query, params)), params).getSingleResult().toString());
     }
 
     public List findAll(String entity) {
@@ -176,7 +176,7 @@ public class JPQL {
         return q;
     }
 
-    public Query bindParameters(Query q, Map<String,Object> params) {
+    public Query bindParameters(Query q, Map<String, Object> params) {
         if (params == null) {
             return q;
         }
@@ -193,10 +193,10 @@ public class JPQL {
         StringBuilder jpql = new StringBuilder();
         String subRequest;
         if (findBy.contains("OrderBy"))
-        	subRequest = findBy.split("OrderBy")[0];
+            subRequest = findBy.split("OrderBy")[0];
         else subRequest = findBy;
         String[] parts = subRequest.split("And");
-		int index = 1;
+        int index = 1;
         for (int i = 0; i < parts.length; i++) {
             String part = parts[i];
             if (part.endsWith("NotEqual")) {
@@ -236,11 +236,11 @@ public class JPQL {
                 }
             } else if (part.endsWith("Ilike")) {
                 String prop = extractProp(part, "Ilike");
-                 if (isHSQL()) {
+                if (isHSQL()) {
                     jpql.append("LCASE(").append(prop).append(") like LCASE(?").append(index++).append(")");
-                 } else {
+                } else {
                     jpql.append("LOWER(").append(prop).append(") like LOWER(?").append(index++).append(")");
-                 }
+                }
             } else if (part.endsWith("Elike")) {
                 String prop = extractProp(part, "Elike");
                 jpql.append(prop).append(" like ?").append(index++);
@@ -265,5 +265,6 @@ public class JPQL {
         prop = (prop.charAt(0) + "").toLowerCase() + prop.substring(1);
         return prop;
     }
+
     public static JPQL instance = null;
 }

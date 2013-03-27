@@ -18,5 +18,5 @@ public class ConfigurationException extends YalpException {
     public String getErrorTitle() {
         return "Configuration error.";
     }
-    
+
 }

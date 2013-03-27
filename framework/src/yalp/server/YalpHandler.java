@@ -71,8 +71,8 @@ public class YalpHandler extends SimpleChannelUpstreamHandler {
         } catch (NoSuchAlgorithmException e) {
             throw new InternalError("SHA-1 not supported on this platform");
         }
-    } 
-    
+    }
+
     static {
         exposeYalpServer = !"false".equals(Yalp.configuration.getProperty("http.exposeYalpServer"));
     }
@@ -966,15 +966,15 @@ public class YalpHandler extends SimpleChannelUpstreamHandler {
         if (Yalp.mode == Yalp.Mode.DEV) {
             httpResponse.setHeader(CACHE_CONTROL, "no-cache");
         } else {
-			// Check if Cache-Control header is not set
-			if (httpResponse.getHeader(CACHE_CONTROL) == null) {
-            	String maxAge = Yalp.configuration.getProperty("http.cacheControl", "3600");
-            	if (maxAge.equals("0")) {
-               		httpResponse.setHeader(CACHE_CONTROL, "no-cache");
-            	} else {
-                	httpResponse.setHeader(CACHE_CONTROL, "max-age=" + maxAge);
-            	}
-			}
+            // Check if Cache-Control header is not set
+            if (httpResponse.getHeader(CACHE_CONTROL) == null) {
+                String maxAge = Yalp.configuration.getProperty("http.cacheControl", "3600");
+                if (maxAge.equals("0")) {
+                    httpResponse.setHeader(CACHE_CONTROL, "no-cache");
+                } else {
+                    httpResponse.setHeader(CACHE_CONTROL, "max-age=" + maxAge);
+                }
+            }
         }
         boolean useEtag = Yalp.configuration.getProperty("http.useETag", "true").equals("true");
         long last = file.lastModified();
@@ -1004,7 +1004,7 @@ public class YalpHandler extends SimpleChannelUpstreamHandler {
         message.setHeader(HttpHeaders.Names.CONTENT_LENGTH, String.valueOf(contentLength));
     }
 
-  
+
     static class LazyChunkedInput implements org.jboss.netty.handler.stream.ChunkedInput {
 
         private boolean closed = false;
@@ -1038,8 +1038,8 @@ public class YalpHandler extends SimpleChannelUpstreamHandler {
             }
 
             byte[] bytes;
-            if ( chunk instanceof byte[]) {
-                bytes = (byte[])chunk;
+            if (chunk instanceof byte[]) {
+                bytes = (byte[]) chunk;
             } else {
                 String message = chunk == null ? "" : chunk.toString();
                 bytes = message.getBytes(Response.current().encoding);
@@ -1047,11 +1047,11 @@ public class YalpHandler extends SimpleChannelUpstreamHandler {
 
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
             byteStream.write(Integer.toHexString(bytes.length).getBytes());
-            final byte[] crlf = new byte[]{(byte)'\r', (byte)'\n'};
+            final byte[] crlf = new byte[]{(byte) '\r', (byte) '\n'};
             byteStream.write(crlf);
             byteStream.write(bytes);
             byteStream.write(crlf);
-            nextChunks.offer( byteStream.toByteArray());
+            nextChunks.offer(byteStream.toByteArray());
         }
     }
 
@@ -1064,10 +1064,10 @@ public class YalpHandler extends SimpleChannelUpstreamHandler {
             }
             ((LazyChunkedInput) yalpResponse.direct).writeChunk(chunk);
             if (Server.pipelines.get("ChunkedWriteHandler") != null) {
-                ((ChunkedWriteHandler)Server.pipelines.get("ChunkedWriteHandler")).resumeTransfer();
+                ((ChunkedWriteHandler) Server.pipelines.get("ChunkedWriteHandler")).resumeTransfer();
             }
-             if (Server.pipelines.get("SslChunkedWriteHandler") != null) {
-                ((ChunkedWriteHandler)Server.pipelines.get("SslChunkedWriteHandler")).resumeTransfer();
+            if (Server.pipelines.get("SslChunkedWriteHandler") != null) {
+                ((ChunkedWriteHandler) Server.pipelines.get("SslChunkedWriteHandler")).resumeTransfer();
             }
         } catch (Exception e) {
             throw new UnexpectedException(e);
@@ -1078,10 +1078,10 @@ public class YalpHandler extends SimpleChannelUpstreamHandler {
         try {
             ((LazyChunkedInput) yalpResponse.direct).close();
             if (Server.pipelines.get("ChunkedWriteHandler") != null) {
-                ((ChunkedWriteHandler)Server.pipelines.get("ChunkedWriteHandler")).resumeTransfer();
+                ((ChunkedWriteHandler) Server.pipelines.get("ChunkedWriteHandler")).resumeTransfer();
             }
-             if (Server.pipelines.get("SslChunkedWriteHandler") != null) {
-                ((ChunkedWriteHandler)Server.pipelines.get("SslChunkedWriteHandler")).resumeTransfer();
+            if (Server.pipelines.get("SslChunkedWriteHandler") != null) {
+                ((ChunkedWriteHandler) Server.pipelines.get("SslChunkedWriteHandler")).resumeTransfer();
             }
         } catch (Exception e) {
             throw new UnexpectedException(e);
@@ -1101,10 +1101,10 @@ public class YalpHandler extends SimpleChannelUpstreamHandler {
         } else if (webSocketFrame instanceof BinaryWebSocketFrame) {
             inbound._received(new Http.WebSocketFrame(webSocketFrame.getBinaryData().array()));
         } else if (webSocketFrame instanceof TextWebSocketFrame) {
-            inbound._received(new Http.WebSocketFrame(((TextWebSocketFrame)webSocketFrame).getText()));
+            inbound._received(new Http.WebSocketFrame(((TextWebSocketFrame) webSocketFrame).getText()));
         }
     }
-    
+
     private String getWebSocketLocation(HttpRequest req) {
         return "ws://" + req.getHeader(HttpHeaders.Names.HOST) + req.getUri();
     }
@@ -1116,23 +1116,26 @@ public class YalpHandler extends SimpleChannelUpstreamHandler {
 
         // Upgrade the pipeline as the handshaker needs the HttpStream Aggregator
         ctx.getPipeline().addLast("fake-aggregator", new HttpChunkAggregator(max));
-	try {
-        WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
-                this.getWebSocketLocation(req), null, false);
-        this.handshaker = wsFactory.newHandshaker(req);
-        if (this.handshaker == null) {
-            wsFactory.sendUnsupportedWebSocketVersionResponse(ctx.getChannel());
-        } else {
-            try {
-                this.handshaker.handshake(ctx.getChannel(), req);
-            } catch(Exception e) {
-                e.printStackTrace();
+        try {
+            WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
+                    this.getWebSocketLocation(req), null, false);
+            this.handshaker = wsFactory.newHandshaker(req);
+            if (this.handshaker == null) {
+                wsFactory.sendUnsupportedWebSocketVersionResponse(ctx.getChannel());
+            } else {
+                try {
+                    this.handshaker.handshake(ctx.getChannel(), req);
+                } catch (Exception e) {
+                    e.printStackTrace();
 
+                }
             }
-        }
         } finally {
-           // Remove fake aggregator in case handshake was not a sucess, it is still lying around
-           try { ctx.getPipeline().remove("fake-aggregator"); } catch(Exception e) {}
+            // Remove fake aggregator in case handshake was not a sucess, it is still lying around
+            try {
+                ctx.getPipeline().remove("fake-aggregator");
+            } catch (Exception e) {
+            }
         }
         Http.Request request = parseRequest(ctx, req, messageEvent);
 

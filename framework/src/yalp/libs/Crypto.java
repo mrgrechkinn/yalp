@@ -26,8 +26,15 @@ public class Crypto {
         SHA256("SHA-256"),
         SHA512("SHA-512");
         private String algorithm;
-        HashType(String algorithm) { this.algorithm = algorithm; }
-        @Override public String toString() { return this.algorithm; }
+
+        HashType(String algorithm) {
+            this.algorithm = algorithm;
+        }
+
+        @Override
+        public String toString() {
+            return this.algorithm;
+        }
     }
 
     /**
@@ -46,8 +53,9 @@ public class Crypto {
 
     /**
      * Sign a message with a key
+     *
      * @param message The message to sign
-     * @param key The key to use
+     * @param key     The key to use
      * @return The signed message (in hexadecimal)
      * @throws java.lang.Exception
      */
@@ -67,7 +75,7 @@ public class Crypto {
             char[] hexChars = new char[len * 2];
 
 
-            for (int charIndex = 0, startIndex = 0; charIndex < hexChars.length;) {
+            for (int charIndex = 0, startIndex = 0; charIndex < hexChars.length; ) {
                 int bite = result[startIndex++] & 0xff;
                 hexChars[charIndex++] = HEX_CHARS[bite >> 4];
                 hexChars[charIndex++] = HEX_CHARS[bite & 0xf];
@@ -80,23 +88,23 @@ public class Crypto {
     }
 
     /**
-        * Create a password hash using the default hashing algorithm
-        * @param input The password
-        * @return The password hash
-        */
-    public static String passwordHash(String input)
-    {
+     * Create a password hash using the default hashing algorithm
+     *
+     * @param input The password
+     * @return The password hash
+     */
+    public static String passwordHash(String input) {
         return passwordHash(input, DEFAULT_HASH_TYPE);
     }
 
     /**
-        * Create a password hash using specific hashing algorithm
-        * @param input The password
-        * @param hashType The hashing algorithm
-        * @return The password hash
-        */
-    public static String passwordHash(String input, HashType hashType)
-    {
+     * Create a password hash using specific hashing algorithm
+     *
+     * @param input    The password
+     * @param hashType The hashing algorithm
+     * @return The password hash
+     */
+    public static String passwordHash(String input, HashType hashType) {
         try {
             MessageDigest m = MessageDigest.getInstance(hashType.toString());
             byte[] out = m.digest(input.getBytes());
@@ -108,6 +116,7 @@ public class Crypto {
 
     /**
      * Encrypt a String with the AES encryption standard using the application secret
+     *
      * @param value The String to encrypt
      * @return An hexadecimal encrypted string
      */
@@ -117,7 +126,8 @@ public class Crypto {
 
     /**
      * Encrypt a String with the AES encryption standard. Private key must have a length of 16 bytes
-     * @param value The String to encrypt
+     *
+     * @param value      The String to encrypt
      * @param privateKey The key used to encrypt
      * @return An hexadecimal encrypted string
      */
@@ -135,6 +145,7 @@ public class Crypto {
 
     /**
      * Decrypt a String with the AES encryption standard using the application secret
+     *
      * @param value An hexadecimal encrypted string
      * @return The decrypted String
      */
@@ -144,7 +155,8 @@ public class Crypto {
 
     /**
      * Decrypt a String with the AES encryption standard. Private key must have a length of 16 bytes
-     * @param value An hexadecimal encrypted string
+     *
+     * @param value      An hexadecimal encrypted string
      * @param privateKey The key used to encrypt
      * @return The decrypted String
      */

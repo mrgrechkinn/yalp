@@ -31,17 +31,18 @@ public class Mailer implements LocalVariablesSupport {
 
     /**
      * Set subject of mail, optionally providing formatting arguments
+     *
      * @param subject plain String or formatted string - interpreted as formatted string only if aguments are provided
-     * @param args optional arguments for formatting subject
+     * @param args    optional arguments for formatting subject
      */
     public static void setSubject(String subject, Object... args) {
         HashMap<String, Object> map = infos.get();
         if (map == null) {
             throw new UnexpectedException("Mailer not instrumented ?");
         }
-	if(args.length != 0){
-	    subject = String.format(subject, args);
-	}
+        if (args.length != 0) {
+            subject = String.format(subject, args);
+        }
         map.put("subject", subject);
         infos.set(map);
     }

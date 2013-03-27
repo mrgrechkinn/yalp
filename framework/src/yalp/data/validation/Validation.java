@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
 import net.sf.oval.configuration.annotation.AbstractAnnotationCheck;
 import yalp.Yalp;
 import yalp.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
@@ -39,7 +40,7 @@ public class Validation {
         Validation validation = current.get();
         if (validation == null)
             return Collections.emptyList();
-        
+
         return new ArrayList<Error>(validation.errors) {
 
             public Error forKey(String key) {
@@ -65,8 +66,9 @@ public class Validation {
 
     /**
      * Add an error
-     * @param field Field name
-     * @param message Message key
+     *
+     * @param field     Field name
+     * @param message   Message key
      * @param variables Message variables
      */
     public static void addError(String field, String message, String... variables) {
@@ -91,9 +93,9 @@ public class Validation {
         Validation validation = current.get();
         if (validation == null)
             return null;
-          
+
         for (Error error : validation.errors) {
-            if (error.key!=null && error.key.equals(field)) {
+            if (error.key != null && error.key.equals(field)) {
                 return error;
             }
         }
@@ -108,10 +110,10 @@ public class Validation {
         Validation validation = current.get();
         if (validation == null)
             return Collections.emptyList();
-      
+
         List<Error> errors = new ArrayList<Error>();
         for (Error error : validation.errors) {
-            if (error.key!=null && error.key.equals(field)) {
+            if (error.key != null && error.key.equals(field)) {
                 errors.add(error);
             }
         }

@@ -36,7 +36,7 @@ import javax.sql.DataSource;
 
 /**
  * Handles migration of data.
- *
+ * <p/>
  * Does only support the default DBConfig
  */
 public class Evolutions extends YalpPlugin {
@@ -48,7 +48,7 @@ public class Evolutions extends YalpPlugin {
     private boolean disabled = false;
 
 
-  	public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException {
 
 
         /** Start the DB plugin **/
@@ -83,7 +83,7 @@ public class Evolutions extends YalpPlugin {
         /** Connected **/
         System.out.println("~ Connected to " + DB.datasource.getConnection().getMetaData().getURL());
 
-        for(Entry<String, VirtualFile> moduleRoot : modulesWithEvolutions.entrySet()) {       
+        for (Entry<String, VirtualFile> moduleRoot : modulesWithEvolutions.entrySet()) {
 
             /** Sumary **/
             Evolution database = listDatabaseEvolutions(moduleRoot.getKey()).peek();
@@ -128,8 +128,8 @@ public class Evolutions extends YalpPlugin {
                 // see later
             }
 
-            System.out.print("~ '" + moduleRoot.getKey()+ "' Application revision is " + application.revision + " [" + application.hash.substring(0, 7) + "]");
-            System.out.println(" and '" + moduleRoot.getKey()+ "' Database revision is " + database.revision + " [" + database.hash.substring(0, 7) + "]");
+            System.out.print("~ '" + moduleRoot.getKey() + "' Application revision is " + application.revision + " [" + application.hash.substring(0, 7) + "]");
+            System.out.println(" and '" + moduleRoot.getKey() + "' Database revision is " + database.revision + " [" + database.hash.substring(0, 7) + "]");
             System.out.println("~");
 
             /** Evolution script **/
@@ -203,15 +203,15 @@ public class Evolutions extends YalpPlugin {
         for (String specificModule : specificModules) {
             if (Yalp.modules.containsKey(specificModule)) {
                 VirtualFile moduleRoot = Yalp.modules.get(specificModule);
-                
-                if(moduleRoot.child("db/evolutions").exists()) {
+
+                if (moduleRoot.child("db/evolutions").exists()) {
                     modulesWithEvolutions.put(specificModule, moduleRoot.child("db/evolutions"));
                 } else {
                     System.out.println("~ '" + specificModule + "' module doesn't have any evolutions scripts in it.");
-	            System.out.println("~");
+                    System.out.println("~");
                     System.exit(-1);
                 }
-            } else if (Yalp.configuration.getProperty("application.name").equals(specificModule))  {
+            } else if (Yalp.configuration.getProperty("application.name").equals(specificModule)) {
                 weShouldAddTheMainProject = true;
             } else {
                 System.out.println("~ Couldn't find a module with the name '" + specificModule + "'. ");
@@ -226,8 +226,8 @@ public class Evolutions extends YalpPlugin {
     private static void populateModulesWithEvolutions() {
         /** Check that evolutions are enabled **/
 
-        for(Entry<String, VirtualFile> moduleRoot : Yalp.modules.entrySet()) {            
-            if(moduleRoot.getValue().child("db/evolutions").exists()) {
+        for (Entry<String, VirtualFile> moduleRoot : Yalp.modules.entrySet()) {
+            if (moduleRoot.getValue().child("db/evolutions").exists()) {
                 modulesWithEvolutions.put(moduleRoot.getKey(), moduleRoot.getValue().child("db/evolutions"));
             }
         }
@@ -256,10 +256,10 @@ public class Evolutions extends YalpPlugin {
 
         // Apply the current evolution script
         if (Yalp.mode.isDev() && request.method.equals("POST") && request.url.equals("/@evolutions/apply")) {
-            
-             for(Entry<String, VirtualFile> moduleRoot : modulesWithEvolutions.entrySet()) {            
-                 applyScript(true, moduleRoot.getKey(), moduleRoot.getValue());
-             }
+
+            for (Entry<String, VirtualFile> moduleRoot : modulesWithEvolutions.entrySet()) {
+                applyScript(true, moduleRoot.getKey(), moduleRoot.getValue());
+            }
             new Redirect("/").apply(request, response);
             return true;
         }
@@ -268,16 +268,16 @@ public class Evolutions extends YalpPlugin {
 
     @Override
     public void beforeInvocation() {
-        if(isDisabled() || Yalp.mode.isProd()) {
+        if (isDisabled() || Yalp.mode.isProd()) {
             return;
         }
         try {
             checkEvolutionsState();
         } catch (InvalidDatabaseRevision e) {
-        	Logger.info("Automatically applying evolutions in in-memory database");
-            for(Entry<String, VirtualFile> moduleRoot : modulesWithEvolutions.entrySet()) {            
+            Logger.info("Automatically applying evolutions in in-memory database");
+            for (Entry<String, VirtualFile> moduleRoot : modulesWithEvolutions.entrySet()) {
                 if ("mem".equals(Yalp.configuration.getProperty("db")) && listDatabaseEvolutions(moduleRoot.getKey()).peek().revision == 0) {
-                	Logger.info("Applying evolutions for '" + moduleRoot.getKey() + "'");
+                    Logger.info("Applying evolutions for '" + moduleRoot.getKey() + "'");
                     applyScript(true, moduleRoot.getKey(), moduleRoot.getValue());
                 } else {
                     throw e;
@@ -290,7 +290,7 @@ public class Evolutions extends YalpPlugin {
     public void onApplicationStart() {
         if (!isDisabled()) {
             populateModulesWithEvolutions();
-            if ( Yalp.mode.isProd()) {
+            if (Yalp.mode.isProd()) {
                 try {
                     checkEvolutionsState();
                 } catch (InvalidDatabaseRevision e) {
@@ -300,7 +300,7 @@ public class Evolutions extends YalpPlugin {
                     throw e;
                 }
             }
-        }        
+        }
     }
 
     /**
@@ -309,7 +309,7 @@ public class Evolutions extends YalpPlugin {
     private boolean isDisabled() {
         return "false".equals(Yalp.configuration.getProperty("evolutions.enabled", "true"));
     }
-    
+
     public static synchronized void resolve(int revision) {
         try {
             execute("update yalp_evolutions set state = 'applied' where state = 'applying_up' and id = " + revision);
@@ -344,7 +344,7 @@ public class Evolutions extends YalpPlugin {
                     }
                     // Execute script
                     if (runScript) {
-                       for (CharSequence sql : new SQLSplitter((evolution.applyUp ? evolution.sql_up : evolution.sql_down))) {
+                        for (CharSequence sql : new SQLSplitter((evolution.applyUp ? evolution.sql_up : evolution.sql_down))) {
                             final String s = sql.toString().trim();
                             if (StringUtils.isEmpty(s)) {
                                 continue;
@@ -403,14 +403,14 @@ public class Evolutions extends YalpPlugin {
     public synchronized static void checkEvolutionsState() {
 
 
-        for(Entry<String, VirtualFile> moduleRoot : modulesWithEvolutions.entrySet()) {            
+        for (Entry<String, VirtualFile> moduleRoot : modulesWithEvolutions.entrySet()) {
 
             if (DB.datasource != null) {
                 List<Evolution> evolutionScript = getEvolutionScript(moduleRoot.getKey(), moduleRoot.getValue());
                 Connection connection = null;
                 try {
                     connection = getNewConnection();
-                    PreparedStatement statement = connection.prepareStatement("select id, hash, apply_script, revert_script, state, last_problem from yalp_evolutions where module_key = ? and state like 'applying_%'"); 
+                    PreparedStatement statement = connection.prepareStatement("select id, hash, apply_script, revert_script, state, last_problem from yalp_evolutions where module_key = ? and state like 'applying_%'");
                     statement.setString(1, moduleRoot.getKey());
                     ResultSet rs = statement.executeQuery();
                     if (rs.next()) {
@@ -516,7 +516,7 @@ public class Evolutions extends YalpPlugin {
             ResultSet rs = connection.getMetaData().getTables(null, null, tableName, null);
 
             if (!rs.next()) {
-		
+
                 // Table in lowercase does not exist
                 // oracle gives table names in upper case
                 tableName = tableName.toUpperCase();
@@ -524,7 +524,7 @@ public class Evolutions extends YalpPlugin {
                 rs.close();
                 rs = connection.getMetaData().getTables(null, null, tableName, null);
                 // Does it exist?
-                if (!rs.next() ) {
+                if (!rs.next()) {
                     // did not find it in uppercase either
                     tableExists = false;
                 }
@@ -532,18 +532,18 @@ public class Evolutions extends YalpPlugin {
 
             // Do we have a
             if (tableExists) {
-                
-                checkAndUpdateEvolutionsForMultiModuleSupport(connection);                    
+
+                checkAndUpdateEvolutionsForMultiModuleSupport(connection);
 
                 PreparedStatement statement = connection.prepareStatement("select id, hash, apply_script, revert_script from yalp_evolutions where module_key = ?");
                 statement.setString(1, moduleKey);
                 ResultSet databaseEvolutions = statement.executeQuery();
-                
+
                 while (databaseEvolutions.next()) {
                     Evolution evolution = new Evolution(databaseEvolutions.getInt(1), databaseEvolutions.getString(3), databaseEvolutions.getString(4), false);
                     evolutions.add(evolution);
                 }
-            
+
             } else {
                 // If you are having problems with the default datatype text (clob for Oracle), you can
                 // specify your own datatype using the 'evolution.YALP_EVOLUTIONS.textType'-property
@@ -574,7 +574,7 @@ public class Evolutions extends YalpPlugin {
         if (jpaDialect != null) {
             try {
                 Class<?> dialectClass = Yalp.classloader.loadClass(jpaDialect);
-			
+
                 // Oracle 8i dialect is the base class for oracle dialects (at least for now)
                 isOracle = org.hibernate.dialect.Oracle8iDialect.class.isAssignableFrom(dialectClass);
             } catch (ClassNotFoundException e) {
@@ -584,12 +584,12 @@ public class Evolutions extends YalpPlugin {
         }
         return isOracle;
     }
-    
+
     private static void checkAndUpdateEvolutionsForMultiModuleSupport(Connection connection) throws SQLException {
         ResultSet rs = connection.getMetaData().getColumns(null, null, "yalp_evolutions", "module_key");
 
-        if(!rs.next()) {
-            
+        if (!rs.next()) {
+
             System.out.println("!!! - Updating the yalp_evolutions table to cope with multiple modules - !!!");
             execute("alter table yalp_evolutions add module_key varchar(255);");
             execute("alter table yalp_evolutions drop primary key;");

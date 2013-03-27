@@ -37,6 +37,7 @@ import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
 import java.util.concurrent.Future;
+
 import org.apache.commons.javaflow.Continuation;
 import org.apache.commons.javaflow.bytecode.StackRecorder;
 import yalp.Invoker.Suspend;
@@ -159,7 +160,7 @@ public class ActionInvoker {
                     ControllerInstrumentation.initActionCall();
                     try {
                         inferResult(invokeControllerMethod(actionMethod));
-                    } catch(Result result) {
+                    } catch (Result result) {
                         actionResult = result;
                         // Cache it if needed
                         if (cacheKey != null) {
@@ -375,6 +376,7 @@ public class ActionInvoker {
     /**
      * Checks and calla all methods in controller annotated with @Finally.
      * The caughtException-value is sent as argument to @Finally-method if method has one argument which is Throwable
+     *
      * @param request
      * @param caughtException If @Finally-methods are called after an error, this variable holds the caught error
      * @throws YalpException
@@ -504,12 +506,13 @@ public class ActionInvoker {
     }
 
     static Object invoke(Method method, Object instance, Object[] realArgs) throws Exception {
-        if(isActionMethod(method)) {
+        if (isActionMethod(method)) {
             return invokeWithContinuation(method, instance, realArgs);
         } else {
             return method.invoke(instance, realArgs);
         }
     }
+
     static final String C = "__continuation";
     static final String A = "__callback";
     static final String F = "__future";
@@ -627,7 +630,7 @@ public class ActionInvoker {
 
         // Check if we have already performed the bind operation
         Object[] rArgs = CachedBoundActionMethodArgs.current().retrieveActionMethodArgs(method);
-        if ( rArgs != null) {
+        if (rArgs != null) {
             // We have already performed the binding-operation for this method
             // in this request.
             return rArgs;
@@ -637,7 +640,7 @@ public class ActionInvoker {
         for (int i = 0; i < method.getParameterTypes().length; i++) {
 
             Class<?> type = method.getParameterTypes()[i];
-            Map<String, String[]> params = new HashMap<String, String[]> ();
+            Map<String, String[]> params = new HashMap<String, String[]>();
 
             // In case of simple params, we don't want to parse the body.
             if (type.equals(String.class) || Number.class.isAssignableFrom(type) || type.isPrimitive()) {
@@ -649,12 +652,12 @@ public class ActionInvoker {
 
             RootParamNode root = ParamNode.convert(params);
             rArgs[i] = Binder.bind(
-                        root,
-                        paramsNames[i],
-                        method.getParameterTypes()[i],
-                        method.getGenericParameterTypes()[i],
-                        method.getParameterAnnotations()[i],
-                        new Binder.MethodAndParamInfo(o, method, i + 1));
+                    root,
+                    paramsNames[i],
+                    method.getParameterTypes()[i],
+                    method.getGenericParameterTypes()[i],
+                    method.getParameterAnnotations()[i],
+                    new Binder.MethodAndParamInfo(o, method, i + 1));
         }
 
         CachedBoundActionMethodArgs.current().storeActionMethodArgs(method, rArgs);

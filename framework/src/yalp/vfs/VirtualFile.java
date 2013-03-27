@@ -223,19 +223,19 @@ public class VirtualFile {
         Pattern pattern = Pattern.compile("^(\\{(.+?)\\})?(.*)$");
         Matcher matcher = pattern.matcher(relativePath);
 
-        if(matcher.matches()) {
+        if (matcher.matches()) {
             String path = matcher.group(3);
             String module = matcher.group(2);
-            if(module == null || module.equals("?") || module.equals("")) {
+            if (module == null || module.equals("?") || module.equals("")) {
                 return new VirtualFile(Yalp.applicationPath).child(path);
             } else {
-                if(module.equals("yalp")) {
+                if (module.equals("yalp")) {
                     return new VirtualFile(Yalp.frameworkPath).child(path);
                 }
-                if(module.startsWith("module:")){
+                if (module.startsWith("module:")) {
                     module = module.substring("module:".length());
-                    for(Entry<String, VirtualFile> entry : Yalp.modules.entrySet()) {
-                        if(entry.getKey().equals(module))
+                    for (Entry<String, VirtualFile> entry : Yalp.modules.entrySet()) {
+                        if (entry.getKey().equals(module))
                             return entry.getValue().child(path);
                     }
                 }
